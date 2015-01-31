@@ -24,22 +24,22 @@
 ! THE SOFTWARE.
 !
 
-module MUSimpleArrayStack
+module MUArrayStack
 
     use MArrays
-    use MSimpleArrayStack
+    use MArrayStack
 
     implicit none
     private
 
-    type, public :: TUSimpleArrayStack
+    type, public :: TUArrayStack
     contains
         procedure :: present
     end type
 contains
     subroutine present(instance)
-        class(TUSimpleArrayStack), intent(in) :: instance
-        
+        class(TUArrayStack), intent(in) :: instance
+
         integer, parameter :: NUMBER_OF_ELEMENTS = 2000000
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 
@@ -47,15 +47,15 @@ contains
         integer index
         real start
 
-        type(TSimpleArrayStack) :: stack
-        type(TArrays)           :: arrays
+        type(TArrayStack) :: stack
+        type(TArrays)     :: arrays
 
         call arrays%fillWithRandom(ARRAY)
 
         ! add elemenets to stack
         call cpu_time(start)
         call stack%init()
-        
+
         do index = 1, size(ARRAY)
             call stack%push(ARRAY(index))
         end do
@@ -82,7 +82,7 @@ contains
             end if
         end do
         call report('Pop', start)
-        
+
         call stack%destroy()
 
         print *, ''
@@ -96,6 +96,6 @@ contains
         real finish
 
         call cpu_time(finish)
-        print format, 'SimpleArrayStack:', operation, ' ', finish - start, 's.'
+        print format, 'ArrayStack:', operation, ' ', finish - start, 's.'
     end subroutine
 end module

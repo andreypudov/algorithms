@@ -33,8 +33,9 @@ module MUnit
     use MUBubbleSort
     use MUInsertionSort
 
-    use MUSimpleArrayStack
-    
+    use MUArrayStack
+    use MUArrayQueue
+
     implicit none
     private
 
@@ -54,7 +55,8 @@ contains
         type(TUBubbleSort)    bubbleSort
         type(TUInsertionSort) insertionSort
 
-        type(TUSimpleArrayStack) simpleArrayStack
+        type(TUArrayStack) arrayStack
+        type(TUArrayQueue) arrayQueue
 
         !call search%present()
         !call shift%present()
@@ -63,6 +65,7 @@ contains
         !call bubbleSort%present()
         !call insertionSort%present()
 
-        call simpleArrayStack%present()
+        call arrayStack%present()
+        call arrayQueue%present()
     end subroutine
 end module

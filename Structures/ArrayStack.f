@@ -24,16 +24,16 @@
 ! THE SOFTWARE.
 !
 
-module MSimpleArrayStack
+module MArrayStack
 
     use MStack
-    
+
     implicit none
     private
 
     integer, parameter :: DEFAULT_SIZE = 16
 
-    type, extends(TStack), public :: TSimpleArrayStack
+    type, extends(TStack), public :: TArrayStack
     private
         integer, dimension(:), allocatable :: array
         integer                            :: index
@@ -48,8 +48,8 @@ module MSimpleArrayStack
 
 contains
     function peek(instance) result(value)
-        class(TSimpleArrayStack), intent(in) :: instance
-        integer                              :: value
+        class(TArrayStack), intent(in) :: instance
+        integer                        :: value
 
         value = 0
         if (instance%index /= 0) then
@@ -58,8 +58,8 @@ contains
     end function
 
     function pop(instance) result(value)
-        class(TSimpleArrayStack), intent(in out) :: instance
-        integer                                  :: value
+        class(TArrayStack), intent(in out) :: instance
+        integer                            :: value
 
         value = 0
         if (instance%index /= 0) then
@@ -69,14 +69,14 @@ contains
     end function
 
     subroutine push(instance, value)
-        class(TSimpleArrayStack), intent(in out) :: instance
-        integer, intent(in)                      :: value
+        class(TArrayStack), intent(in out) :: instance
+        integer, intent(in)                :: value
 
         integer, dimension(:), allocatable :: temporary_array
         integer length
 
         instance%index = instance%index + 1
-        
+
         ! increase array size when required
         if (instance%index > size(instance%array)) then
             length = size(instance%array) * 3 / 2
@@ -84,20 +84,20 @@ contains
             temporary_array(1:size(instance%array)) = instance%array
             call move_alloc(temporary_array, instance%array)
         end if
-        
+
         instance%array(instance%index) = value
     end subroutine
 
     subroutine init(instance)
-        class(TSimpleArrayStack), intent(in out) :: instance
+        class(TArrayStack), intent(in out) :: instance
 
         allocate(instance%array(DEFAULT_SIZE))
         instance%index = 0
     end subroutine
 
     subroutine destroy(instance)
-        class(TSimpleArrayStack), intent(in out) :: instance
+        class(TArrayStack), intent(in out) :: instance
 
         deallocate(instance%array)
     end subroutine
-end module    
+end module

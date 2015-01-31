@@ -31,11 +31,14 @@ module MShift
 
     type, public :: TShift
     contains
-        procedure :: shift => shiftByLoop
+        procedure :: shift     => shiftByLoop
+        procedure :: shiftBack => shiftBackByLoop
         
         procedure :: shiftByLoop
         procedure :: shiftByAssignment
         procedure :: shiftByIntrinsic
+
+        procedure :: shiftBackByLoop
     end type
 
 contains    
@@ -63,5 +66,16 @@ contains
 
         array    = cshift(array, -1)
         array(1) = array(2) ! replace the last element of an array by first element
+    end subroutine
+
+    subroutine shiftBackByLoop(instance, array)
+        class(TShift), intent(in)             :: instance
+        integer, dimension(:), intent(in out) :: array
+
+        integer index
+        
+        do index = 1, size(array) - 1
+            array(index) = array(index + 1)
+        end do
     end subroutine
 end module
