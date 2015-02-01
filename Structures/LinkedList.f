@@ -25,97 +25,96 @@
 !
 
 module MLinkedList
-    
+
+    use MList
+
     implicit none
-    
-    ! linked list container contains pointers to the first and the last elements
-    type LinkedList
-        type (ListEntry), pointer :: first => null()
-        type (ListEntry), pointer :: last  => null()
-    end type
-    
-    ! linked list entry contains pointers to the next and the previous elements
-    type ListEntry
-        type (ListEntry), pointer :: back => null()
-        type (ListEntry), pointer :: next => null()
-        
-        integer :: value
-    end type
-    
+    private
+
+    type, extends(TList), public :: TLinkedList
+    private
+        type(TListEntry), pointer :: first => null()
+        type(TListEntry), pointer :: last  => null()
     contains
-        subroutine struct()
-            type (LinkedList), pointer :: list
-            type (ListEntry),  pointer :: listEntry
-            
-            integer :: index
-            
-            list => create()
-            
-            write (*, '(A)') 'Structure 1. Linked List.'
-            
-            write (*, '(A)') 'Creating linked list with ten millions entries...'
-            ! fill linked list by sequence of natural numbers
-            do index = 0, 9999999
-                call add(list, index)
-            end do
-            
-            listEntry => list%last
-            write(*, '(A, I)') 'Element with the last value (fast): ', listEntry%value
-            listEntry => get(list, 9999999)
-            write(*, '(A, I)') 'Element with the last value (slow): ', listEntry%value
-        end subroutine
-        
-        ! creates linked list container structure
-        function create()
-            type (LinkedList), pointer :: create
-            type (ListEntry),  pointer :: listEntry
-            
-            allocate(create)
-            allocate(listEntry)
-            
-            listEntry%back  => null()
-            listEntry%next  => null()
-            listEntry%value = 0
-            
-            create%first => listEntry
-            create%last  => listEntry
-        end function
-        
-        ! adds new entry to the end of linked list
-        subroutine add(list, value)
-            type (LinkedList), pointer :: list
-            type (ListEntry),  pointer :: lastEntry
-            type (ListEntry),  pointer :: listEntry
-            
-            integer :: value
-            
-            lastEntry => list%last
-            
-            allocate(listEntry)
-            listEntry%back  => lastEntry
-            listEntry%next  => null()
-            listEntry%value =  value
-            
-            lastEntry%next => listEntry
-            list%last      => listEntry
-        end subroutine
-        
-        ! Gets element with specified value
-        function get(list, value)
-            type (LinkedList), pointer :: list
-            type (ListEntry),  pointer :: get
-            
-            integer :: value
-            
-            get => list%first
-            do while (associated(get))
-                if (get%value .eq. value) then
-                    return
-                end if
-                
-                get => get%next
-            end do
-            
-            get => null()
-        end function
+        procedure :: add
+        procedure :: contains
+        procedure :: get
+        !procedure :: iterator
+        procedure :: remove
+        procedure :: set
+        procedure :: size
+
+        procedure :: init
+        procedure :: destroy
+    end type
+
+    type TListEntry
+    private
+        type(TListEntry), pointer :: next => null()
+        integer                   :: value
+    end type
+
+contains
+    subroutine add(instance, value)
+        class(TLinkedList), intent(in out) :: instance
+        integer, intent(in)                :: value
+
+        type(TListEntry), pointer :: entry
+
+        allocate(entry)
+        entry%next  => null()
+        entry%value =  value
+
+        instance%last%next => entry
+
+        if (associated(instance%first) /= .true.) then
+            instance%first => entry
+        end if
+    end subroutine
+
+    function contains(instance, value) result(status)
+        class(TLinkedList), intent(in) :: instance
+        integer, intent(in)            :: value
+        logical                        :: status
+
+        status = .false.
+    end function
+
+    function get(instance, index) result(value)
+        class(TLinkedList), intent(in) :: instance
+        integer, intent(in)            :: index
+        integer                        :: value
+
+        value = 0
+    end function
+
+    subroutine remove(instance, index)
+        class(TLinkedList), intent(in out) :: instance
+        integer, intent(in)                :: index
+    end subroutine
+
+    subroutine set(instance, index, value)
+        class(TLinkedList), intent(in out) :: instance
+        integer, intent(in)                :: index
+        integer, intent(in)                :: value
+    end subroutine
+
+    function size(instance) result(value)
+        class(TLinkedList), intent(in) :: instance
+        integer                        :: value
+
+        value = 0
+    end function
+
+    subroutine init(instance)
+        class(TLinkedList), intent(in out) :: instance
+
+        ! left blank
+    end subroutine
+
+    subroutine destroy(instance)
+        class(TLinkedList), intent(in out) :: instance
+
+        ! left blank
+    end subroutine
 end module

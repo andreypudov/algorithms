@@ -1,7 +1,11 @@
 FC = ifort
 FFLAGS = -c -debug all -free
 LDFLAGS =
-SOURCES = Searches/Search.f Structures/Queue.f Structures/Stack.f Sorts/Sort.f $(wildcard **/*.f) Algorithms.f
+SOURCES = Searches/Search.f \
+          Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
+          Sorts/Sort.f \
+          $(wildcard **/*.f) \
+          Algorithms.f
 OBJECTS = $(SOURCES:.f=.o)
 EXECUTABLE = algorithms
 
