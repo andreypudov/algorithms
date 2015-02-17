@@ -29,6 +29,8 @@ module MUSearch
     use MArrays
     use MBinarySearch
     use MSequenceSearch
+    use MUAsserts
+    use MUReport
 
     implicit none
     private
@@ -70,7 +72,9 @@ contains
 
         call cpu_time(start)
         position = search%search(array, array(size(array) / 2))
-        call report('BinarySearch', sequences(1), array, array(size(array) / 2), position, start)
+
+        call report('Search', 'BinarySearch', sequences(1), start)
+        call assert_equals(array(position), array(size(array) / 2))
 
         print *, ''
     end subroutine
@@ -90,29 +94,11 @@ contains
 
             call cpu_time(start)
             position = search%search(array, array(size(array) / 2))
-            call report('SequenceSearch', sequences(index), array, array(size(array) / 2), position, start)
+
+            call report('Search', 'SequenceSearch', sequences(index), start)
+            call assert_equals(array(position), array(size(array) / 2))
         end do
 
         print *, ''
-    end subroutine
-
-    subroutine report(algorithm, sequence, array, key, position, start)
-        character(len=*), intent(in)      :: algorithm
-        character(len=*), intent(in)      :: sequence
-        integer, dimension(:), intent(in) :: array
-        integer, intent(in) :: key
-        integer, intent(in) :: position
-        real, intent(in)    :: start
-
-        character(len=*), parameter :: format = "(t1, a, a20, a2, a16, f0.3, a2)"
-        real finish
-
-        call cpu_time(finish)
-        print format, 'Search: ', algorithm, ' ', sequence, finish - start, 's.'
-
-        if (array(position) .ne. key) then
-            print '(t1, a)', 'FAILED: The found position is incorrect.'
-            print '(t9, a, i8, a, i5)', 'Key: ', key, ', Position: ', position
-        end if
     end subroutine
 end module

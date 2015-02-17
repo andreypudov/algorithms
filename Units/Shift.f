@@ -28,6 +28,7 @@ module MUShift
 
     use MArrays
     use MShift
+    use MUReport
 
     implicit none
     private
@@ -66,7 +67,8 @@ contains
         copy = array
         call cpu_time(start)
         call shift%shiftByLoop(copy)
-        call report(copy, 'Loop', start)
+
+        call report('Shift', 'Loop', '', start)
     end subroutine
 
     subroutine shiftByAssignment(array)
@@ -79,7 +81,8 @@ contains
         copy = array
         call cpu_time(start)
         call shift%shiftByAssignment(copy)
-        call report(copy, 'Assignment', start)
+
+        call report('Shift', 'Assignment', '', start)
     end subroutine
 
     subroutine shiftByIntrinsic(array)
@@ -92,18 +95,7 @@ contains
         copy = array
         call cpu_time(start)
         call shift%shiftByIntrinsic(copy)
-        call report(copy, 'Intrinsic', start)
-    end subroutine
 
-    subroutine report(array, algorithm, start)
-        integer, dimension(:), intent(in) :: array
-        character(len=*), intent(in)      :: algorithm
-        real, intent(in)                  :: start
-
-        character(len=*), parameter :: format = "(t1, a6,  a22, a18, f0.3, a)"
-        real finish
-
-        call cpu_time(finish)
-        print format, 'Shift: ', algorithm, ' ', finish - start, 's.'
+        call report('Shift', 'Intrinsic', '', start)
     end subroutine
 end module

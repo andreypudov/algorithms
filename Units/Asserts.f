@@ -24,54 +24,31 @@
 ! THE SOFTWARE.
 !
 
-module MUnit
+module MUAsserts
 
-    use MUSearch
-    use MUShift
-    use MUSort
-
-    use MUBubbleSort
-    use MUInsertionSort
-    use MUMergeSort
-
-    use MUArrayStack
-    use MUArrayQueue
-    use MULinkedList
+    use MArrays
 
     implicit none
-    private
-
-    type, public :: TUnit
-    contains
-        procedure :: present
-    end type
+    public
 
 contains
-    subroutine present(instance)
-        class(TUnit), intent(in) :: instance
+    subroutine assert_equals(value1, value2)
+        integer, intent(in) :: value1
+        integer, intent(in) :: value2
 
-        type(TUSearch) search
-        type(TUShift)  shift
-        type(TUSort)   sort
+        if (value1 .ne. value2) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
 
-        type(TUBubbleSort)    bubbleSort
-        type(TUInsertionSort) insertionSort
-        type(TUMergeSort)     mergeSort
+    subroutine assert_sorted(array)
+        integer, dimension(:), intent(in) :: array
+        type(TArrays) :: arrays
 
-        type(TUArrayStack) arrayStack
-        type(TUArrayQueue) arrayQueue
-        type(TULinkedList) linkedList
-
-        !call search%present()
-        !call shift%present()
-
-        !call sort%present()
-        !call bubbleSort%present()
-        !call insertionSort%present()
-        call mergeSort%present()
-
-        !call arrayStack%present()
-        !call arrayQueue%present()
-        !call linkedList%present()
+        if (arrays%isSorted(array) .ne. .true.) then
+            print '(t1, a)', 'FAILED. The sequence does not sorted properly.'
+            print *, array
+        end if
     end subroutine
 end module

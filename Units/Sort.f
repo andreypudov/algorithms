@@ -29,7 +29,9 @@ module MUSort
     use MArrays
     use MBubbleSort
     use MInsertionSort
-    
+    use MUAsserts
+    use MUReport
+
     implicit none
     private
 
@@ -67,13 +69,15 @@ contains
         integer, pointer  :: array(:)
         integer index
         real    start
-        
+
         do index = 1, size(arrays, 2)
             array => arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             call sort%sort(array)
-            call report('BubbleSort', sequences(index), array, start)
+
+            call report('BubbleSort', '', sequences(index), start)
+            call assert_sorted(array)
         end do
 
         print *, ''
@@ -87,35 +91,17 @@ contains
         integer, pointer  :: array(:)
         integer index
         real    start
-        
+
         do index = 1, size(arrays, 2)
             array => arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             call sort%sort(array)
-            call report('InsertionSort', sequences(index), array, start)
+
+            call report('InsertionSort', '', sequences(index), start)
+            call assert_sorted(array)
         end do
 
         print *, ''
-    end subroutine
-
-    subroutine report(algorithm, sequence, array, start)
-        character(len=*), intent(in)      :: algorithm
-        character(len=*), intent(in)      :: sequence
-        integer, dimension(:), intent(in) :: array
-        real, intent(in)                  :: start
-
-        type(TArrays)               :: arrays
-        character(len=*), parameter :: format = "(t1, a, a14, a6, a10, a10, f0.3, a)"
-        real finish
-        
-        call cpu_time(finish)
-        print FORMAT, 'Search: ', algorithm, ' ', sequence, ' ', &
-                finish - start, "s."
-
-        if (arrays%isSorted(array) .ne. .true.) then
-            print '(t1, a)', 'FAILED. The sequence does not sorted properly.'
-            print *, array
-        end if
     end subroutine
 end module

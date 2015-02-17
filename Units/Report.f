@@ -24,54 +24,30 @@
 ! THE SOFTWARE.
 !
 
-module MUnit
-
-    use MUSearch
-    use MUShift
-    use MUSort
-
-    use MUBubbleSort
-    use MUInsertionSort
-    use MUMergeSort
-
-    use MUArrayStack
-    use MUArrayQueue
-    use MULinkedList
+module MUReport
 
     implicit none
-    private
-
-    type, public :: TUnit
-    contains
-        procedure :: present
-    end type
+    public
 
 contains
-    subroutine present(instance)
-        class(TUnit), intent(in) :: instance
+    subroutine report(algorithm, version, sequence, start)
+        character(len=*), intent(in) :: algorithm
+        character(len=*), intent(in) :: version
+        character(len=*), intent(in) :: sequence
+        real, intent(in)             :: start
 
-        type(TUSearch) search
-        type(TUShift)  shift
-        type(TUSort)   sort
+        character(len=*), parameter :: format = "(t1, a18, a2, a12, a8, a2, f0.3, a)"
+        real finish
 
-        type(TUBubbleSort)    bubbleSort
-        type(TUInsertionSort) insertionSort
-        type(TUMergeSort)     mergeSort
+        character(len=18) :: algorithm_
+        character(len=12) :: version_
+        character(len=8)  :: sequence_
 
-        type(TUArrayStack) arrayStack
-        type(TUArrayQueue) arrayQueue
-        type(TULinkedList) linkedList
+        algorithm_ = algorithm
+        version_   = version
+        sequence_  = sequence
 
-        !call search%present()
-        !call shift%present()
-
-        !call sort%present()
-        !call bubbleSort%present()
-        !call insertionSort%present()
-        call mergeSort%present()
-
-        !call arrayStack%present()
-        !call arrayQueue%present()
-        !call linkedList%present()
+        call cpu_time(finish)
+        print format, algorithm_, ': ', version_, sequence_, ' ', finish - start, "s."
     end subroutine
 end module

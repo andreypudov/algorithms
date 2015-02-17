@@ -24,23 +24,23 @@
 ! THE SOFTWARE.
 !
 
-module MUInsertionSort
+module MUMergeSort
 
     use MArrays
-    use MInsertionSort
+    use MMergeSort
     use MUAsserts
     use MUReport
 
     implicit none
     private
 
-    type, public :: TUInsertionSort
+    type, public :: TUMergeSort
     contains
         procedure :: present
     end type
 contains
     subroutine present(instance)
-        class(TUInsertionSort), intent(in) :: instance
+        class(TUMergeSort), intent(in) :: instance
         type(TArrays) :: arrays
 
         integer, parameter :: NUMBER_OF_ELEMENTS = 25000
@@ -55,14 +55,13 @@ contains
         call arrays%fillWithInversedSequence(ARRAY(1:NUMBER_OF_ELEMENTS, 4))
 
         call sortOriginal(ARRAY, SEQUENCES)
-        call sortBinary(ARRAY, SEQUENCES)
     end subroutine
 
     subroutine sortOriginal(arrays, sequences)
         integer, dimension(:,:), intent(in)        :: arrays
         character(len=*), dimension(:), intent(in) :: sequences
 
-        type(TInsertionSort)                :: insertionSort
+        type(TMergeSort)                    :: mergeSort
         integer, dimension(size(arrays, 1)) :: copy
         integer index
         real    start
@@ -71,31 +70,9 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call insertionSort%sortOriginal(copy)
+            call mergeSort%sortOriginal(copy)
 
-            call report('InsertionSort', 'Original', sequences(index), start)
-            call assert_sorted(copy)
-        end do
-
-        print *, ''
-    end subroutine
-
-    subroutine sortBinary(arrays, sequences)
-        integer, dimension(:,:), intent(in)        :: arrays
-        character(len=*), dimension(:), intent(in) :: sequences
-
-        type(TInsertionSort)                :: insertionSort
-        integer, dimension(size(arrays, 1)) :: copy
-        integer index
-        real    start
-
-        do index = 1, size(arrays, 2)
-            copy = arrays(1:size(arrays, 1), index)
-
-            call cpu_time(start)
-            call insertionSort%sortBinary(copy)
-
-            call report('InsertionSort', '*Binary', sequences(index), start)
+            call report('MergeSort', 'Original', sequences(index), start)
             call assert_sorted(copy)
         end do
 

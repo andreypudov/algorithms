@@ -28,6 +28,8 @@ module MUBubbleSort
 
     use MArrays
     use MBubbleSort
+    use MUAsserts
+    use MUReport
 
     implicit none
     private
@@ -40,13 +42,13 @@ contains
     subroutine present(instance)
         class(TUBubbleSort), intent(in) :: instance
         type(TArrays) :: arrays
-        
+
         integer, parameter :: NUMBER_OF_ELEMENTS = 25000
         integer, dimension(NUMBER_OF_ELEMENTS, 4) :: ARRAY
 
         character(len=24), dimension(4) :: SEQUENCES = &
                 (/ 'Sorted', 'Dirty', 'Random', 'Inversed' /)
-        
+
         call arrays%fillWithSequence(ARRAY(1:NUMBER_OF_ELEMENTS, 1))
         call arrays%fillWithDirtySequence(ARRAY(1:NUMBER_OF_ELEMENTS, 2))
         call arrays%fillWithRandom(ARRAY(1:NUMBER_OF_ELEMENTS, 3))
@@ -63,15 +65,17 @@ contains
 
         type(TBubbleSort)                   :: bubbleSort
         integer, dimension(size(arrays, 1)) :: copy
-        integer index        
+        integer index
         real    start
-        
+
         do index = 1, size(arrays, 2)
             copy = arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             call bubbleSort%sortOriginal(copy)
-            call report(copy, 'Original', sequences(index), start)
+
+            call report('BubbleSort', 'Original', sequences(index), start)
+            call assert_sorted(copy)
         end do
 
         print *, ''
@@ -83,57 +87,41 @@ contains
 
         type(TBubbleSort)                   :: bubbleSort
         integer, dimension(size(arrays, 1)) :: copy
-        integer index        
+        integer index
         real    start
-        
+
         do index = 1, size(arrays, 2)
             copy = arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             call bubbleSort%sortInversed(copy)
-            call report(copy, 'Inversed', sequences(index), start)
+
+            call report('BubbleSort', 'Inversed', sequences(index), start)
+            call assert_sorted(copy)
         end do
 
         print *, ''
     end subroutine
-    
+
     subroutine sortFlagged(arrays, sequences)
         integer, dimension(:,:), intent(in)        :: arrays
         character(len=*), dimension(:), intent(in) :: sequences
 
         type(TBubbleSort)                   :: bubbleSort
         integer, dimension(size(arrays, 1)) :: copy
-        integer index        
+        integer index
         real    start
-        
+
         do index = 1, size(arrays, 2)
             copy = arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             call bubbleSort%sortFlagged(copy)
-            call report(copy, '*Flagged', sequences(index), start)
+
+            call report('BubbleSort', '*Flagged', sequences(index), start)
+            call assert_sorted(copy)
         end do
 
         print *, ''
-    end subroutine
-
-    subroutine report(array, algorithm, sequence, start)
-        integer, dimension(:), intent(in) :: array
-        character(len=*), intent(in)      :: algorithm
-        character(len=*), intent(in)      :: sequence
-        real, intent(in)                  :: start
-
-        type(TArrays)               :: arrays
-        character(len=*), parameter :: format = "(t1, a,  a15, a8, a10, a10, f0.3, a)"
-        real finish
-
-        call cpu_time(finish)
-        print FORMAT, 'BubbleSort: ', algorithm, ' ', sequence, ' ', &
-                finish - start, "s."
-
-        if (arrays%isSorted(array) .ne. .true.) then
-            print '(t1, a)', 'FAILED. The sequence does not sorted properly.'
-            print *, array
-        end if
     end subroutine
 end module
