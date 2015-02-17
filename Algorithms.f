@@ -27,17 +27,13 @@
 program Algorithms
 
     use MUnit
-    
+
     implicit none
 
     type(TUnit) unit
-        
+
     write (*, '(A)') 'The Laboratory of Algorithms'
     write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
 
-    
     call unit%present()
-    
-    !write (*, '(A)') 'Press any key to continue...'
-    !read *
 end program

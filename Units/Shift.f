@@ -40,17 +40,19 @@ contains
     subroutine present(instance)
         class(TUShift), intent(in) :: instance
         type(TArrays) :: arrays
-        
+
         integer, parameter :: NUMBER_OF_ELEMENTS = 1000000
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
-        
+
         call arrays%fillWithSequence(ARRAY)
 
         ! 1, 2, 3, 4, 5 => 1, 1, 2, 3, 4
-        
+
         call shiftByIntrinsic(ARRAY)
         call shiftByAssignment(ARRAY)
         call shiftByLoop(ARRAY)
+
+        print *, ''
     end subroutine present
 
     subroutine shiftByLoop(array)
@@ -73,7 +75,7 @@ contains
         type(TShift)                    :: shift
         integer, dimension(size(array)) :: copy
         real    start
-        
+
         copy = array
         call cpu_time(start)
         call shift%shiftByAssignment(copy)
@@ -86,7 +88,7 @@ contains
         type(TShift)                    :: shift
         integer, dimension(size(array)) :: copy
         real    start
-        
+
         copy = array
         call cpu_time(start)
         call shift%shiftByIntrinsic(copy)
@@ -98,10 +100,10 @@ contains
         character(len=*), intent(in)      :: algorithm
         real, intent(in)                  :: start
 
-        character(len=*), parameter :: format = "(t1, a,  a20, a28, f0.3, a)"
+        character(len=*), parameter :: format = "(t1, a6,  a22, a18, f0.3, a)"
         real finish
 
         call cpu_time(finish)
-        print format, 'Shift: ', algorithm, ' ', finish - start, "s."
+        print format, 'Shift: ', algorithm, ' ', finish - start, 's.'
     end subroutine
 end module

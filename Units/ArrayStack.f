@@ -92,7 +92,7 @@ contains
         character(len=*), intent(in) :: operation
         real, intent(in)             :: start
 
-        character(len=*), parameter :: format = "(t1, a,  a10, a28, f0.3, a)"
+        character(len=*), parameter :: format = "(t1, a,  a17, a18, f0.3, a)"
         real finish
 
         call cpu_time(finish)

@@ -35,6 +35,8 @@ module MLinkedList
     private
         type(TListEntry), pointer :: first => null()
         type(TListEntry), pointer :: last  => null()
+
+        integer                   :: length
     contains
         procedure :: add
         procedure :: contains
@@ -60,22 +62,39 @@ contains
         integer, intent(in)                :: value
 
         type(TListEntry), pointer :: entry
+        type(TListEntry), pointer :: previous
 
         allocate(entry)
         entry%next  => null()
         entry%value =  value
 
-        instance%last%next => entry
-
-        if (associated(instance%first) /= .true.) then
+        if (associated(instance%last) /= .true.) then
             instance%first => entry
+        else
+            previous      => instance%last
+            previous%next => entry
         end if
+
+        instance%last   => entry
+        instance%length =  instance%length + 1
     end subroutine
 
     function contains(instance, value) result(status)
         class(TLinkedList), intent(in) :: instance
         integer, intent(in)            :: value
         logical                        :: status
+
+        type(TListEntry), pointer :: entry
+
+        entry => instance%first
+        do while (associated(entry))
+            if (entry%value == value) then
+                status = .true.
+                return
+            end if
+
+            entry => entry%next
+        end do
 
         status = .false.
     end function
@@ -84,6 +103,22 @@ contains
         class(TLinkedList), intent(in) :: instance
         integer, intent(in)            :: index
         integer                        :: value
+
+        type(TListEntry), pointer :: entry
+        integer                   :: position
+
+        entry    => instance%first
+        position =  1
+
+        do while (associated(entry))
+            if (position == index) then
+                value = entry%value
+                return
+            end if
+
+            entry    => entry%next
+            position =  position + 1
+        end do
 
         value = 0
     end function
@@ -103,18 +138,27 @@ contains
         class(TLinkedList), intent(in) :: instance
         integer                        :: value
 
-        value = 0
+        value = instance%length
     end function
 
     subroutine init(instance)
         class(TLinkedList), intent(in out) :: instance
 
-        ! left blank
+        instance%length = 0
     end subroutine
 
     subroutine destroy(instance)
         class(TLinkedList), intent(in out) :: instance
 
-        ! left blank
+        ! a -> b -> c -> d
+        ! entry -> a, next -> b, delete a
+        ! b -> c -> d
+        type(TListEntry), pointer :: entry
+
+        do while (associated(instance%first))
+            entry => instance%first
+            instance%first => instance%first%next
+            deallocate(entry)
+        end do
     end subroutine
 end module

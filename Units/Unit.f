@@ -35,6 +35,7 @@ module MUnit
 
     use MUArrayStack
     use MUArrayQueue
+    use MULinkedList
 
     implicit none
     private
@@ -57,9 +58,10 @@ contains
 
         type(TUArrayStack) arrayStack
         type(TUArrayQueue) arrayQueue
+        type(TULinkedList) linkedList
 
-        !call search%present()
-        !call shift%present()
+        call search%present()
+        call shift%present()
         !call sort%present()
 
         !call bubbleSort%present()
@@ -67,5 +69,6 @@ contains
 
         call arrayStack%present()
         call arrayQueue%present()
+        call linkedList%present()
     end subroutine
 end module

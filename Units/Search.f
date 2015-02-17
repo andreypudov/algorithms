@@ -29,7 +29,7 @@ module MUSearch
     use MArrays
     use MBinarySearch
     use MSequenceSearch
-    
+
     implicit none
     private
 
@@ -67,7 +67,7 @@ contains
         integer index
         integer position
         real    start
-        
+
         call cpu_time(start)
         position = search%search(array, array(size(array) / 2))
         call report('BinarySearch', sequences(1), array, array(size(array) / 2), position, start)
@@ -84,10 +84,10 @@ contains
         integer index
         integer position
         real    start
-        
+
         do index = 1, size(arrays, 2)
             array => arrays(1:size(arrays, 1), index)
-            
+
             call cpu_time(start)
             position = search%search(array, array(size(array) / 2))
             call report('SequenceSearch', sequences(index), array, array(size(array) / 2), position, start)
@@ -104,16 +104,15 @@ contains
         integer, intent(in) :: position
         real, intent(in)    :: start
 
-        character(len=*), parameter :: format = "(t1, a, a14, a6, a10, a10, f0.3, a)"
+        character(len=*), parameter :: format = "(t1, a, a20, a2, a16, f0.3, a2)"
         real finish
-        
+
         call cpu_time(finish)
-        print FORMAT, 'Search: ', algorithm, ' ', sequence, ' ', &
-                finish - start, "s."
+        print format, 'Search: ', algorithm, ' ', sequence, finish - start, 's.'
 
         if (array(position) .ne. key) then
             print '(t1, a)', 'FAILED: The found position is incorrect.'
-            print '(t9, a, i8, a, i5)', 'Key: ', key, ', Position: ', position 
+            print '(t9, a, i8, a, i5)', 'Key: ', key, ', Position: ', position
         end if
     end subroutine
 end module
