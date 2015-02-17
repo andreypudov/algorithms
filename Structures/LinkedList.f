@@ -126,12 +126,54 @@ contains
     subroutine remove(instance, index)
         class(TLinkedList), intent(in out) :: instance
         integer, intent(in)                :: index
+
+        type(TLIstEntry), pointer :: entry
+        type(TLIstEntry), pointer :: previous
+        integer                   :: position
+
+        entry    => instance%first
+        previous => entry
+        position =  1
+
+        do while (associated(entry))
+            if (position == index) then
+                instance%length = instance%length - 1
+                previous%next => entry%next
+                deallocate(entry)
+
+                if (position == 1) then
+                    instance%first => null()
+                end if
+
+                return
+            end if
+
+            previous => entry
+            entry    => entry%next
+            position =  position + 1
+        end do
     end subroutine
 
     subroutine set(instance, index, value)
         class(TLinkedList), intent(in out) :: instance
         integer, intent(in)                :: index
         integer, intent(in)                :: value
+
+        type(TListEntry), pointer :: entry
+        integer                   :: position
+
+        entry    => instance%first
+        position =  1
+
+        do while (associated(entry))
+            if (position == index) then
+                entry%value = value
+                return
+            end if
+
+            entry    => entry%next
+            position =  position + 1
+        end do
     end subroutine
 
     function size(instance) result(value)

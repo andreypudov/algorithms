@@ -40,7 +40,7 @@ contains
     subroutine present(instance)
         class(TULinkedList), intent(in) :: instance
 
-        integer, parameter :: NUMBER_OF_ELEMENTS = 30000!00
+        integer, parameter :: NUMBER_OF_ELEMENTS = 300000
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 
         integer element
@@ -50,8 +50,7 @@ contains
         type(TLinkedList) :: list
         type(TArrays)     :: arrays
 
-        !call arrays%fillWithRandom(ARRAY)
-        call arrays%fillWithSequence(ARRAY)
+        call arrays%fillWithRandom(ARRAY)
 
         ! add elemenets to stack
         call cpu_time(start)
@@ -84,8 +83,28 @@ contains
         end do
         call report('Get', start)
 
-        call list%destroy()
-        call list%init()
+        call cpu_time(start)
+        do index = 1, size(ARRAY)
+            call list%set(index, index)
+            if (list%get(index) /= index) then
+                print '(t1, a)', 'FAILED. The return value of set operation is incorrect.'
+                print '(t9, a, i10, a, i10)', 'Expected: ', index, ', Value: ', list%get(index)
+                print *, list%size()
+                return
+            end if
+        end do
+        call report('Set', start)
+
+        call cpu_time(start)
+        do index = size(ARRAY) - 1, 0, -1
+            call list%remove(list%size())
+            if (list%size() /= index) then
+                print '(t1, a)', 'FAILED. The return value of remove operation is incorrect.'
+                print '(t9, a, i10, a, i10)', 'Expected: ', index, ', Value: ', list%size()
+                return
+            end if
+        end do
+        call report('Remove', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
