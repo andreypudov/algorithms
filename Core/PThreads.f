@@ -24,20 +24,24 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MUnit
-    use MPThreads
-    !use iso_c_binding
+module MPThreads
 
     implicit none
+    public
 
-    type(TUnit) unit
+    !character(len=11 ,kind=c_char) :: digit_string = c_char_'0123456789'
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+    interface
+        integer(c_int) function pthreads_init(threads_number) bind(C, name='pthreads_init')
+            use, intrinsic :: iso_c_binding
+            implicit none
+            integer(c_int), intent(in), value :: threads_number
+        end function
 
-    print *, pthreads_strlen("Hello, World!")
-
-    call unit%present()
-end program
+        function pthreads_strlen(string) bind(C, name='strlen') result(length)
+            use, intrinsic :: iso_c_binding
+            character(kind=c_char), dimension(*), intent(in) :: string
+            integer(c_int) :: length
+        end function
+    end interface
+end module

@@ -68,9 +68,9 @@ contains
         !call sort%present()
         !call bubbleSort%present()
         !call insertionSort%present()
-        call mergeSort%present()
+        !call mergeSort%present()
 
-        !call arrayStack%present()
+        call arrayStack%present()
         !call arrayQueue%present()
         !call linkedList%present()
     end subroutine
