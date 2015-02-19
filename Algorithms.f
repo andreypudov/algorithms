@@ -26,18 +26,17 @@
 
 program Algorithms
 
+    use MExample
     use MUnit
-    use MPThreads
-    !use iso_c_binding
 
     implicit none
 
-    type(TUnit) unit
+    type(TExample) example
+    type(TUnit)    unit
 
     write (*, '(A)') 'The Laboratory of Algorithms'
     write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
 
-    print *, pthreads_strlen("Hello, World!")
-
-    call unit%present()
+    call example%present()
+    !call unit%present()
 end program

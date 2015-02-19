@@ -1,12 +1,16 @@
 FC = ifort
-FFLAGS  = -c -debug all -free -module Modules -c
+CC = clang
+FFLAGS  = -c -debug all -free -module Modules
+CFLAGS  = -c -g
 LDFLAGS =
-SOURCES = Searches/Search.f \
+SOURCES = Searches/Search.f   \
           Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
-          Sorts/Sort.f \
+          Sorts/Sort.f       \
+		  Units/Report.f     \
+          $(wildcard **/*.c) \
           $(wildcard **/*.f) \
           Algorithms.f
-OBJECTS = $(patsubst %.f, Objects/%.o, $(SOURCES))
+OBJECTS = $(patsubst %.f, Objects/%.o, $(patsubst %.c, Objects/%_c.o, $(SOURCES)) )
 EXECUTABLE = algorithms
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -19,5 +23,9 @@ Objects/%.o: %.f
 	@mkdir -p $$(dirname $@)
 	$(FC) $(FFLAGS) -c $< -o $@
 
+Objects/%_c.o: %.c
+	@mkdir -p $$(dirname $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	@rm -rf Modules $(OBJECTS) Objects $(EXECUTABLE)
+	@rm -rf Modules Objects $(EXECUTABLE)

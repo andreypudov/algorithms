@@ -54,7 +54,7 @@ contains
         call shiftByLoop(ARRAY)
 
         print *, ''
-    end subroutine present
+    end subroutine
 
     subroutine shiftByLoop(array)
         integer, dimension(:), intent(in) :: array

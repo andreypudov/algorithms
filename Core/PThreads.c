@@ -25,5 +25,5 @@
  */
 
 int pthreads_init(int threads_number) {
-    return 0;
+    return 666;
 }

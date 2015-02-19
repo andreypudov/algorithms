@@ -32,10 +32,11 @@ module MPThreads
     !character(len=11 ,kind=c_char) :: digit_string = c_char_'0123456789'
 
     interface
-        integer(c_int) function pthreads_init(threads_number) bind(C, name='pthreads_init')
+        function pthreads_init(threads_number) bind(C, name='pthreads_init') result(status)
             use, intrinsic :: iso_c_binding
             implicit none
             integer(c_int), intent(in), value :: threads_number
+            integer(c_int)                    :: status
         end function
 
         function pthreads_strlen(string) bind(C, name='strlen') result(length)
