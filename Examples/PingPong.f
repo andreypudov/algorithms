@@ -52,14 +52,10 @@ contains
         !
         ! pthread_join(pinger, NULL)
         ! pthread_join(ponger, NULL)
-
-        integer index
-        index = pthreads_init(10)
-
-        print *, index
     end subroutine
 
-    subroutine ping()
+    subroutine ping(argument)
+        integer, intent(in) :: argument
         integer index
 
         do index = 1, 100
@@ -76,7 +72,8 @@ contains
         ! pthread_exit(0)
     end subroutine
 
-    subroutine pong()
+    subroutine pong(argument)
+        integer, intent(in) :: argument
         integer index
 
         do index = 1, 100

@@ -24,6 +24,20 @@
  * THE SOFTWARE.
  */
 
-int pthreads_init(int threads_number) {
-    return 666;
+#include <pthread.h>
+
+pthread_t        threads[10];
+pthread_mutex_t  mutexes[10];
+void* arguments[10];
+int   mutexcount;
+
+void _pthread_mutex_init(int *mutexid) {
+    *mutexid = 4;
+    //pthread_mutex_init(&mutex, NULL)
+}
+
+int _pthreads_create(int id, void *(*procedure) (void *), void *argument) {
+    /* pthread_create(&pinger, NULL, (void*)&ping, NULL) */
+    arguments[id] = argument;
+    return pthread_create(&(threads[id - 1]), NULL, procedure, arguments[id]);
 }

@@ -32,15 +32,27 @@ module MPThreads
     !character(len=11 ,kind=c_char) :: digit_string = c_char_'0123456789'
 
     interface
-        function pthreads_init(threads_number) bind(C, name='pthreads_init') result(status)
+        subroutine pthread_mutex_init(mutex) bind(C, name='_pthread_mutex_init')
             use, intrinsic :: iso_c_binding
             implicit none
-            integer(c_int), intent(in), value :: threads_number
-            integer(c_int)                    :: status
+
+            integer(c_int), intent(out) :: mutex
+        end subroutine
+
+        function pthread_create(id, procedure, argument) bind(C, name='_pthreads_create') result(status)
+            use, intrinsic :: iso_c_binding
+            implicit none
+
+            integer(c_int), intent(out) :: id
+            type(c_funptr), intent(in)  :: procedure
+            type(c_ptr),    intent(in)  :: argument
+            integer(c_int) :: status
         end function
 
         function pthreads_strlen(string) bind(C, name='strlen') result(length)
             use, intrinsic :: iso_c_binding
+            implicit none
+
             character(kind=c_char), dimension(*), intent(in) :: string
             integer(c_int) :: length
         end function

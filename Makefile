@@ -3,14 +3,20 @@ CC = clang
 FFLAGS  = -c -debug all -free -module Modules
 CFLAGS  = -c -g
 LDFLAGS =
-SOURCES = Searches/Search.f   \
-          Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
-          Sorts/Sort.f       \
-		  Units/Report.f     \
-          $(wildcard **/*.c) \
-          $(wildcard **/*.f) \
-          Algorithms.f
-OBJECTS = $(patsubst %.f, Objects/%.o, $(patsubst %.c, Objects/%_c.o, $(SOURCES)) )
+
+INTERFACES = Searches/Search.f \
+             Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
+             Sorts/Sort.f   \
+		     Units/Report.f
+EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/*) \
+           $(patsubst %, ! -path './%', $(INTERFACES))
+SOURCES  = $(INTERFACES) \
+		   $(shell find . -name '*.c' $(EXCLUDES)) \
+		   $(shell find . -name '*.f' $(EXCLUDES)) \
+           $(shell find Examples -name '*.f' ! -name 'Example.f') Examples/Example.f \
+           Algorithms.f
+#          $(wildcard **/*.c)
+OBJECTS  = $(patsubst %.f, Objects/%.o, $(patsubst %.c, Objects/%_c.o, $(SOURCES)))
 EXECUTABLE = algorithms
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -20,11 +26,11 @@ $(EXECUTABLE): $(OBJECTS)
 
 Objects/%.o: %.f
 	@mkdir -p Modules
-	@mkdir -p $$(dirname $@)
+	@mkdir -p $(dir $@)
 	$(FC) $(FFLAGS) -c $< -o $@
 
 Objects/%_c.o: %.c
-	@mkdir -p $$(dirname $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
