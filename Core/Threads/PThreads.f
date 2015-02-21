@@ -93,6 +93,12 @@ contains
         call c_f_pointer(value_pointer, value)
     end subroutine
 
+    subroutine pthread_exit(value)
+        integer, pointer :: value
+
+        call thread_exit(c_loc(value))
+    end subroutine
+
     subroutine pthread_destroy(info)
         integer, intent(out) :: info
 

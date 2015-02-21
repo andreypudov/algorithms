@@ -175,6 +175,10 @@ void thread_cancel(int *thread_id, int *info) {
     *info = pthread_cancel(*((pthread_t*) (threads->data[*thread_id])));
 }
 
+void thread_exit(void *value_pointer) {
+    pthread_exit(value_pointer);
+}
+
 void thread_destroy(int* info) {
     for(int id = 1; id < threads->after; ++id) {
         thread_cancel(&id, info);

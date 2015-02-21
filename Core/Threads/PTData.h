@@ -51,24 +51,16 @@ typedef struct varray_tag {
     pthread_mutex_t mutex;
 } varray_t;
 
-
 int is_initialized;
 
 array_t *threads;
 array_t *mutexes;
-/*array_t *conditions;
-array_t *barriers;
-array_t *rwlocks;*/
 
 array_t *thread_attributes;
 array_t *mutex_attributes;
-/*array_t *condition_attributes;
-array_t *barrier_attributes;
-array_t *rwlock_attributes;*/
 
 array_t *thread_keys;
 array_t *once_ctrls;
-//varray_t *spinlocks;
 
 void array_init(array_t **array, int size);
 void array_resize(array_t **array, int size);

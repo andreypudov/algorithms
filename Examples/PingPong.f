@@ -86,6 +86,11 @@ contains
         integer :: argument
         integer index
         integer info
+        integer, target  :: status
+        integer, pointer :: status_pointer
+
+        status_pointer => status
+        status         =  0
 
         do index = 1, 10
             call pthread_mutex_lock(mutex, info)
@@ -95,16 +100,24 @@ contains
                 pingpong = .false.
             end if
 
+            ! additional async output
+            print *, ''
+
             call pthread_mutex_unlock(mutex, info)
         end do
 
-        ! pthread_exit(0)
+        call pthread_exit(status_pointer)
     end subroutine
 
     subroutine pong(argument)
         integer :: argument
         integer index
         integer info
+        integer, target  :: status
+        integer, pointer :: status_pointer
+
+        status_pointer => status
+        status         =  0
 
         do index = 1, 10
             call pthread_mutex_lock(mutex, info)
@@ -117,6 +130,6 @@ contains
             call pthread_mutex_unlock(mutex, info)
         end do
 
-        ! pthread_exit(0)
+        call pthread_exit(status_pointer)
     end subroutine
 end module

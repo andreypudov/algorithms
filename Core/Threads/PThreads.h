@@ -30,6 +30,7 @@ void thread_create(int *thread_id, int *attribute_id, void *(**routine)(void *),
                    void *argument, int* info);
 void thread_join(int *thread_id, void **value_pointer, int *info);
 void thread_cancel(int *thread_id, int *info);
+void thread_exit(void *value_pointer);
 void thread_destroy(int* info);
 
 void thread_mutex_init(int *mutex_id, int *attribute_id, int *info);

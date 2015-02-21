@@ -65,6 +65,11 @@ module MPTInterface
             integer(c_int), intent(out) :: info
         end subroutine
 
+        subroutine thread_exit(value_pointer) bind(c)
+            use iso_c_binding
+            type(c_ptr), intent(in) :: value_pointer
+        end subroutine
+
         subroutine thread_destroy(info) bind(c)
             use iso_c_binding
             integer(c_int), intent(out) :: info
