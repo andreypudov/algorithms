@@ -34,6 +34,8 @@ module MEPingPong
     ! pthread_mutex_t mutex
     logical :: pingpong = .false.
 
+    integer :: mutex
+
     type, public :: TEPingPong
     contains
         procedure :: present
@@ -52,11 +54,58 @@ contains
         !
         ! pthread_join(pinger, NULL)
         ! pthread_join(ponger, NULL)
+
+        integer, parameter :: n = 100
+        integer, dimension(n) :: threads
+        integer thread_id
+        integer attribute_id
+        integer argument
+        integer, target  ::  result
+        integer, pointer :: result_pointer
+        integer info
+        integer index
+
+        argument     = 0
+        attribute_id = 0
+        result_pointer => result
+
+        call pthread_init(info)
+        if (info .ne. 0) then
+            print *, 'Error initializing ', info
+            return
+        end if
+
+        call pthread_mutex_init(mutex, attribute_id, info)
+
+        do index = 1, n
+            call pthread_create(thread_id, attribute_id, ping, argument, info)
+            threads(index) = thread_id
+
+            if (info .ne. 0) then
+                print *, 'Error creating thread ', index
+            endif
+        enddo
+
+        do index = 1, n
+            call pthread_join(threads(index), result_pointer, info)
+
+            if (info .ne. 0) then
+                print *, 'Error joining thread ', index
+            endif
+        enddo
+
+        call pthread_mutex_destroy(mutex, info)
+        call pthread_destroy(info)
+        if (info .ne. 0) then
+            print *, 'Error destroying.'
+        endif
     end subroutine
 
     subroutine ping(argument)
-        integer, intent(in) :: argument
+        integer :: argument
         integer index
+
+        print *, 'TEST'
 
         do index = 1, 100
             ! pthread_mutex_lock(&mutex)

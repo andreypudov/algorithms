@@ -8,11 +8,12 @@ INTERFACES = Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
              Sorts/Sort.f   \
 		     Units/Report.f
+INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
 EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/*) \
            $(patsubst %, ! -path './%', $(INTERFACES))
 SOURCES  = $(INTERFACES) \
-		   $(shell find . -name '*.c' $(EXCLUDES)) \
-		   $(shell find . -name '*.f' $(EXCLUDES)) \
+		   $(shell find . -name '*.c' $(EXCLUDES) | sort) \
+		   $(shell find . -name '*.f' $(EXCLUDES) | sort) \
            $(shell find Examples -name '*.f' ! -name 'Example.f') Examples/Example.f \
            Algorithms.f
 #          $(wildcard **/*.c)
@@ -22,16 +23,20 @@ EXECUTABLE = algorithms
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(FC) $(LDFLAGS) $(OBJECTS) -o Objects/$@
+	@echo 'Linking to $@...'
+	@$(FC) $(LDFLAGS) $(OBJECTS) -o Objects/$@
 
 Objects/%.o: %.f
+	@echo 'Compiling $@...'
 	@mkdir -p Modules
 	@mkdir -p $(dir $@)
-	$(FC) $(FFLAGS) -c $< -o $@
+	@$(FC) $(FFLAGS) -c $< -o $@
 
 Objects/%_c.o: %.c
+	@echo 'Compiling $@...'
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	@echo "Cleaning..."
 	@rm -rf Modules Objects $(EXECUTABLE)
