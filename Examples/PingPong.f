@@ -31,9 +31,7 @@ module MEPingPong
     implicit none
     private
 
-    ! pthread_mutex_t mutex
     logical :: pingpong = .false.
-
     integer :: mutex
 
     type, public :: TEPingPong
@@ -44,55 +42,38 @@ contains
     subroutine present(instance)
         class(TEPingPong), intent(in) :: instance
 
-        ! pthread_t pinger
-        ! pthread_t ponger
-        !
-        ! pthread_mutex_init(&mutex, NULL)
-        !
-        ! pthread_create(&pinger, NULL, (void*)&ping, NULL)
-        ! pthread_create(&ponger, NULL, (void*)&pong, NULL)
-        !
-        ! pthread_join(pinger, NULL)
-        ! pthread_join(ponger, NULL)
+        integer pinger
+        integer ponger
 
-        integer, parameter :: n = 100
-        integer, dimension(n) :: threads
-        integer thread_id
         integer attribute_id
         integer argument
-        integer, target  ::  result
+        integer, target  :: result
         integer, pointer :: result_pointer
         integer info
-        integer index
 
         argument     = 0
-        attribute_id = 0
+        attribute_id = -1
         result_pointer => result
 
         call pthread_init(info)
         if (info .ne. 0) then
-            print *, 'Error initializing ', info
+            print *, 'Error initializing.'
             return
         end if
 
         call pthread_mutex_init(mutex, attribute_id, info)
 
-        do index = 1, n
-            call pthread_create(thread_id, attribute_id, ping, argument, info)
-            threads(index) = thread_id
+        call pthread_create(pinger, attribute_id, ping, argument, info)
+        call pthread_create(ponger, attribute_id, pong, argument, info)
+        if (info .ne. 0) then
+            print *, 'Error creating threads.'
+        endif
 
-            if (info .ne. 0) then
-                print *, 'Error creating thread ', index
-            endif
-        enddo
-
-        do index = 1, n
-            call pthread_join(threads(index), result_pointer, info)
-
-            if (info .ne. 0) then
-                print *, 'Error joining thread ', index
-            endif
-        enddo
+        call pthread_join(pinger, result_pointer, info)
+        call pthread_join(ponger, result_pointer, info)
+        if (info .ne. 0) then
+            print *, 'Error joining threads.'
+        endif
 
         call pthread_mutex_destroy(mutex, info)
         call pthread_destroy(info)
@@ -104,36 +85,36 @@ contains
     subroutine ping(argument)
         integer :: argument
         integer index
+        integer info
 
-        print *, 'TEST'
+        do index = 1, 10
+            call pthread_mutex_lock(mutex, info)
 
-        do index = 1, 100
-            ! pthread_mutex_lock(&mutex)
             if (pingpong) then
                 print *, 'Ping'
                 pingpong = .false.
-            !else
-                !index = index - 1
             end if
-            ! pthread_mutex_unlock(&mutex)
+
+            call pthread_mutex_unlock(mutex, info)
         end do
 
         ! pthread_exit(0)
     end subroutine
 
     subroutine pong(argument)
-        integer, intent(in) :: argument
+        integer :: argument
         integer index
+        integer info
 
-        do index = 1, 100
-            ! pthread_mutex_lock(&mutex)
+        do index = 1, 10
+            call pthread_mutex_lock(mutex, info)
+
             if (pingpong .ne. .true.) then
                 print *, 'Pong'
                 pingpong = .true.
-            !else
-                !index = index - 1
             end if
-            ! pthread_mutex_unlock(&mutex)
+
+            call pthread_mutex_unlock(mutex, info)
         end do
 
         ! pthread_exit(0)

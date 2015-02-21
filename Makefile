@@ -1,7 +1,7 @@
 FC = ifort
 CC = clang
-FFLAGS  = -c -debug all -free -module Modules
-CFLAGS  = -c -g
+FFLAGS  = -c -debug all -free -module Modules -reentrancy threaded
+CFLAGS  = -c -g -pthread
 LDFLAGS =
 
 INTERFACES = Searches/Search.f \

@@ -36,17 +36,3 @@ void thread_mutex_init(int *mutex_id, int *attribute_id, int *info);
 void thread_mutex_lock(int *mutex_id, int *info);
 void thread_mutex_unlock(int *mutex_id, int *info);
 void thread_mutex_destroy(int *mutex_id, int *info);
-
-/*
-void thread_condition_init(int *condition_id, int *attribute_id, int *info);
-void thread_condition_destroy(int *condition_id, int *info);
-
-void thread_barrier_init(int *barrier_id, int *attribute_id, int *count, int *info);
-void thread_barrier_destroy(int *barrier_id, int *info);
-
-void thread_spin_init(int *spinlock_id, int *pshared, int *info);
-void thread_spin_destroy(int *spinlock_id, int *info);
-
-void thread_rwlock_init(int *rwlock_id, int *attribute_id, int *info);
-void thread_rwlock_destroy(int *rwlock_id, int *info);
-*/
