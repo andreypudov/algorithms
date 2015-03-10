@@ -24,47 +24,60 @@
 ! THE SOFTWARE.
 !
 
-module MSequenceSearch
+module MUFibonacci
 
-    use MSearch
+    use MFibonacci
+    use MUAsserts
+    use MUReport
 
     implicit none
     private
 
-    type, extends(TSearch), public :: TSequenceSearch
+    integer, parameter :: NUMBER_OF_ITERATIONS = 6000000
+
+    type, public :: TUFibonacci
     contains
-        procedure, nopass :: search
+        procedure :: present
     end type
 
 contains
-    function search(array, key, begin, end) result(position)
-        integer, dimension(:), intent(in) :: array
-        integer, intent(in)               :: key
-        integer, optional, intent(in)     :: begin
-        integer, optional, intent(in)     :: end
-        integer :: position
+    subroutine present(instance)
+        class(TUFibonacci), intent(in) :: instance
 
-        integer low
-        integer high
+        call fibonacciRecursive()
+        call fibonacciIterate()
+        print *, ''
+    end subroutine
+
+    subroutine fibonacciRecursive()
+        type(TFibonacci) :: fibonacci
         integer index
+        integer value
+        real    start
 
-        if (present(begin) .and. present(end)) then
-            low  = begin
-            high = end
-        else
-            low  = 1
-            high = size(array)
-        end if
+        call cpu_time(start)
 
-        ! sequence search
-
-        do index = low, high
-            if (array(index) .eq. key) then
-                position = index
-                return
-            end if
+        do index = 1, NUMBER_OF_ITERATIONS
+            value = fibonacci%fibonacciRecursive(10)
+            call assert_equals(value, 55)
         end do
 
-        position = -1
-    end function
+        call report('Fibonacci', 'Recursive', '', start)
+    end subroutine
+
+    subroutine fibonacciIterate()
+        type(TFibonacci) :: fibonacci
+        integer index
+        integer value
+        real    start
+
+        call cpu_time(start)
+
+        do index = 1, NUMBER_OF_ITERATIONS
+            value = fibonacci%fibonacciIterate(10)
+            call assert_equals(value, 55)
+        end do
+
+        call report('Fibonacci', 'Iterate', '', start)
+    end subroutine
 end module

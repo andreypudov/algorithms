@@ -27,18 +27,17 @@
 module MBinarySearch
 
     use MSearch
-    
+
     implicit none
     private
 
     type, extends(TSearch), public :: TBinarySearch
     contains
-        procedure :: search
+        procedure, nopass :: search
     end type
 
 contains
-    function search(instance, array, key, begin, end) result(position)
-        class(TBinarySearch), intent(in)  :: instance
+    function search(array, key, begin, end) result(position)
         integer, dimension(:), intent(in) :: array
         integer, intent(in)               :: key
         integer, optional, intent(in)     :: begin
@@ -48,7 +47,7 @@ contains
         integer low
         integer middle
         integer high
-        
+
         if (present(begin) .and. present(end)) then
             low  = begin
             high = end
@@ -69,7 +68,7 @@ contains
             else
                 position = middle
                 return
-            end if         
+            end if
         end do
 
         position = -(low)

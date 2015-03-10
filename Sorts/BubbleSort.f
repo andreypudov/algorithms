@@ -27,21 +27,20 @@
 module MBubbleSort
 
     use MSort
-    
+
     implicit none
     private
 
     type, extends(TSort), public :: TBubbleSort
     contains
-        procedure :: sort => sortFlagged
-        
-        procedure :: sortOriginal
-        procedure :: sortInversed
-        procedure :: sortFlagged
+        procedure, nopass :: sort => sortFlagged
+
+        procedure, nopass :: sortOriginal
+        procedure, nopass :: sortInversed
+        procedure, nopass :: sortFlagged
     end type
 contains
-    subroutine sortOriginal(instance, array)
-        class(TBubbleSort), intent(in)        :: instance
+    subroutine sortOriginal(array)
         integer, dimension(:), intent(in out) :: array
 
         integer index
@@ -59,8 +58,7 @@ contains
         end do
     end subroutine
 
-    subroutine sortInversed(instance, array)
-        class(TBubbleSort), intent(in)        :: instance
+    subroutine sortInversed(array)
         integer, dimension(:), intent(in out) :: array
 
         integer index
@@ -77,23 +75,22 @@ contains
             end do
         end do
     end subroutine
-    
-    subroutine sortFlagged(instance, array)
-        class(TBubbleSort), intent(in)        :: instance
+
+    subroutine sortFlagged(array)
         integer, dimension(:), intent(in out) :: array
-        
+
         integer index
         integer jndex
         integer temp
         logical flag
-            
+
         ! initial value
         jndex = size(array) - 1
         flag  = .true.
-            
+
         do while (flag)
             flag = .false.
-                
+
             do index = 1, jndex
                 if (array(index) > array(index + 1)) then
                     temp             = array(index)
@@ -106,5 +103,5 @@ contains
 
             jndex = jndex - 1
         end do
-    end subroutine        
+    end subroutine
 end module

@@ -31,14 +31,13 @@ module MSort
 
     type, abstract :: TSort
     contains
-        procedure(ISort), deferred :: sort
+        procedure(ISort), nopass, deferred :: sort
     end type
 
     abstract interface
-        subroutine ISort(instance, array)
+        subroutine ISort(array)
             import TSort
 
-            class(TSort), intent(in)              :: instance
             integer, dimension(:), intent(in out) :: array
         end subroutine
     end interface

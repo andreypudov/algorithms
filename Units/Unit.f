@@ -26,6 +26,9 @@
 
 module MUnit
 
+    use MUFibonacci
+    use MUGreatestCommonDivisor
+
     use MUSearch
     use MUShift
     use MUSort
@@ -33,6 +36,8 @@ module MUnit
     use MUBubbleSort
     use MUInsertionSort
     use MUMergeSort
+    use MUSelectionSort
+    use MUShellSort
 
     use MUArrayStack
     use MUArrayQueue
@@ -50,6 +55,9 @@ contains
     subroutine present(instance)
         class(TUnit), intent(in) :: instance
 
+        type(TUFibonacci)             fibonacci
+        type(TUGreatestCommonDivisor) greatestCommonDivisor
+
         type(TUSearch) search
         type(TUShift)  shift
         type(TUSort)   sort
@@ -57,10 +65,15 @@ contains
         type(TUBubbleSort)    bubbleSort
         type(TUInsertionSort) insertionSort
         type(TUMergeSort)     mergeSort
+        type(TUSelectionSort) selectionSort
+        type(TUShellSort)     shellSort
 
         type(TUArrayStack) arrayStack
         type(TUArrayQueue) arrayQueue
         type(TULinkedList) linkedList
+
+        !call fibonacci%present()
+        !call greatestCommonDivisor%present()
 
         !call search%present()
         !call shift%present()
@@ -69,8 +82,10 @@ contains
         !call bubbleSort%present()
         !call insertionSort%present()
         !call mergeSort%present()
+        call selectionSort%present()
+        call shellSort%present()
 
-        call arrayStack%present()
+        !call arrayStack%present()
         !call arrayQueue%present()
         !call linkedList%present()
     end subroutine

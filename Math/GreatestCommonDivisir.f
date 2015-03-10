@@ -24,19 +24,38 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MExample
-    use MUnit
+module MGreatestCommonDivisor
 
     implicit none
+    private
 
-    type(TExample) example
-    type(TUnit)    unit
+    type, public :: TGreatestCommonDivisor
+    contains
+        procedure, nopass :: gcd => gcdOriginal
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+        procedure, nopass :: gcdOriginal
+    end type
+contains
+    function gcdOriginal(value1, value2) result(gcd)
+        integer, intent(in) :: value1
+        integer, intent(in) :: value2
+        integer :: gcd
+        integer :: v1
+        integer :: v2
 
-    !call example%present()
-    call unit%present()
-end program
+        v1 = value1
+        v2 = value2
+
+        do while (v1 > 0)
+            if (v1 < v2) then
+                gcd = v1
+                v1  = v2
+                v2  = gcd
+            end if
+
+            v1 = v1 - v2
+        end do
+
+        gcd = v2
+    end function
+end module

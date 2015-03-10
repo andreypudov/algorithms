@@ -24,20 +24,18 @@
 ! THE SOFTWARE.
 !
 
-module MInsertionSort
+module MSelectionSort
 
     use MSort
-    use MBinarySearch
 
     implicit none
     private
 
-    type, extends(TSort), public :: TInsertionSort
+    type, extends(TSort), public :: TSelectionSort
     contains
-        procedure, nopass :: sort => sortBinary
+        procedure, nopass :: sort => sortOriginal
 
         procedure, nopass :: sortOriginal
-        procedure, nopass :: sortBinary
     end type
 
 contains
@@ -45,46 +43,22 @@ contains
         integer, dimension(:), intent(in out) :: array
 
         integer index
-        integer location
-        integer key
-
-        do index = 2, size(array)
-            key      = array(index)
-            location = index - 1
-
-            do while ((location > 0) .and. (array(location) > key))
-                array(location + 1) = array(location)
-                location = location - 1
-            end do
-
-            array(location + 1) = key
-        end do
-    end subroutine
-
-    subroutine sortBinary(array)
-        integer, dimension(:), intent(in out) :: array
-
-        type(TBinarySearch) :: BinarySearch
-
-        integer index
         integer jndex
-        integer location
-        integer key
+        integer buffer
+        integer min
 
-        do index = 2, size(array)
-            key      = array(index)
-            location = BinarySearch%search(array, key, 1, index)
+        do index = 1, size(array)
+            min = index
 
-            if (location < 1) then
-                location = -location
-            end if
-
-            !array(location + 1:index) = array(location:index - 1)
-
-            do jndex = index - 1, location, -1
-                array(jndex + 1) = array(jndex)
+            do jndex = index + 1, size(array)
+                if (array(jndex) < array(min)) then
+                    min = jndex
+                end if
             end do
-            array(location) = key
+
+            buffer       = array(min)
+            array(min)   = array(index)
+            array(index) = buffer
         end do
     end subroutine
 end module

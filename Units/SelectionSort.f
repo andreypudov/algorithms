@@ -24,26 +24,26 @@
 ! THE SOFTWARE.
 !
 
-module MUMergeSort
+module MUSelectionSort
 
     use MArrays
-    use MMergeSort
+    use MSelectionSort
     use MUAsserts
     use MUReport
 
     implicit none
     private
 
-    type, public :: TUMergeSort
+    type, public :: TUSelectionSort
     contains
         procedure :: present
     end type
 contains
     subroutine present(instance)
-        class(TUMergeSort), intent(in) :: instance
+        class(TUSelectionSort), intent(in) :: instance
         type(TArrays) :: arrays
 
-        integer, parameter :: NUMBER_OF_ELEMENTS = 12!25000
+        integer, parameter :: NUMBER_OF_ELEMENTS = 25000
         integer, dimension(NUMBER_OF_ELEMENTS, 4) :: ARRAY
 
         character(len=24), dimension(4) :: SEQUENCES = &
@@ -61,7 +61,7 @@ contains
         integer, dimension(:,:), intent(in)        :: arrays
         character(len=*), dimension(:), intent(in) :: sequences
 
-        type(TMergeSort)                    :: mergeSort
+        type(TSelectionSort)                :: selectionSort
         integer, dimension(size(arrays, 1)) :: copy
         integer index
         real    start
@@ -70,9 +70,9 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call mergeSort%sortOriginalWrapper(copy)
+            call selectionSort%sortOriginal(copy)
 
-            call report('MergeSort', 'Original', sequences(index), start)
+            call report('SelectionSort', 'Original', sequences(index), start)
             call assert_sorted(copy)
         end do
 

@@ -25,29 +25,28 @@
 !
 
 module MArrays
-    
+
     implicit none
     private
 
     type, public :: TArrays
     contains
-        procedure :: fillWithSequence
-        procedure :: fillWithDirtySequence
-        procedure :: fillWithRandom
-        procedure :: fillWithInversedSequence
-        
-        procedure :: isSorted
+        procedure, nopass :: fillWithSequence
+        procedure, nopass :: fillWithDirtySequence
+        procedure, nopass :: fillWithRandom
+        procedure, nopass :: fillWithInversedSequence
+
+        procedure, nopass :: isSorted
     end type
 
 contains
     !
     ! Fills the array with sequence from one to the last index.
     !
-    subroutine fillWithSequence(instance, array)
-        class(TArrays), intent(in)            :: instance
-        integer, dimension(:), intent(in out) :: array            
+    subroutine fillWithSequence(array)
+        integer, dimension(:), intent(in out) :: array
         integer index
-            
+
         array = (/ (index, index = 1, size(array)) /)
     end subroutine
 
@@ -55,30 +54,28 @@ contains
     ! Fills the array with sequence from one to the last index
     ! and ten percent ramdom values.
     !
-    subroutine fillWithDirtySequence(instance, array)
-        class(TArrays), intent(in)            :: instance
-        integer, dimension(:), intent(in out) :: array            
+    subroutine fillWithDirtySequence(array)
+        integer, dimension(:), intent(in out) :: array
 
         integer index
         integer step
 
         array = (/ (index, index = 1, size(array)) /)
         step  = size(array) / (size(array) * 0.1)
-        
+
         do index = step, size(array), step
             array(index) =  array(index) * 2
         end do
     end subroutine
-    
+
     !
     ! Fills the array with random numbers between zero and maximal
     ! value of type of the array.
     !
-    subroutine fillWithRandom(instance, array)
-        class(TArrays), intent(in)            :: instance
+    subroutine fillWithRandom(array)
         integer, dimension(:), intent(in out) :: array
         real, dimension(size(array)) :: temporary
-            
+
         call random_seed()
         call random_number(temporary)
 
@@ -88,21 +85,19 @@ contains
     !
     ! Fills the array with sequence from last index of array to the one.
     !
-    subroutine fillWithInversedSequence(instance, array)
-        class(TArrays), intent(in)            :: instance
-        integer, dimension(:), intent(in out) :: array            
+    subroutine fillWithInversedSequence(array)
+        integer, dimension(:), intent(in out) :: array
         integer index
-            
+
         array = (/ (index, index = size(array), 1, -1) /)
     end subroutine
-    
+
     !
     ! Validates given array to be sorted.
     !
-    function isSorted(instance, array) result(sorted)
-        class(TArrays), intent(in)        :: instance
+    function isSorted(array) result(sorted)
         integer, dimension(:), intent(in) :: array
-        logical                           :: sorted  
+        logical                           :: sorted
 
         integer index
 
@@ -110,7 +105,7 @@ contains
             if (array(index - 1) > array(index)) then
                 sorted =  .false.
                 return
-            end if  
+            end if
          end do
 
          sorted = .true.

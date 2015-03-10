@@ -31,49 +31,45 @@ module MShift
 
     type, public :: TShift
     contains
-        procedure :: shift     => shiftByLoop
-        procedure :: shiftBack => shiftBackByLoop
-        
-        procedure :: shiftByLoop
-        procedure :: shiftByAssignment
-        procedure :: shiftByIntrinsic
+        procedure, nopass :: shift     => shiftByLoop
+        procedure, nopass :: shiftBack => shiftBackByLoop
 
-        procedure :: shiftBackByLoop
+        procedure, nopass :: shiftByLoop
+        procedure, nopass :: shiftByAssignment
+        procedure, nopass :: shiftByIntrinsic
+
+        procedure, nopass :: shiftBackByLoop
     end type
 
-contains    
-    subroutine shiftByLoop(instance, array)
-        class(TShift), intent(in)             :: instance
+contains
+    subroutine shiftByLoop(array)
         integer, dimension(:), intent(in out) :: array
 
         integer index
-        
+
         do index = size(array) - 1, 1, -1
             array(index + 1) = array(index)
         end do
     end subroutine
 
-    subroutine shiftByAssignment(instance, array)
-        class(TShift), intent(in)             :: instance
+    subroutine shiftByAssignment(array)
         integer, dimension(:), intent(in out) :: array
 
         array(2:size(array)) = array(1:size(array) - 1)
     end subroutine
 
-    subroutine shiftByIntrinsic(instance, array)
-        class(TShift), intent(in)             :: instance
+    subroutine shiftByIntrinsic(array)
         integer, dimension(:), intent(in out) :: array
 
         array    = cshift(array, -1)
         array(1) = array(2) ! replace the last element of an array by first element
     end subroutine
 
-    subroutine shiftBackByLoop(instance, array)
-        class(TShift), intent(in)             :: instance
+    subroutine shiftBackByLoop(array)
         integer, dimension(:), intent(in out) :: array
 
         integer index
-        
+
         do index = 1, size(array) - 1
             array(index) = array(index + 1)
         end do

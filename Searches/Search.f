@@ -31,14 +31,11 @@ module MSearch
 
     type, abstract :: TSearch
     contains
-        procedure(ISearch), deferred :: search
+        procedure(ISearch), nopass, deferred :: search
     end type
 
     abstract interface
-        function ISearch(instance, array, key, begin, end) result(position)
-            import TSearch
-
-            class(TSearch), intent(in)        :: instance
+        function ISearch(array, key, begin, end) result(position)
             integer, dimension(:), intent(in) :: array
             integer, intent(in)               :: key
             integer, optional, intent(in)     :: begin

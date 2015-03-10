@@ -24,47 +24,44 @@
 ! THE SOFTWARE.
 !
 
-module MSequenceSearch
+module MUGreatestCommonDivisor
 
-    use MSearch
+    use MGreatestCommonDivisor
+    use MUAsserts
+    use MUReport
 
     implicit none
     private
 
-    type, extends(TSearch), public :: TSequenceSearch
+    integer, parameter :: NUMBER_OF_ITERATIONS = 10000000
+
+    type, public :: TUGreatestCommonDivisor
     contains
-        procedure, nopass :: search
+        procedure :: present
     end type
 
 contains
-    function search(array, key, begin, end) result(position)
-        integer, dimension(:), intent(in) :: array
-        integer, intent(in)               :: key
-        integer, optional, intent(in)     :: begin
-        integer, optional, intent(in)     :: end
-        integer :: position
+    subroutine present(instance)
+        class(TUGreatestCommonDivisor), intent(in) :: instance
 
-        integer low
-        integer high
+        call gcdOriginal()
+    end subroutine
+
+    subroutine gcdOriginal()
+        type(TGreatestCommonDivisor) :: greatestCommonDivisor
         integer index
+        integer gcd
+        real    start
 
-        if (present(begin) .and. present(end)) then
-            low  = begin
-            high = end
-        else
-            low  = 1
-            high = size(array)
-        end if
+        call cpu_time(start)
 
-        ! sequence search
-
-        do index = low, high
-            if (array(index) .eq. key) then
-                position = index
-                return
-            end if
+        do index = 1, NUMBER_OF_ITERATIONS
+            gcd = greatestCommonDivisor%gcdOriginal(461952, 116298)
+            call assert_equals(gcd, 18)
         end do
 
-        position = -1
-    end function
+        call report('GCD', 'Original', '', start)
+
+        print *, ''
+    end subroutine
 end module

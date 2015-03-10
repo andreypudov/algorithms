@@ -33,27 +33,48 @@ module MMergeSort
 
     type, extends(TSort), public :: TMergeSort
     contains
-        procedure :: sort => sortOriginal
+        procedure, nopass :: sort => sortOriginalWrapper
 
-        procedure :: sortOriginal
+        procedure, nopass :: sortOriginalWrapper
     end type
 contains
-    subroutine sortOriginal(instance, array)
-        class(TMergeSort), intent(in)         :: instance
+    subroutine sortOriginalWrapper(array)
         integer, dimension(:), intent(in out) :: array
 
-        integer index
-        integer jndex
-        integer temp
+        call sortOriginal(array, 1, size(array))
+    end subroutine
 
-        do index = size(array) - 1, 1, -1
-            do jndex = 1, index
-                if (array(jndex) > array(jndex + 1)) then
-                    temp             = array(jndex)
-                    array(jndex)     = array(jndex + 1)
-                    array(jndex + 1) = temp
-                end if
-            end do
+    recursive subroutine sortOriginal(array, begin, end)
+        integer, dimension(:), intent(in out) :: array
+        integer, intent(in)                   :: begin
+        integer, intent(in)                   :: end
+
+        integer middle
+
+        middle = begin + ((end - begin) / 2)
+        if (begin < end) then
+            print *, begin, middle, end
+            call sortOriginal(array, begin, middle)
+            call sortOriginal(array, middle + 1, end)
+
+            call mergeOriginal(array, begin, middle, end)
+        end if
+    end subroutine
+
+    subroutine mergeOriginal(array, begin, middle, end)
+        integer, dimension(:), intent(in out) :: array
+        integer, intent(in)                   :: begin
+        integer, intent(in)                   :: middle
+        integer, intent(in)                   :: end
+
+        integer, dimension(end - begin + 1) :: buffer
+        integer :: key1 = 1
+        integer :: key2 = 1
+
+        ! 1 3 5
+        ! 2 4 6
+        do while (key1 < size(buffer) .and. key2 < size(buffer))
+            !if ()
         end do
     end subroutine
 end module

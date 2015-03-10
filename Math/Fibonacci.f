@@ -24,19 +24,46 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MExample
-    use MUnit
+module MFibonacci
 
     implicit none
+    private
 
-    type(TExample) example
-    type(TUnit)    unit
+    type, public :: TFibonacci
+    contains
+        procedure, nopass :: fibonacci => fibonacciRecursive
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+        procedure, nopass :: fibonacciRecursive
+        procedure, nopass :: fibonacciIterate
+    end type
+contains
+    recursive function fibonacciRecursive(position) result(fibonacci)
+        integer, intent(in) :: position
+        integer :: fibonacci
 
-    !call example%present()
-    call unit%present()
-end program
+        if (position <= 2) then
+            fibonacci = 1
+            return
+        end if
+
+        fibonacci = fibonacciRecursive(position - 1) + fibonacciRecursive(position - 2)
+    end function
+
+    function fibonacciIterate(position) result(fibonacci)
+        integer, intent(in) :: position
+        integer :: fibonacci
+
+        integer, dimension(10), save :: buffer
+        integer, save                :: index  = 3
+        buffer(1) = 1
+        buffer(2) = 1
+
+        if (buffer(position) == 0) then
+            do index = index, position
+                buffer(index) = buffer(index - 1) + buffer(index - 2)
+            end do
+        end if
+
+        fibonacci = buffer(position)
+    end function
+end module

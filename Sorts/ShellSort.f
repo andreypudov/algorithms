@@ -24,20 +24,18 @@
 ! THE SOFTWARE.
 !
 
-module MInsertionSort
+module MShellSort
 
     use MSort
-    use MBinarySearch
 
     implicit none
     private
 
-    type, extends(TSort), public :: TInsertionSort
+    type, extends(TSort), public :: TShellSort
     contains
-        procedure, nopass :: sort => sortBinary
+        procedure, nopass :: sort => sortOriginal
 
         procedure, nopass :: sortOriginal
-        procedure, nopass :: sortBinary
     end type
 
 contains
@@ -45,46 +43,29 @@ contains
         integer, dimension(:), intent(in out) :: array
 
         integer index
-        integer location
-        integer key
-
-        do index = 2, size(array)
-            key      = array(index)
-            location = index - 1
-
-            do while ((location > 0) .and. (array(location) > key))
-                array(location + 1) = array(location)
-                location = location - 1
-            end do
-
-            array(location + 1) = key
-        end do
-    end subroutine
-
-    subroutine sortBinary(array)
-        integer, dimension(:), intent(in out) :: array
-
-        type(TBinarySearch) :: BinarySearch
-
-        integer index
         integer jndex
-        integer location
-        integer key
+        integer head
+        integer value
 
-        do index = 2, size(array)
-            key      = array(index)
-            location = BinarySearch%search(array, key, 1, index)
+        head = 1
+        do while (head <= size(array) / 9)
+            head = 3 * head + 1
+        end do
 
-            if (location < 1) then
-                location = -location
-            end if
+        do while (head > 0)
+            do index = head + 1, size(array)
+                value = array(index)
+                jndex = index
 
-            !array(location + 1:index) = array(location:index - 1)
+                do while ((jndex > head) .and. (array(jndex - head) > value))
+                    array(jndex) = array(jndex - head)
+                    jndex = jndex - head
+                end do
 
-            do jndex = index - 1, location, -1
-                array(jndex + 1) = array(jndex)
+                array(jndex) = value
             end do
-            array(location) = key
+
+            head = head / 3
         end do
     end subroutine
 end module

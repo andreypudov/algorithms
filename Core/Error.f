@@ -24,47 +24,28 @@
 ! THE SOFTWARE.
 !
 
-module MSequenceSearch
-
-    use MSearch
+module MError
 
     implicit none
-    private
+    public
 
-    type, extends(TSearch), public :: TSequenceSearch
-    contains
-        procedure, nopass :: search
-    end type
+    integer, parameter :: NumberFormatException = 1
 
+    ! the global error number indicator
+    integer, private :: error_number = 0
+
+    ! the global error message provided in user code
+    character(len=80), private :: error_message = ""
 contains
-    function search(array, key, begin, end) result(position)
-        integer, dimension(:), intent(in) :: array
-        integer, intent(in)               :: key
-        integer, optional, intent(in)     :: begin
-        integer, optional, intent(in)     :: end
-        integer :: position
+    subroutine throw(error, message)
+        integer,                    intent(in) :: error
+        character(len=*), optional, intent(in) :: message
 
-        integer low
-        integer high
-        integer index
-
-        if (present(begin) .and. present(end)) then
-            low  = begin
-            high = end
+        error_number = error
+        if (present(message)) then
+            error_message = message
         else
-            low  = 1
-            high = size(array)
+            error_message = ""
         end if
-
-        ! sequence search
-
-        do index = low, high
-            if (array(index) .eq. key) then
-                position = index
-                return
-            end if
-        end do
-
-        position = -1
-    end function
+    end subroutine
 end module
