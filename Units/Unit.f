@@ -36,6 +36,7 @@ module MUnit
     use MUBubbleSort
     use MUInsertionSort
     use MUMergeSort
+    use MUQuickSort
     use MUSelectionSort
     use MUShellSort
 
@@ -65,6 +66,7 @@ contains
         type(TUBubbleSort)    bubbleSort
         type(TUInsertionSort) insertionSort
         type(TUMergeSort)     mergeSort
+        type(TUQuickSort)     quickSort
         type(TUSelectionSort) selectionSort
         type(TUShellSort)     shellSort
 
@@ -82,7 +84,8 @@ contains
         !call bubbleSort%present()
         !call insertionSort%present()
         !call mergeSort%present()
-        call selectionSort%present()
+        call quickSort%present()
+        !call selectionSort%present()
         call shellSort%present()
 
         !call arrayStack%present()

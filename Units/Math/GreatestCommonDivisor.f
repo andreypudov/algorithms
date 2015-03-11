@@ -37,13 +37,11 @@ module MUGreatestCommonDivisor
 
     type, public :: TUGreatestCommonDivisor
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 
 contains
-    subroutine present(instance)
-        class(TUGreatestCommonDivisor), intent(in) :: instance
-
+    subroutine present()
         call gcdOriginal()
     end subroutine
 

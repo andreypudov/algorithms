@@ -35,12 +35,10 @@ module MUArrayStack
 
     type, public :: TUArrayStack
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TUArrayStack), intent(in) :: instance
-
+    subroutine present()
         integer, parameter :: NUMBER_OF_ELEMENTS = 2000000
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 

@@ -35,11 +35,10 @@ module MUShift
 
     type, public :: TUShift
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TUShift), intent(in) :: instance
+    subroutine present()
         type(TArrays) :: arrays
 
         integer, parameter :: NUMBER_OF_ELEMENTS = 1000000

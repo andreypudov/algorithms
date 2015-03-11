@@ -24,28 +24,26 @@
 ! THE SOFTWARE.
 !
 
-module MUSearch
+module MUSort
 
     use MArrays
-    use MBinarySearch
-    use MSequenceSearch
+    use MBubbleSort
+    use MInsertionSort
     use MUAsserts
     use MUReport
 
     implicit none
     private
 
-    integer, parameter :: NUMBER_OF_ELEMENTS = 2096164
+    integer, parameter :: NUMBER_OF_ELEMENTS = 100000
 
-    type, public :: TUSearch
+    type, public :: TUSort
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 
 contains
-    subroutine present(instance)
-        class(TUSearch), intent(in) :: instance
-
+    subroutine present()
         type(TArrays) :: arrays
 
         integer, dimension(NUMBER_OF_ELEMENTS, 4) :: array
@@ -57,46 +55,49 @@ contains
         call arrays%fillWithRandom(array(1:NUMBER_OF_ELEMENTS, 3))
         call arrays%fillWithInversedSequence(array(1:NUMBER_OF_ELEMENTS, 4))
 
-        call binarySearch(array(1:NUMBER_OF_ELEMENTS, 1), sequences)
-        call sequenceSearch(array, sequences)
+        call bubbleSort(array, sequences)
+        call insertionSort(array, sequences)
     end subroutine
 
-    subroutine binarySearch(array, sequences)
-        integer, dimension(:), intent(in)           :: array
-        character(len=*), dimension(:), intent(in)  :: sequences
-
-        type(TBinarySearch) :: search
-        integer index
-        integer position
-        real    start
-
-        call cpu_time(start)
-        position = search%search(array, array(size(array) / 2))
-
-        call report('Search', 'BinarySearch', sequences(1), start)
-        call assert_equals(array(position), array(size(array) / 2))
-
-        print *, ''
-    end subroutine
-
-    subroutine sequenceSearch(arrays, sequences)
+    subroutine bubbleSort(arrays, sequences)
         integer, target, dimension(:,:), intent(in) :: arrays
         character(len=*), dimension(:), intent(in)  :: sequences
 
-        type(TSequenceSearch) :: search
-        integer, pointer    :: array(:)
+        type(TBubbleSort) :: sort
+        integer, pointer  :: array(:)
         integer index
-        integer position
         real    start
 
         do index = 1, size(arrays, 2)
             array => arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            position = search%search(array, array(size(array) / 2))
+            call sort%sort(array)
 
-            call report('Search', 'SequenceSearch', sequences(index), start)
-            call assert_equals(array(position), array(size(array) / 2))
+            call report('BubbleSort', '', sequences(index), start)
+            call assert_sorted(array)
+        end do
+
+        print *, ''
+    end subroutine
+
+    subroutine insertionSort(arrays, sequences)
+        integer, target, dimension(:,:), intent(in) :: arrays
+        character(len=*), dimension(:), intent(in)  :: sequences
+
+        type(TInsertionSort) :: sort
+        integer, pointer  :: array(:)
+        integer index
+        real    start
+
+        do index = 1, size(arrays, 2)
+            array => arrays(1:size(arrays, 1), index)
+
+            call cpu_time(start)
+            call sort%sort(array)
+
+            call report('InsertionSort', '', sequences(index), start)
+            call assert_sorted(array)
         end do
 
         print *, ''

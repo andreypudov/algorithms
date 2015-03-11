@@ -34,12 +34,10 @@ module MULinkedList
 
     type, public :: TULinkedList
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TULinkedList), intent(in) :: instance
-
+    subroutine present()
         integer, parameter :: NUMBER_OF_ELEMENTS = 300000
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 

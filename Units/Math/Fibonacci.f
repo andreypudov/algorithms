@@ -37,13 +37,11 @@ module MUFibonacci
 
     type, public :: TUFibonacci
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 
 contains
-    subroutine present(instance)
-        class(TUFibonacci), intent(in) :: instance
-
+    subroutine present()
         call fibonacciRecursive()
         call fibonacciIterate()
         print *, ''

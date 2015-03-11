@@ -36,11 +36,10 @@ module MUBubbleSort
 
     type, public :: TUBubbleSort
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TUBubbleSort), intent(in) :: instance
+    subroutine present()
         type(TArrays) :: arrays
 
         integer, parameter :: NUMBER_OF_ELEMENTS = 25000

@@ -24,23 +24,22 @@
 ! THE SOFTWARE.
 !
 
-module MUShellSort
+module MUSelectionSort
 
     use MArrays
-    use MShellSort
+    use MSelectionSort
     use MUAsserts
     use MUReport
 
     implicit none
     private
 
-    type, public :: TUShellSort
+    type, public :: TUSelectionSort
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TUShellSort), intent(in) :: instance
+    subroutine present()
         type(TArrays) :: arrays
 
         integer, parameter :: NUMBER_OF_ELEMENTS = 25000
@@ -61,7 +60,7 @@ contains
         integer, dimension(:,:), intent(in)        :: arrays
         character(len=*), dimension(:), intent(in) :: sequences
 
-        type(TShellSort)                    :: shellSort
+        type(TSelectionSort)                :: selectionSort
         integer, dimension(size(arrays, 1)) :: copy
         integer index
         real    start
@@ -70,9 +69,9 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call shellSort%sortOriginal(copy)
+            call selectionSort%sortOriginal(copy)
 
-            call report('ShellSort', 'Original', sequences(index), start)
+            call report('SelectionSort', 'Original', sequences(index), start)
             call assert_sorted(copy)
         end do
 
