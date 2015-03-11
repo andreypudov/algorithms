@@ -33,18 +33,18 @@ module MMergeSort
 
     type, extends(TSort), public :: TMergeSort
     contains
-        procedure, nopass :: sort => sortOriginalWrapper
+        procedure, nopass :: sort => sortOriginal
 
-        procedure, nopass :: sortOriginalWrapper
+        procedure, nopass :: sortOriginal
     end type
 contains
-    subroutine sortOriginalWrapper(array)
+    subroutine sortOriginal(array)
         integer, dimension(:), intent(in out) :: array
 
-        call sortOriginal(array, 1, size(array))
+        call sortOriginalProc(array, 1, size(array))
     end subroutine
 
-    recursive subroutine sortOriginal(array, begin, end)
+    recursive subroutine sortOriginalProc(array, begin, end)
         integer, dimension(:), intent(in out) :: array
         integer, intent(in)                   :: begin
         integer, intent(in)                   :: end
@@ -54,8 +54,8 @@ contains
         middle = begin + ((end - begin) / 2)
         if (begin < end) then
             print *, begin, middle, end
-            call sortOriginal(array, begin, middle)
-            call sortOriginal(array, middle + 1, end)
+            call sortOriginalProc(array, begin, middle)
+            call sortOriginalProc(array, middle + 1, end)
 
             call mergeOriginal(array, begin, middle, end)
         end if

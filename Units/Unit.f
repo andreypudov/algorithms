@@ -37,6 +37,7 @@ module MUnit
     use MUInsertionSort
     use MUMergeSort
     use MUQuickSort
+    use MURadixSort
     use MUSelectionSort
     use MUShellSort
 
@@ -67,6 +68,7 @@ contains
         type(TUInsertionSort) insertionSort
         type(TUMergeSort)     mergeSort
         type(TUQuickSort)     quickSort
+        type(TURadixSort)     radixSort
         type(TUSelectionSort) selectionSort
         type(TUShellSort)     shellSort
 
@@ -85,8 +87,9 @@ contains
         !call insertionSort%present()
         !call mergeSort%present()
         call quickSort%present()
+        call radixSort%present()
         !call selectionSort%present()
-        call shellSort%present()
+        !call shellSort%present()
 
         !call arrayStack%present()
         !call arrayQueue%present()

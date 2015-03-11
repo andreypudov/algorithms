@@ -69,7 +69,7 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call mergeSort%sortOriginalWrapper(copy)
+            call mergeSort%sortOriginal(copy)
 
             call report('MergeSort', 'Original', sequences(index), start)
             call assert_sorted(copy)

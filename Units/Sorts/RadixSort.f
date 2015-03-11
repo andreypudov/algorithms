@@ -24,17 +24,17 @@
 ! THE SOFTWARE.
 !
 
-module MUQuickSort
+module MURadixSort
 
     use MArrays
-    use MQuickSort
+    use MRadixSort
     use MUAsserts
     use MUReport
 
     implicit none
     private
 
-    type, public :: TUQuickSort
+    type, public :: TURadixSort
     contains
         procedure, nopass :: present
     end type
@@ -53,15 +53,14 @@ contains
         call arrays%fillWithRandom(ARRAY(1:NUMBER_OF_ELEMENTS, 3))
         call arrays%fillWithInversedSequence(ARRAY(1:NUMBER_OF_ELEMENTS, 4))
 
-        call sortOriginal(ARRAY, SEQUENCES)
-        call sortStackBased(ARRAY, SEQUENCES)
+        call sortExchange(ARRAY, SEQUENCES)
     end subroutine
 
-    subroutine sortOriginal(arrays, sequences)
+    subroutine sortExchange(arrays, sequences)
         integer, dimension(:,:), intent(in)        :: arrays
         character(len=*), dimension(:), intent(in) :: sequences
 
-        type(TQuickSort)                    :: quickSort
+        type(TRadixSort)                    :: radixSort
         integer, dimension(size(arrays, 1)) :: copy
         integer index
         real    start
@@ -70,31 +69,9 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call quickSort%sortOriginal(copy)
+            call radixSort%sortExchange(copy)
 
-            call report('QuickSort', 'Original', sequences(index), start)
-            call assert_sorted(copy)
-        end do
-
-        print *, ''
-    end subroutine
-
-    subroutine sortStackBased(arrays, sequences)
-        integer, dimension(:,:), intent(in)        :: arrays
-        character(len=*), dimension(:), intent(in) :: sequences
-
-        type(TQuickSort)                    :: quickSort
-        integer, dimension(size(arrays, 1)) :: copy
-        integer index
-        real    start
-
-        do index = 1, size(arrays, 2)
-            copy = arrays(1:size(arrays, 1), index)
-
-            call cpu_time(start)
-            call quickSort%sortStackBased(copy)
-
-            call report('QuickSort', 'StackBased', sequences(index), start)
+            call report('RadixSort', 'Exchange', sequences(index), start)
             call assert_sorted(copy)
         end do
 

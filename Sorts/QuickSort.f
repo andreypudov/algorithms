@@ -26,6 +26,7 @@
 
 module MQuickSort
 
+    use MArrayStack
     use MSort
 
     implicit none
@@ -33,60 +34,113 @@ module MQuickSort
 
     type, extends(TSort), public :: TQuickSort
     contains
-        procedure, nopass :: sort => sortOriginalWrapper
+        procedure, nopass :: sort => sortOriginal
 
-        procedure, nopass :: sortOriginalWrapper
+        procedure, nopass :: sortOriginal
+        procedure, nopass :: sortStackBased
     end type
 
 contains
-    subroutine sortOriginalWrapper(array)
+    subroutine sortOriginal(array)
         integer, dimension(:), intent(in out) :: array
 
-        call sortOriginal(array, 1, size(array))
+        call sortOriginalProc(array, 1, size(array))
     end subroutine
 
-    recursive subroutine sortOriginal(array, left, right)
+    recursive subroutine sortOriginalProc(array, left, right)
         integer, dimension(:), intent(in out) :: array
         integer, intent(in) :: left
         integer, intent(in) :: right
 
+        integer pivot
+
+        if (right > left) then
+            pivot = partition(array, left, right)
+
+            call sortOriginalProc(array, left, pivot - 1)
+            call sortOriginalProc(array, pivot + 1, right)
+        end if
+    end subroutine
+
+    subroutine sortStackBased(array)
+        integer, dimension(:), intent(in out) :: array
+
+        type(TArrayStack) :: stack
         integer index
+        integer left
+        integer right
+
+        call stack%init()
+
+        left  = 1
+        right = size(array)
+
+        do
+            do while (right > left)
+                index = partition(array, left, right)
+
+                if (index - left > right - index) then
+                    call stack%push(left)
+                    call stack%push(index - 1)
+
+                    left = index + 1
+                else
+                    call stack%push(index + 1)
+                    call stack%push(right)
+
+                    right = index - 1
+                end if
+            end do
+
+            ! stack is empty
+            if (stack%peek() == 0) then
+                exit
+            end if
+
+            right = stack%pop()
+            left  = stack%pop()
+        end do
+
+        call stack%destroy()
+    end subroutine
+
+    function partition(array, left, right) result(pivot)
+        integer, dimension(:), intent(in out) :: array
+        integer, intent(in) :: left
+        integer, intent(in) :: right
+
+        integer pivot
         integer jndex
         integer value
         integer buffer
 
-        if (right > left) then
-            value = array(right)
-            index = left - 1
-            jndex = right
+        value = array(right)
+        pivot = left - 1
+        jndex = right
 
-            do
-                index = index + 1
-                jndex = jndex - 1
+        do
+            pivot = pivot + 1
+            jndex = jndex - 1
 
-                do while (array(index) < value)
-                    index = index + 1
-                end do
-
-                do while (array(jndex) > value)
-                    jndex = jndex - 1
-                end do
-
-                if (index >= jndex) then
-                    exit
-                end if
-
-                buffer       = array(index)
-                array(index) = array(jndex)
-                array(jndex) = buffer
+            do while (array(pivot) < value)
+                pivot = pivot + 1
             end do
 
-            buffer       = array(index)
-            array(index) = array(right)
-            array(right) = buffer
+            do while (array(jndex) > value)
+                jndex = jndex - 1
+            end do
 
-            call sortOriginal(array, left, index - 1)
-            call sortOriginal(array, index + 1, right)
-        end if
-    end subroutine
+            if (pivot >= jndex) then
+                exit
+            end if
+
+            buffer       = array(pivot)
+            array(pivot) = array(jndex)
+            array(jndex) = buffer
+        end do
+
+        buffer       = array(pivot)
+        array(pivot) = array(right)
+        array(right) = buffer
+    end function
 end module

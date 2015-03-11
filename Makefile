@@ -7,6 +7,7 @@ LDFLAGS =
 INTERFACES = Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
              Sorts/Sort.f   \
+			 Structures/ArrayStack.f \
 		     Units/Report.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
 EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/*) \
