@@ -29,6 +29,8 @@ module MUnit
     use MUFibonacci
     use MUGreatestCommonDivisor
 
+    use MULinearCongruential
+
     use MUSearch
     use MUShift
     use MUSort
@@ -60,6 +62,8 @@ contains
         type(TUFibonacci)             fibonacci
         type(TUGreatestCommonDivisor) greatestCommonDivisor
 
+        type(TULinearCongruential) linearCongruential
+
         type(TUSearch) search
         type(TUShift)  shift
         type(TUSort)   sort
@@ -79,6 +83,8 @@ contains
         !call fibonacci%present()
         !call greatestCommonDivisor%present()
 
+        call linearCongruential%present()
+
         !call search%present()
         !call shift%present()
 
@@ -86,8 +92,8 @@ contains
         !call bubbleSort%present()
         !call insertionSort%present()
         !call mergeSort%present()
-        call quickSort%present()
-        call radixSort%present()
+        !call quickSort%present()
+        !call radixSort%present()
         !call selectionSort%present()
         !call shellSort%present()
 

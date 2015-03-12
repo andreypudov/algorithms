@@ -28,7 +28,9 @@ module MUBubbleSort
 
     use MArrays
     use MBubbleSort
+
     use MUAsserts
+    use MUParameters
     use MUReport
 
     implicit none
@@ -42,7 +44,7 @@ contains
     subroutine present()
         type(TArrays) :: arrays
 
-        integer, parameter :: NUMBER_OF_ELEMENTS = 25000
+        integer, parameter :: NUMBER_OF_ELEMENTS = QUADRATIC_COMPLEXITY
         integer, dimension(NUMBER_OF_ELEMENTS, 4) :: ARRAY
 
         character(len=24), dimension(4) :: SEQUENCES = &

@@ -4,11 +4,12 @@ FFLAGS  = -c -debug all -free -module Modules -reentrancy threaded
 CFLAGS  = -c -g -pthread
 LDFLAGS =
 
-INTERFACES = Searches/Search.f \
+INTERFACES = Randoms/Random.f \
+	         Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
              Sorts/Sort.f   \
 			 Structures/ArrayStack.f \
-		     Units/Report.f
+		     Units/Parameters.f Units/Report.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
 EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/*) \
            $(patsubst %, ! -path './%', $(INTERFACES))
