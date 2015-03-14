@@ -28,6 +28,7 @@ module MUnit
 
     use MUFibonacci
     use MUGreatestCommonDivisor
+    use MUPi
 
     use MULinearCongruential
 
@@ -52,20 +53,41 @@ module MUnit
 
     type, public :: TUnit
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 
 contains
-    subroutine present(instance)
-        class(TUnit), intent(in) :: instance
-
+    subroutine present()
         type(TUFibonacci)             fibonacci
         type(TUGreatestCommonDivisor) greatestCommonDivisor
+        type (TUPi)                   pi
 
         type(TULinearCongruential) linearCongruential
 
         type(TUSearch) search
         type(TUShift)  shift
+
+        type(TUArrayStack) arrayStack
+        type(TUArrayQueue) arrayQueue
+        type(TULinkedList) linkedList
+
+        !call fibonacci%present()
+        !call greatestCommonDivisor%present()
+        call pi%present()
+
+        !call linearCongruential%present()
+
+        !call search%present()
+        !call shift%present()
+
+        !call sorts()
+
+        !call arrayStack%present()
+        !call arrayQueue%present()
+        !call linkedList%present()
+    end subroutine
+
+    subroutine sorts()
         type(TUSort)   sort
 
         type(TUBubbleSort)    bubbleSort
@@ -76,19 +98,8 @@ contains
         type(TUSelectionSort) selectionSort
         type(TUShellSort)     shellSort
 
-        type(TUArrayStack) arrayStack
-        type(TUArrayQueue) arrayQueue
-        type(TULinkedList) linkedList
+        call sort%present()
 
-        !call fibonacci%present()
-        !call greatestCommonDivisor%present()
-
-        call linearCongruential%present()
-
-        !call search%present()
-        !call shift%present()
-
-        !call sort%present()
         !call bubbleSort%present()
         !call insertionSort%present()
         !call mergeSort%present()
@@ -96,9 +107,5 @@ contains
         !call radixSort%present()
         !call selectionSort%present()
         !call shellSort%present()
-
-        !call arrayStack%present()
-        !call arrayQueue%present()
-        !call linkedList%present()
     end subroutine
 end module

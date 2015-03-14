@@ -1,7 +1,7 @@
 FC = ifort
 CC = clang
-FFLAGS  = -c -debug all -free -module Modules -reentrancy threaded
-CFLAGS  = -c -g -pthread
+FFLAGS  = -c -free -module Modules -reentrancy threaded # -debug all
+CFLAGS  = -c -pthread # -g
 LDFLAGS =
 
 INTERFACES = Randoms/Random.f \
