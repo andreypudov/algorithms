@@ -31,12 +31,27 @@ module MUAsserts
     implicit none
     public
 
+    interface assert_equals
+        module procedure assert_equals_int, assert_equals_real
+    end interface
 contains
-    subroutine assert_equals(value1, value2)
+    subroutine assert_equals_int(value1, value2)
         integer, intent(in) :: value1
         integer, intent(in) :: value2
 
         if (value1 .ne. value2) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
+
+    subroutine assert_equals_real(value1, value2)
+        real, intent(in) :: value1
+        real, intent(in) :: value2
+
+        real, parameter :: EPSILON = 0.000001
+
+        if (abs(value1 - value2) > EPSILON) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
             print *, value1, value2
         end if

@@ -56,7 +56,7 @@ contains
 
         call cpu_time(start)
         value = pi%vietesSeries()
-        call assert_equals(int(PI_VALUE - value), 0)
+        call assert_equals(value, PI_VALUE)
         call report('Pi', 'Vietes', '', start)
     end subroutine
 
@@ -67,7 +67,7 @@ contains
 
         call cpu_time(start)
         value = pi%wallisSeries()
-        call assert_equals(int(PI_VALUE - value), 0)
+        call assert_equals(value, PI_VALUE)
         call report('Pi', 'Wallis', '', start)
     end subroutine
 
@@ -78,7 +78,7 @@ contains
 
         call cpu_time(start)
         value = pi%leibnizSeries()
-        call assert_equals(int(PI_VALUE - value), 0)
+        call assert_equals(value, PI_VALUE)
         call report('Pi', 'Leibniz', '', start)
     end subroutine
 
@@ -89,7 +89,7 @@ contains
 
         call cpu_time(start)
         value = pi%nilakanthaSeries()
-        call assert_equals(int(PI_VALUE - value), 0)
+        call assert_equals(value, PI_VALUE)
         call report('Pi', 'Nilakantha', '', start)
     end subroutine
 end module

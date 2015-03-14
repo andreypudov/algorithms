@@ -36,7 +36,7 @@ contains
         character(len=*), intent(in) :: sequence
         real, intent(in)             :: start
 
-        character(len=*), parameter :: format = "(t1, a18, a2, a12, a8, a2, f0.3, a)"
+        character(len=*), parameter :: format = "(t1, a18, a2, a12, a8, a2, f6.3, a)"
         real finish
 
         character(len=18) :: algorithm_
