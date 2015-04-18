@@ -31,13 +31,14 @@ module MRandom
 
     type, abstract :: TRandom
     contains
-        procedure(IRandom), nopass, deferred :: random
+        procedure(IRandom), deferred :: random
     end type
 
     abstract interface
-        function IRandom() result(random)
+        function IRandom(instance) result(random)
             import TRandom
 
+            class(TRandom), intent(in out) :: instance
             integer :: random
         end function
     end interface

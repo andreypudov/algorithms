@@ -28,6 +28,7 @@ module MUArrayQueue
 
     use MArrays
     use MArrayQueue
+    use MUReport
 
     implicit none
     private
@@ -57,7 +58,7 @@ contains
         do index = 1, size(ARRAY)
             call queue%push(ARRAY(index))
         end do
-        call report('Push', start)
+        call report('ArrayQueue', 'Push', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -68,7 +69,7 @@ contains
                 return
             end if
         end do
-        call report('Peek', start)
+        call report('ArrayQueue', 'Peek', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -80,21 +81,10 @@ contains
                 return
             end if
         end do
-        call report('Pop', start)
+        call report('ArrayQueue', 'Pop', '', start)
 
         call queue%destroy()
 
         print *, ''
-    end subroutine
-
-    subroutine report(operation, start)
-        character(len=*), intent(in) :: operation
-        real, intent(in)             :: start
-
-        character(len=*), parameter :: format = "(t1, a,  a17, a18, f0.3, a)"
-        real finish
-
-        call cpu_time(finish)
-        print format, 'ArrayQueue:', operation, ' ', finish - start, 's.'
     end subroutine
 end module

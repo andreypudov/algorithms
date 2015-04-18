@@ -34,6 +34,8 @@ module MStack
         procedure(IPeek), deferred :: peek
         procedure(IPop),  deferred :: pop
         procedure(IPush), deferred :: push
+
+        procedure(IEmpty), deferred :: empty
     end type
 
     abstract interface
@@ -57,5 +59,12 @@ module MStack
             class(TStack), intent(in out) :: instance
             integer, intent(in)           :: value
         end subroutine
-    end interface    
+
+        function IEmpty(instance) result(value)
+            import TStack
+
+            class(TStack), intent(in) :: instance
+            logical :: value
+        end function
+    end interface
 end module

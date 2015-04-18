@@ -24,38 +24,62 @@
 ! THE SOFTWARE.
 !
 
-module MUReport
+module MUDepthFirstSearch
+
+    use MDepthFirstSearch
+    use MGraph
+    use MUAsserts
+    use MUReport
 
     implicit none
-    public
+    private
 
+    type, public :: TUDepthFirstSearch
+    contains
+        procedure, nopass :: present
+    end type
 contains
-    subroutine report(algorithm, version, sequence, start)
-        character(len=*), intent(in) :: algorithm
-        character(len=*), intent(in) :: version
-        character(len=*), intent(in) :: sequence
-        real, intent(in)             :: start
+    subroutine present()
+        type(TDepthFirstSearch) dfs
+        type(TGraph)            graph
 
-        character(len=*), parameter :: format1 = "(t1, a14, a2, a14, a2, a8, a2, f6.3, a)"
-        character(len=*), parameter :: format2 = "(t1, a14, a2, a24, a0, a0, a2, f6.3, a)"
-        character(len=80) :: format
-        real finish
+        integer, dimension(:), pointer :: sequence
+        real :: start
 
-        character(len=14) :: algorithm_
-        character(len=24) :: version_
-        character(len=8)  :: sequence_
+        call graph%init()
 
-        format     = format1
-        algorithm_ = algorithm
-        version_   = version
-        sequence_  = sequence
+        call graph%addVertex(1)
+        call graph%addVertex(2)
+        call graph%addVertex(3)
+        call graph%addVertex(4)
+        call graph%addVertex(5)
+        call graph%addVertex(6)
 
-        ! increase version field in case sequence is empty
-        if (len(trim(sequence_)) == 0) then
-            format = format2
-        end if
 
-        call cpu_time(finish)
-        print format, algorithm_, ': ', version_, ' ',sequence_, ' ', finish - start, "s."
+        !   2 - 3 - 6
+        !  /
+        ! 1
+        !  \
+        !   4 - 5
+
+        ! expected to have 1 - 2 - 3 - 6 - 4 - 5
+
+        call graph%addEdge(1, 2)
+        call graph%addEdge(2, 3)
+        call graph%addEdge(3, 6)
+        call graph%addEdge(1, 4)
+        call graph%addEdge(4, 5)
+
+        call cpu_time(start)
+
+        sequence => dfs%search(graph)
+
+        call report('Graph', 'DepthFirstSearch', '', start)
+        call assert_equals(sequence(1:6), (/ 1, 2, 3, 6, 4, 5 /))
+
+        call graph%destroy()
+        deallocate(sequence)
+
+        print *, ''
     end subroutine
 end module

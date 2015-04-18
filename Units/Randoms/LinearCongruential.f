@@ -57,7 +57,6 @@ contains
         do index = 1, NUMBER_OF_ITERATIONS
             value = linearCongruential%random()
             !call assert_equals(value, 55)
-            print *, value
         end do
 
         call report('LinearCongr.', 'Original', '', start)

@@ -24,38 +24,41 @@
 ! THE SOFTWARE.
 !
 
-module MUReport
+module MURank
 
     implicit none
-    public
+    private
 
+    integer, parameter :: NUMBER_OF_ELEMENTS = 6
+
+    type, public :: TURank
+    contains
+        procedure, nopass :: present
+    end type
+
+    interface getRank
+        module procedure getRankOneDimension, getRankTwoDimension
+    end interface
 contains
-    subroutine report(algorithm, version, sequence, start)
-        character(len=*), intent(in) :: algorithm
-        character(len=*), intent(in) :: version
-        character(len=*), intent(in) :: sequence
-        real, intent(in)             :: start
+    subroutine present()
+        integer, dimension(NUMBER_OF_ELEMENTS)                     :: oneDimensional
+        integer, dimension(NUMBER_OF_ELEMENTS, NUMBER_OF_ELEMENTS) :: twoDimensional
 
-        character(len=*), parameter :: format1 = "(t1, a14, a2, a14, a2, a8, a2, f6.3, a)"
-        character(len=*), parameter :: format2 = "(t1, a14, a2, a24, a0, a0, a2, f6.3, a)"
-        character(len=80) :: format
-        real finish
+        call getRank(oneDimensional)
+        call getRank(twoDimensional)
 
-        character(len=14) :: algorithm_
-        character(len=24) :: version_
-        character(len=8)  :: sequence_
+        print *, ''
+    end subroutine
 
-        format     = format1
-        algorithm_ = algorithm
-        version_   = version
-        sequence_  = sequence
+    subroutine getRankOneDimension(array)
+        integer, dimension(:), intent(in) :: array
 
-        ! increase version field in case sequence is empty
-        if (len(trim(sequence_)) == 0) then
-            format = format2
-        end if
+        print '(t1, a, i)', 'Shape: ', shape(array)
+    end subroutine
 
-        call cpu_time(finish)
-        print format, algorithm_, ': ', version_, ' ',sequence_, ' ', finish - start, "s."
+    subroutine getRankTwoDimension(array)
+        integer, dimension(:, :), intent(in) :: array
+
+        print '(t1, a, i, i)', 'Shape: ', shape(array)
     end subroutine
 end module

@@ -4,10 +4,12 @@ FFLAGS  = -c -free -module Modules -reentrancy threaded # -debug all
 CFLAGS  = -c -pthread # -g
 LDFLAGS =
 
-INTERFACES = Randoms/Random.f \
+INTERFACES = Arrays/Arrays.f \
+			 Randoms/Random.f \
 	         Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
              Sorts/Sort.f   \
+			 Graphs/Vertex.f Graphs/Graph.f \
 			 Structures/ArrayStack.f \
 		     Units/Parameters.f Units/Report.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)

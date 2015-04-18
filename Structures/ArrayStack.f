@@ -26,6 +26,7 @@
 
 module MArrayStack
 
+    use MArrays
     use MStack
 
     implicit none
@@ -41,6 +42,8 @@ module MArrayStack
         procedure :: peek
         procedure :: pop
         procedure :: push
+
+        procedure :: empty
 
         procedure :: init
         procedure :: destroy
@@ -72,21 +75,19 @@ contains
         class(TArrayStack), intent(in out) :: instance
         integer, intent(in)                :: value
 
-        integer, dimension(:), allocatable :: temporary_array
-        integer length
+        type(TArrays) arrays
 
         instance%index = instance%index + 1
-
-        ! increase array size when required
-        if (instance%index > size(instance%array)) then
-            length = size(instance%array) * 3 / 2
-            allocate(temporary_array(length))
-            temporary_array(1:size(instance%array)) = instance%array
-            call move_alloc(temporary_array, instance%array)
-        end if
-
+        call arrays%increaseWhenRequired(instance%array, instance%index)
         instance%array(instance%index) = value
     end subroutine
+
+    function empty(instance) result(value)
+        class(TArrayStack), intent(in) :: instance
+        logical :: value
+
+        value = (instance%index == 0)
+    end function
 
     subroutine init(instance)
         class(TArrayStack), intent(in out) :: instance

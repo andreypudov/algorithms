@@ -40,6 +40,8 @@ module MListStack
         procedure :: pop
         procedure :: push
 
+        procedure :: empty
+
         procedure :: init
         procedure :: destroy
     end type
@@ -85,6 +87,13 @@ contains
 
         instance%array(instance%index) = value
     end subroutine
+
+    function empty(instance) result(value)
+        class(TArrayStack), intent(in) :: instance
+        logical :: value
+
+        value = (instance%index == 0)
+    end function
 
     subroutine init(instance)
         class(TArrayStack), intent(in out) :: instance

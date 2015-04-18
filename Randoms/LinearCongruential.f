@@ -37,10 +37,11 @@ module MLinearCongruential
 
     type, extends(TRandom), public :: TLinearCongruential
     contains
-        procedure, nopass :: random
+        procedure :: random
     end type
 contains
-    function random()
+    function random(instance)
+        class(TLinearCongruential), intent(in out) :: instance
         integer :: random
 
         integer, save :: value = 1234567

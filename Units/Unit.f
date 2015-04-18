@@ -26,16 +26,25 @@
 
 module MUnit
 
+    ! arrays
+    use MUShift
+
+    ! graphs
+    use MUDepthFirstSearch
+
+    ! math
     use MUFibonacci
     use MUGreatestCommonDivisor
     use MUPi
 
+    ! randoms
     use MULinearCongruential
 
+    ! searches
     use MUSearch
-    use MUShift
-    use MUSort
 
+    ! sorts
+    use MUSort
     use MUBubbleSort
     use MUInsertionSort
     use MUMergeSort
@@ -44,9 +53,14 @@ module MUnit
     use MUSelectionSort
     use MUShellSort
 
+    ! structures
     use MUArrayStack
     use MUArrayQueue
     use MULinkedList
+
+    ! language features
+    use MURank
+    use MUReallocation
 
     implicit none
     private
@@ -55,12 +69,13 @@ module MUnit
     contains
         procedure, nopass :: present
     end type
-
 contains
     subroutine present()
+        type(TUDepthFirstSearch)      depthFirstSearch
+
         type(TUFibonacci)             fibonacci
         type(TUGreatestCommonDivisor) greatestCommonDivisor
-        type (TUPi)                   pi
+        type(TUPi)                    pi
 
         type(TULinearCongruential) linearCongruential
 
@@ -71,9 +86,11 @@ contains
         type(TUArrayQueue) arrayQueue
         type(TULinkedList) linkedList
 
+        call depthFirstSearch%present()
+
         !call fibonacci%present()
         !call greatestCommonDivisor%present()
-        call pi%present()
+        !call pi%present()
 
         !call linearCongruential%present()
 
@@ -84,11 +101,12 @@ contains
 
         !call arrayStack%present()
         !call arrayQueue%present()
-        !call linkedList%present()
+
+        !call features()
     end subroutine
 
     subroutine sorts()
-        type(TUSort)   sort
+        type(TUSort) sort
 
         type(TUBubbleSort)    bubbleSort
         type(TUInsertionSort) insertionSort
@@ -107,5 +125,13 @@ contains
         !call radixSort%present()
         !call selectionSort%present()
         !call shellSort%present()
+    end subroutine
+
+    subroutine features()
+        type(TURank)         rank
+        type(TUReallocation) reallocation
+
+        call rank%present()
+        call reallocation%present()
     end subroutine
 end module

@@ -31,23 +31,42 @@ module MArrays
 
     type, public :: TArrays
     contains
-        procedure, nopass :: fillWithSequence
+        procedure, nopass :: fillWithSequence1d
+        procedure, nopass :: fillWithSequence2d
+
         procedure, nopass :: fillWithDirtySequence
         procedure, nopass :: fillWithRandom
         procedure, nopass :: fillWithInversedSequence
 
-        procedure, nopass :: isSorted
-    end type
+        procedure, nopass :: increaseWhenRequiredAllocatable
+        procedure, nopass :: increaseWhenRequiredPointer
 
+        procedure, nopass :: isSorted
+
+        procedure, nopass :: print1d
+        procedure, nopass :: print2d
+
+        generic :: fillWithSequence      => fillWithSequence1d, fillWithSequence2d
+        generic :: increaseWhenRequired => increaseWhenRequiredAllocatable, increaseWhenRequiredPointer
+
+        generic :: print => print1d, print2d
+    end type
 contains
     !
     ! Fills the array with sequence from one to the last index.
     !
-    subroutine fillWithSequence(array)
+    subroutine fillWithSequence1d(array)
         integer, dimension(:), intent(in out) :: array
         integer index
 
         array = (/ (index, index = 1, size(array)) /)
+    end subroutine
+
+    subroutine fillWithSequence2d(array)
+        integer, dimension(:,:), intent(in out) :: array
+        integer index
+
+        array = reshape((/ (index, index = 1, size(array)) /), shape(array))
     end subroutine
 
     !
@@ -93,6 +112,42 @@ contains
     end subroutine
 
     !
+    ! Increase the size of given array if limit is larger than size of array.
+    !
+    subroutine increaseWhenRequiredAllocatable(array, limit)
+        integer, dimension(:), allocatable, intent(in out) :: array
+        integer, intent(in) :: limit
+
+        integer, dimension(:), allocatable :: temporary_array
+        integer length
+
+        ! increase array size when required
+        if (limit > size(array)) then
+            length = size(array) * 3 / 2
+            allocate(temporary_array(length))
+            temporary_array(1:size(array)) = array
+            call move_alloc(temporary_array, array)
+        end if
+    end subroutine
+
+    subroutine increaseWhenRequiredPointer(array, limit)
+        integer, dimension(:), pointer, intent(in out) :: array
+        integer, intent(in) :: limit
+
+        integer, dimension(:), pointer :: temporary_array
+        integer length
+
+        ! increase array size when required
+        if (limit > size(array)) then
+            length = size(array) * 3 / 2
+            allocate(temporary_array(length))
+            temporary_array(1:size(array)) = array
+            deallocate(array)
+            array => temporary_array
+        end if
+    end subroutine
+
+    !
     ! Validates given array to be sorted.
     !
     function isSorted(array) result(sorted)
@@ -109,5 +164,54 @@ contains
          end do
 
          sorted = .true.
-    end function
+     end function
+
+     !
+     ! Prints given array to console.
+     !
+     subroutine print1d(array)
+         integer, dimension(:), intent(in) :: array
+
+         character(len=80) :: count
+         character(len=80) :: length
+         integer           :: maximum
+         integer           :: value
+
+         maximum = (maxval(array))
+         if (maximum == 0) then
+             value = 2
+         else if (mod(maximum, 10) == 0) then
+             value = ceiling(log10(real(maxval(array)))) + 2
+         else
+             value = ceiling(log10(real(maxval(array)))) + 1
+         end if
+
+         write(count,  '(i0.0)') size(array)
+         write(length, '(i0.0)') value
+
+         print '(' // trim(count) // 'i' // trim(length) // ')', array
+     end subroutine
+
+     subroutine print2d(array)
+         integer, dimension(:,:), intent(in) :: array
+
+         character(len=80) :: count
+         character(len=80) :: length
+         integer           :: maximum
+         integer           :: value
+
+         maximum = (maxval(array))
+         if (maximum == 0) then
+             value = 2
+         else if (mod(maximum, 10) == 0) then
+             value = ceiling(log10(real(maxval(array)))) + 2
+         else
+             value = ceiling(log10(real(maxval(array)))) + 1
+         end if
+
+         write(count,  '(i0.0)') size(array, 2)
+         write(length, '(i0.0)') value
+
+         print '(' // trim(count) // 'i' // trim(length) // ')', array
+     end subroutine
 end module
