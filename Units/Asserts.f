@@ -32,7 +32,8 @@ module MUAsserts
     public
 
     interface assert_equals
-        module procedure assert_equals_int, assert_equals_real, assert_equals_int_arrays
+        module procedure assert_equals_int, assert_equals_real, &
+                assert_equals_int_arrays1d, assert_equals_int_arrays2d
     end interface
 contains
     subroutine assert_equals_int(value1, value2)
@@ -57,9 +58,19 @@ contains
         end if
     end subroutine
 
-    subroutine assert_equals_int_arrays(value1, value2)
+    subroutine assert_equals_int_arrays1d(value1, value2)
         integer, dimension(:), intent(in) :: value1
         integer, dimension(:), intent(in) :: value2
+
+        if (all(value1 .eq. value2 ) .ne. .true. ) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
+
+    subroutine assert_equals_int_arrays2d(value1, value2)
+        integer, dimension(:,:), intent(in) :: value1
+        integer, dimension(:,:), intent(in) :: value2
 
         if (all(value1 .eq. value2 ) .ne. .true. ) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'

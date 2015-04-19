@@ -58,10 +58,6 @@ module MUnit
     use MUArrayQueue
     use MULinkedList
 
-    ! language features
-    use MURank
-    use MUReallocation
-
     implicit none
     private
 
@@ -101,8 +97,6 @@ contains
 
         !call arrayStack%present()
         !call arrayQueue%present()
-
-        !call features()
     end subroutine
 
     subroutine sorts()
@@ -125,13 +119,5 @@ contains
         !call radixSort%present()
         !call selectionSort%present()
         !call shellSort%present()
-    end subroutine
-
-    subroutine features()
-        type(TURank)         rank
-        type(TUReallocation) reallocation
-
-        call rank%present()
-        call reallocation%present()
     end subroutine
 end module

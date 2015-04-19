@@ -27,16 +27,19 @@
 program Algorithms
 
     use MExample
+    use MFeature
     use MUnit
 
     implicit none
 
     type(TExample) example
+    type(TFeature) feature
     type(TUnit)    unit
 
     write (*, '(A)') 'The Laboratory of Algorithms'
     write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
 
     !call example%present()
+    !call feature%present()
     call unit%present()
 end program

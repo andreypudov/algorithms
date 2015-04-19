@@ -24,16 +24,18 @@
 ! THE SOFTWARE.
 !
 
-module MUReallocation
+module MFReallocation
 
     use MArrays
+    use MUAsserts
+    use MUReport
 
     implicit none
     private
 
     integer, parameter :: NUMBER_OF_ELEMENTS = 5
 
-    type, public :: TUReallocation
+    type, public :: TFReallocation
     contains
         procedure, nopass :: present
     end type
@@ -50,21 +52,20 @@ contains
         integer, dimension(:), allocatable :: temporary_array
 
         type(TArrays) Arrays
+        real start
+
+        call cpu_time(start)
 
         allocate(array(NUMBER_OF_ELEMENTS))
-
-        print '(a)', 'Source array'
-        call Arrays.print(array)
-
         call Arrays.fillWithSequence(array)
-        print '(/a)', 'Filled array'
-        call Arrays.print(array)
-
-        print '(/a)', 'Increased array'
         allocate(temporary_array(NUMBER_OF_ELEMENTS + 2))
         temporary_array(1:size(array)) = array
+
+        call report('Reallocation', 'OneDimension', '', start)
+        call assert_equals(temporary_array(1:size(array)), array)
+
+        deallocate(array)
         call move_alloc(temporary_array, array)
-        call Arrays.print(array)
 
         deallocate(array)
     end subroutine
@@ -74,21 +75,21 @@ contains
         integer, dimension(:,:), allocatable :: temporary_array
 
         type(TArrays) Arrays
+        real start
+
+        call cpu_time(start)
 
         allocate(array(NUMBER_OF_ELEMENTS, NUMBER_OF_ELEMENTS))
 
-        print '(/a)', 'Source array:'
-        call Arrays.print(array)
-
         call Arrays.fillWithSequence(array)
-        print '(/a)', 'Filled array:'
-        call Arrays.print(array)
-
-        print '(/a)', 'Increased array'
         allocate(temporary_array(NUMBER_OF_ELEMENTS + 2, NUMBER_OF_ELEMENTS + 2))
-        temporary_array(1:size(array,1),1:size(array,2)) = array
+        temporary_array(1:size(array, 1), 1:size(array, 2)) = array
+
+        call report('Reallocation', 'TwoDimension', '', start)
+        call assert_equals(temporary_array(1:size(array, 1), 1:size(array, 2)), array)
+
+        deallocate(array)
         call move_alloc(temporary_array, array)
-        call Arrays.print(array)
 
         deallocate(array)
     end subroutine

@@ -5,6 +5,7 @@ CFLAGS  = -c -pthread # -g
 LDFLAGS =
 
 INTERFACES = Arrays/Arrays.f \
+			 Units/Asserts.f Units/Report.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \

@@ -24,41 +24,27 @@
 ! THE SOFTWARE.
 !
 
-module MURank
+module MFeature
+
+    use MFArrays
+    use MFReallocation
 
     implicit none
     private
 
-    integer, parameter :: NUMBER_OF_ELEMENTS = 6
-
-    type, public :: TURank
+    type, public :: TFeature
     contains
-        procedure, nopass :: present
+        procedure :: present
     end type
 
-    interface getRank
-        module procedure getRankOneDimension, getRankTwoDimension
-    end interface
 contains
-    subroutine present()
-        integer, dimension(NUMBER_OF_ELEMENTS)                     :: oneDimensional
-        integer, dimension(NUMBER_OF_ELEMENTS, NUMBER_OF_ELEMENTS) :: twoDimensional
+    subroutine present(instance)
+        class(TFeature), intent(in) :: instance
 
-        call getRank(oneDimensional)
-        call getRank(twoDimensional)
+        type(TFArrays)       arrays
+        type(TFReallocation) reallocation
 
-        print *, ''
-    end subroutine
-
-    subroutine getRankOneDimension(array)
-        integer, dimension(:), intent(in) :: array
-
-        print '(t1, a, i)', 'Shape: ', shape(array)
-    end subroutine
-
-    subroutine getRankTwoDimension(array)
-        integer, dimension(:, :), intent(in) :: array
-
-        print '(t1, a, i, i)', 'Shape: ', shape(array)
+        call arrays%present()
+        call reallocation%present()
     end subroutine
 end module

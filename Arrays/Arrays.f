@@ -126,6 +126,7 @@ contains
             length = size(array) * 3 / 2
             allocate(temporary_array(length))
             temporary_array(1:size(array)) = array
+            deallocate(array)
             call move_alloc(temporary_array, array)
         end if
     end subroutine
