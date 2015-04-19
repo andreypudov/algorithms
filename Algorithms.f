@@ -40,6 +40,6 @@ program Algorithms
     write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
 
     !call example%present()
-    !call feature%present()
-    call unit%present()
+    call feature%present()
+    !call unit%present()
 end program

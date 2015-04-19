@@ -36,8 +36,8 @@ contains
         character(len=*), intent(in) :: sequence
         real, intent(in)             :: start
 
-        character(len=*), parameter :: format1 = "(t1, a14, a2, a14, a2, a8, a2, f6.3, a)"
-        character(len=*), parameter :: format2 = "(t1, a14, a2, a24, a0, a0, a2, f6.3, a)"
+        character(len=*), parameter :: format1 = '(t1, a14, a2, a14, a2, a8, a2, f6.3, a)'
+        character(len=*), parameter :: format2 = '(t1, a14, a2, a24, a0, a0, a2, f6.3, a)'
         character(len=80) :: format
         real finish
 

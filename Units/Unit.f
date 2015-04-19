@@ -31,6 +31,7 @@ module MUnit
 
     ! graphs
     use MUDepthFirstSearch
+    use MUBreadthFirstSearch
 
     ! math
     use MUFibonacci
@@ -68,6 +69,7 @@ module MUnit
 contains
     subroutine present()
         type(TUDepthFirstSearch)      depthFirstSearch
+        type(TUBreadthFirstSearch)    breadthFirstSearch
 
         type(TUFibonacci)             fibonacci
         type(TUGreatestCommonDivisor) greatestCommonDivisor
@@ -82,7 +84,8 @@ contains
         type(TUArrayQueue) arrayQueue
         type(TULinkedList) linkedList
 
-        call depthFirstSearch%present()
+        !call depthFirstSearch%present()
+        !call breadthFirstSearch%present()
 
         !call fibonacci%present()
         !call greatestCommonDivisor%present()
@@ -97,6 +100,7 @@ contains
 
         !call arrayStack%present()
         !call arrayQueue%present()
+        call linkedList%present()
     end subroutine
 
     subroutine sorts()
@@ -110,7 +114,7 @@ contains
         type(TUSelectionSort) selectionSort
         type(TUShellSort)     shellSort
 
-        call sort%present()
+        !call sort%present()
 
         !call bubbleSort%present()
         !call insertionSort%present()

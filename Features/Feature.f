@@ -29,6 +29,8 @@ module MFeature
     use MFArrays
     use MFReallocation
 
+    use MFInheritance
+
     implicit none
     private
 
@@ -36,7 +38,6 @@ module MFeature
     contains
         procedure :: present
     end type
-
 contains
     subroutine present(instance)
         class(TFeature), intent(in) :: instance
@@ -44,7 +45,11 @@ contains
         type(TFArrays)       arrays
         type(TFReallocation) reallocation
 
-        call arrays%present()
-        call reallocation%present()
+        type(TFInheritance)  inheritance
+
+        !call arrays%present()
+        !call reallocation%present()
+
+        call inheritance%present()
     end subroutine
 end module

@@ -28,6 +28,7 @@ module MULinkedList
 
     use MArrays
     use MLinkedList
+    use MUReport
 
     implicit none
     private
@@ -38,7 +39,7 @@ module MULinkedList
     end type
 contains
     subroutine present()
-        integer, parameter :: NUMBER_OF_ELEMENTS = 300000
+        integer, parameter :: NUMBER_OF_ELEMENTS = 50000!0
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 
         integer element
@@ -57,7 +58,7 @@ contains
         do index = 1, size(ARRAY)
             call list%add(ARRAY(index))
         end do
-        call report('Add', start)
+        call report('LinkedList', 'Add', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -68,7 +69,7 @@ contains
                 return
             end if
         end do
-        call report('Contains', start)
+        call report('LinkedList', 'Contains', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -79,7 +80,7 @@ contains
                 return
             end if
         end do
-        call report('Get', start)
+        call report('LinkedList', 'Get', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -91,7 +92,7 @@ contains
                 return
             end if
         end do
-        call report('Set', start)
+        call report('LinkedList', 'Set', '', start)
 
         call cpu_time(start)
         do index = size(ARRAY) - 1, 0, -1
@@ -102,7 +103,7 @@ contains
                 return
             end if
         end do
-        call report('Remove', start)
+        call report('LinkedList', 'Remove', '', start)
 
         call cpu_time(start)
         do index = 1, size(ARRAY)
@@ -113,21 +114,10 @@ contains
                 return
             end if
         end do
-        call report('Size', start)
+        call report('LinkedList', 'Size', '', start)
 
         call list%destroy()
 
         print *, ''
-    end subroutine
-
-    subroutine report(operation, start)
-        character(len=*), intent(in) :: operation
-        real, intent(in)             :: start
-
-        character(len=*), parameter :: format = "(t1, a,  a17, a18, f0.3, a)"
-        real finish
-
-        call cpu_time(finish)
-        print format, 'LinkedList:', operation, ' ', finish - start, 's.'
     end subroutine
 end module

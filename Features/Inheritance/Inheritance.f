@@ -24,38 +24,39 @@
 ! THE SOFTWARE.
 !
 
-module MQueue
+module MFInheritance
+
+    use MFAnimal
+    use MFCat
+    use MFDog
+
+    use MUAsserts
+    use MUReport
 
     implicit none
-    public
+    private
 
-    type, abstract :: TQueue
+    type, public :: TFInheritance
     contains
-        procedure(IPeek), deferred :: peek
-        procedure(IPop),  deferred :: pop
-        procedure(IPush), deferred :: push
+        procedure :: present
     end type
+contains
+    subroutine present(instance)
+        class(TFInheritance), intent(in) :: instance
+        type(TFCat) cat
 
-    abstract interface
-        function IPeek(instance) result(value)
-            import TQueue
+        call say(cat)
+    end subroutine
 
-            class(TQueue), intent(in) :: instance
-            integer :: value
-        end function
+    subroutine say(animal)
+        class(TFAnimal), intent(in) :: animal
+        character(len=80) :: word
+        real start
 
-        function IPop(instance) result(value)
-            import TQueue
+        call cpu_time(start)
+        word = animal%say()
 
-            class(TQueue), intent(in out) :: instance
-            integer :: value
-        end function
-
-        subroutine IPush(instance, value)
-            import TQueue
-
-            class(TQueue), intent(in out) :: instance
-            integer, intent(in)           :: value
-        end subroutine
-    end interface
+        call report('Inheritance', 'Say', '', start)
+        call assert_equals(trim(word), 'Myaw')
+    end subroutine
 end module

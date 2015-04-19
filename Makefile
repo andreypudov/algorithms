@@ -11,15 +11,16 @@ INTERFACES = Arrays/Arrays.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
              Sorts/Sort.f   \
 			 Graphs/Vertex.f Graphs/Graph.f \
-			 Structures/ArrayStack.f \
+			 Structures/ArrayStack.f Structures/ArrayQueue.f \
 		     Units/Parameters.f Units/Report.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
-EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/*) \
+EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/* Features/*) \
            $(patsubst %, ! -path './%', $(INTERFACES))
 SOURCES  = $(INTERFACES) \
 		   $(shell find . -name '*.c' $(EXCLUDES) | sort) \
 		   $(shell find . -name '*.f' $(EXCLUDES) | sort) \
            $(shell find Examples -name '*.f' ! -name 'Example.f') Examples/Example.f \
+		   $(shell find Features -name '*.f' ! -name 'Feature.f') Features/Feature.f \
            Algorithms.f
 #          $(wildcard **/*.c)
 OBJECTS  = $(patsubst %.f, Objects/%.o, $(patsubst %.c, Objects/%_c.o, $(SOURCES)))

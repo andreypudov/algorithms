@@ -43,6 +43,8 @@ module MArrayQueue
         procedure :: pop
         procedure :: push
 
+        procedure :: empty
+
         procedure :: init
         procedure :: destroy
     end type
@@ -112,6 +114,7 @@ contains
                 instance%high = length + instance%high + 1
             end if
 
+            deallocate(instance%array)
             call move_alloc(temporary_array, instance%array)
         else
             instance%high = instance%high + 1
@@ -122,6 +125,13 @@ contains
             instance%array(instance%high) = value
         end if
     end subroutine
+
+    function empty(instance) result(value)
+        class(TArrayQueue), intent(in) :: instance
+        logical :: value
+
+        value = (count(instance) == 0)
+    end function
 
     subroutine init(instance)
         class(TArrayQueue), intent(in out) :: instance
@@ -138,7 +148,7 @@ contains
     end subroutine
 
     function count(instance) result(value)
-        class(TArrayQueue), intent(in out) :: instance
+        class(TArrayQueue), intent(in) :: instance
         integer ::value
 
         ! queue is empty

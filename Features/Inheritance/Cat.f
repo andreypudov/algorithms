@@ -24,38 +24,22 @@
 ! THE SOFTWARE.
 !
 
-module MQueue
+module MFCat
+
+    use MFAnimal
 
     implicit none
-    public
+    private
 
-    type, abstract :: TQueue
+    type, extends(TFAnimal), public :: TFCat
     contains
-        procedure(IPeek), deferred :: peek
-        procedure(IPop),  deferred :: pop
-        procedure(IPush), deferred :: push
+        procedure :: say
     end type
+contains
+    function say(instance)
+        class(TFCat), intent(in) :: instance
+        character(len=80) :: say
 
-    abstract interface
-        function IPeek(instance) result(value)
-            import TQueue
-
-            class(TQueue), intent(in) :: instance
-            integer :: value
-        end function
-
-        function IPop(instance) result(value)
-            import TQueue
-
-            class(TQueue), intent(in out) :: instance
-            integer :: value
-        end function
-
-        subroutine IPush(instance, value)
-            import TQueue
-
-            class(TQueue), intent(in out) :: instance
-            integer, intent(in)           :: value
-        end subroutine
-    end interface
+        say = 'Myaw'
+    end function
 end module

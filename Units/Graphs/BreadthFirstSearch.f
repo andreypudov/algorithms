@@ -24,38 +24,62 @@
 ! THE SOFTWARE.
 !
 
-module MQueue
+module MUBreadthFirstSearch
+
+    use MBreadthFirstSearch
+    use MGraph
+    use MUAsserts
+    use MUReport
 
     implicit none
-    public
+    private
 
-    type, abstract :: TQueue
+    type, public :: TUBreadthFirstSearch
     contains
-        procedure(IPeek), deferred :: peek
-        procedure(IPop),  deferred :: pop
-        procedure(IPush), deferred :: push
+        procedure, nopass :: present
     end type
+contains
+    subroutine present()
+        type(TBreadthFirstSearch) bfs
+        type(TGraph)              graph
 
-    abstract interface
-        function IPeek(instance) result(value)
-            import TQueue
+        integer, dimension(:), pointer :: sequence
+        real :: start
 
-            class(TQueue), intent(in) :: instance
-            integer :: value
-        end function
+        call graph%init()
 
-        function IPop(instance) result(value)
-            import TQueue
+        call graph%addVertex(1)
+        call graph%addVertex(2)
+        call graph%addVertex(3)
+        call graph%addVertex(4)
+        call graph%addVertex(5)
+        call graph%addVertex(6)
 
-            class(TQueue), intent(in out) :: instance
-            integer :: value
-        end function
 
-        subroutine IPush(instance, value)
-            import TQueue
+        !   2 - 3 - 6
+        !  /
+        ! 1
+        !  \
+        !   4 - 5
 
-            class(TQueue), intent(in out) :: instance
-            integer, intent(in)           :: value
-        end subroutine
-    end interface
+        ! expected to have 1 - 2 - 4 - 3 - 5 - 6
+
+        call graph%addEdge(1, 2)
+        call graph%addEdge(2, 3)
+        call graph%addEdge(3, 6)
+        call graph%addEdge(1, 4)
+        call graph%addEdge(4, 5)
+
+        call cpu_time(start)
+
+        sequence => bfs%search(graph)
+
+        call report('Graph', 'BreadthFirstSearch', '', start)
+        call assert_equals(sequence(1:6), (/ 1, 2, 4, 3, 5, 6 /))
+
+        call graph%destroy()
+        deallocate(sequence)
+
+        print *, ''
+    end subroutine
 end module

@@ -33,6 +33,7 @@ module MUAsserts
 
     interface assert_equals
         module procedure assert_equals_int, assert_equals_real, &
+                assert_equals_string, &
                 assert_equals_int_arrays1d, assert_equals_int_arrays2d
     end interface
 contains
@@ -53,6 +54,16 @@ contains
         real, parameter :: EPSILON = 0.000001
 
         if (abs(value1 - value2) > EPSILON) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
+
+    subroutine assert_equals_string(value1, value2)
+        character(len=*), intent(in) :: value1
+        character(len=*), intent(in) :: value2
+
+        if (value1 .ne. value2) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
             print *, value1, value2
         end if

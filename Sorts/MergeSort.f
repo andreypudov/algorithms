@@ -51,9 +51,9 @@ contains
 
         integer middle
 
-        middle = begin + ((end - begin) / 2)
         if (begin < end) then
-            print *, begin, middle, end
+            middle = begin + ((end - begin) / 2)
+
             call sortOriginalProc(array, begin, middle)
             call sortOriginalProc(array, middle + 1, end)
 
