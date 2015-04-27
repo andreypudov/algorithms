@@ -42,6 +42,6 @@ contains
 
         type(TEPingPong) pingPong
 
-        call pingPong%present()
+        !call pingPong%present()
     end subroutine
 end module
