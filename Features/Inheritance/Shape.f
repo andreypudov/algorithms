@@ -24,59 +24,24 @@
 ! THE SOFTWARE.
 !
 
-module MFInheritance
-
-    use MFAnimal
-    use MFCat
-    use MFDog
-
-    use MFShape
-    use MFCircle
-
-    use MUAsserts
-    use MUReport
+module MFShape
 
     implicit none
-    private
+    public
 
-    type, public :: TFInheritance
+    type, abstract :: TFShape
+        real :: width
+        real :: height
     contains
-        procedure :: present
+        procedure(IGetArea), deferred :: getArea
     end type
-contains
-    subroutine present(instance)
-        class(TFInheritance), intent(in) :: instance
-        type(TFCat)    cat
-        type(TFCircle) circle
 
-        ! construct the circle
-        circle = TFCircle(17.0)
+    abstract interface
+        function IGetArea(this) result(area)
+            import TFShape
 
-        call say(cat)
-        call area(circle)
-    end subroutine
-
-    subroutine say(animal)
-        class(TFAnimal), intent(in) :: animal
-        character(len=80) :: word
-        real start
-
-        call cpu_time(start)
-        word = animal%say()
-
-        call report('Inheritance', 'Say', '', start)
-        call assert_equals(trim(word), 'Myaw')
-    end subroutine
-
-    subroutine area(shape)
-        class(TFShape), intent(in) :: shape
-        real value
-        real start
-
-        call cpu_time(start)
-        value = shape%getArea()
-
-        call report('Inheritance', 'Area', '', start)
-        call assert_equals(value, 17 * 17 * 3.14159265 / 4.0)
-    end subroutine
+            class(TFShape), intent(in) :: this
+            real :: area
+        end function
+    end interface
 end module

@@ -6,6 +6,7 @@ LDFLAGS =
 
 INTERFACES = Arrays/Arrays.f \
 			 Units/Asserts.f Units/Report.f \
+			 Features/Inheritance/Shape.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \
              Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \

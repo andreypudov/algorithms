@@ -51,7 +51,7 @@ contains
         real, intent(in) :: value1
         real, intent(in) :: value2
 
-        real, parameter :: EPSILON = 0.000001
+        real, parameter :: EPSILON = 0.001 !0.000001
 
         if (abs(value1 - value2) > EPSILON) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
