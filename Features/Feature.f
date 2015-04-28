@@ -30,6 +30,7 @@ module MFeature
     use MFReallocation
 
     use MFInheritance
+    use MFConstructor
 
     implicit none
     private
@@ -46,6 +47,10 @@ contains
         type(TFReallocation) reallocation
 
         type(TFInheritance)  inheritance
+        !type(TFConstructor)  constructor
+
+        !constructor = TFConstructor(6)
+        !call constructor%method()
 
         !call arrays%present()
         !call reallocation%present()
