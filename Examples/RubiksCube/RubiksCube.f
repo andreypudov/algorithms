@@ -24,27 +24,33 @@
 ! THE SOFTWARE.
 !
 
-module MExample
+module MERubiksCube
 
-    use MEPingPong
-    use MERubiksCube
+    use MERubiksCubeCommon
+    use MERubiksCubeCube
+    use MERubiksCubeRotation
 
     implicit none
     private
 
-    type, public :: TExample
+    type, public :: TERubiksCube
     contains
         procedure :: present
     end type
-
 contains
-    subroutine present(instance)
-        class(TExample), intent(in) :: instance
+    subroutine present(this)
+        class(TERubiksCube), intent(in) :: this
 
-        type(TEPingPong)   pingPong
-        type(TERubiksCube) rubiksCube
+        type(TECube)     cube
+        type(TERotation) rotation
 
-        !call pingPong%present()
-        call rubiksCube%present()
+        cube = TECube()
+
+        cube%cube(1, 1, 1) = 2
+        cube%cube(3, 3, 1) = 3
+
+        call cube%print()
+        call rotation%rotate(cube, CUBE_ROTATE_RED_CW)
+        call cube%print()
     end subroutine
 end module
