@@ -29,28 +29,28 @@ module MERubiksCubeCommon
     implicit none
     public
 
-    integer, parameter :: CUBE_LENGTH_OF_SIDE  = 3
-    integer, parameter :: CUBE_NUMBER_OF_SIDES = 6
+    integer, parameter :: LENGTH_OF_SIDE  = 3
+    integer, parameter :: NUMBER_OF_SIDES = 6
 
-    integer, parameter :: CUBE_RED    = 1
-    integer, parameter :: CUBE_WHITE  = 2
-    integer, parameter :: CUBE_BLUE   = 3
-    integer, parameter :: CUBE_YELLOW = 4
-    integer, parameter :: CUBE_GREEN  = 5
-    integer, parameter :: CUBE_ORANGE = 6
+    integer, parameter :: R = 1, RED    = 1
+    integer, parameter :: W = 2, WHITE  = 2
+    integer, parameter :: B = 3, BLUE   = 3
+    integer, parameter :: Y = 4, YELLOW = 4
+    integer, parameter :: G = 5, GREEN  = 5
+    integer, parameter :: O = 6, ORANGE = 6
 
-    integer, parameter :: CUBE_ROTATE_RED_CW     =  CUBE_RED
-    integer, parameter :: CUBE_ROTATE_RED_CCW    = -CUBE_RED
-    integer, parameter :: CUBE_ROTATE_WHITE_CW   =  CUBE_WHITE
-    integer, parameter :: CUBE_ROTATE_WHITE_CCW  = -CUBE_WHITE
-    integer, parameter :: CUBE_ROTATE_BLUE_CW    =  CUBE_BLUE
-    integer, parameter :: CUBE_ROTATE_BLUE_CCW   = -CUBE_BLUE
-    integer, parameter :: CUBE_ROTATE_YELLOW_CW  =  CUBE_YELLOW
-    integer, parameter :: CUBE_ROTATE_YELLOW_CCW = -CUBE_YELLOW
-    integer, parameter :: CUBE_ROTATE_GREEN_CW   =  CUBE_GREEN
-    integer, parameter :: CUBE_ROTATE_GREEN_CCW  = -CUBE_GREEN
-    integer, parameter :: CUBE_ROTATE_ORANGE_CW  =  CUBE_ORANGE
-    integer, parameter :: CUBE_ROTATE_ORANGE_CCW = -CUBE_ORANGE
+    integer, parameter :: RED_CW     =  RED
+    integer, parameter :: RED_CCW    = -RED
+    integer, parameter :: WHITE_CW   =  WHITE
+    integer, parameter :: WHITE_CCW  = -WHITE
+    integer, parameter :: BLUE_CW    =  BLUE
+    integer, parameter :: BLUE_CCW   = -BLUE
+    integer, parameter :: YELLOW_CW  =  YELLOW
+    integer, parameter :: YELLOW_CCW = -YELLOW
+    integer, parameter :: GREEN_CW   =  GREEN
+    integer, parameter :: GREEN_CCW  = -GREEN
+    integer, parameter :: ORANGE_CW  =  ORANGE
+    integer, parameter :: ORANGE_CCW = -ORANGE
 
     character, parameter, dimension(0:6) :: CUBE_COLORS = [' ', 'R', 'W', 'B', 'Y', 'G', 'O']
 

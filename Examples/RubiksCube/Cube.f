@@ -47,9 +47,11 @@ module MERubiksCubeCube
 
     type, public :: TECube
     private
-        integer, dimension(CUBE_LENGTH_OF_SIDE, CUBE_LENGTH_OF_SIDE, &
-            CUBE_NUMBER_OF_SIDES), public :: cube
+        integer, dimension(LENGTH_OF_SIDE, LENGTH_OF_SIDE, NUMBER_OF_SIDES), public :: cube
     contains
+        !procedure :: get
+        procedure :: set
+
         procedure :: print
 
         final :: detroy
@@ -59,6 +61,13 @@ module MERubiksCubeCube
         procedure :: init
     end interface
 contains
+    subroutine set(this, vector)
+        class(TECube), intent(in out)     :: this
+        integer, dimension(:), intent(in) :: vector
+
+        this%cube = reshape(vector, shape(this%cube))
+    end subroutine
+
     subroutine print(this)
         class(TECube), intent(in) :: this
         integer, dimension(9, 12) :: buffer

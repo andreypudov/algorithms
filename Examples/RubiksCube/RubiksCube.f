@@ -28,7 +28,7 @@ module MERubiksCube
 
     use MERubiksCubeCommon
     use MERubiksCubeCube
-    use MERubiksCubeRotation
+    use MERubiksCubeRotator
 
     implicit none
     private
@@ -41,16 +41,27 @@ contains
     subroutine present(this)
         class(TERubiksCube), intent(in) :: this
 
-        type(TECube)     cube
-        type(TERotation) rotation
+        type(TECube)    cube
+        type(TERotator) rotator
 
-        cube = TECube()
+        cube    = TECube()
+        rotator = TERotator()
 
-        cube%cube(1, 1, 1) = 2
-        cube%cube(3, 3, 1) = 3
+        cube%cube(1, 1, WHITE)  = ORANGE
+        cube%cube(1, 1, RED)    = WHITE
+        cube%cube(1, 1, YELLOW) = RED
+        cube%cube(1, 3, ORANGE) = BLUE
+        cube%cube(1, 1, BLUE)   = ORANGE
 
+        print '(A)', 'Initial state: '
+        call cube%set([R, R, R, R, R, R, R, R, Y, W, W, W, W, W, W, G, W, W, &
+                B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G, &
+                G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B])
         call cube%print()
-        call rotation%rotate(cube, CUBE_ROTATE_RED_CW)
+
+        call rotator%rotate(cube, ORANGE_CCW)
+
+        print '(/A)', 'Rotated state: '
         call cube%print()
     end subroutine
 end module
