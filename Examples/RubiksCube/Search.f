@@ -26,8 +26,6 @@
 
 module MERubiksCubeSearch
 
-    use MArrays
-
     use MERubiksCubeCommon
     use MERubiksCubeCube
     use MERubiksCubeRotator
@@ -59,63 +57,51 @@ contains
         integer, dimension(:), intent(in) :: rotations
         integer, intent(in)               :: depth
 
-        integer, dimension(size(rotations)) :: rotations_copy
         integer, dimension(:), allocatable  :: buffer
-
-        type(TArrays) arrays
-        logical       status
-
-        allocate(buffer(depth))
-        rotations_copy = rotations
-
-        ! sort the sequence of rotations
-        call arrays%sort(rotations_copy)
-
-        !print '(A)', 'Initial state: '
-        !call cube%set(source)
-        !call cube%print()
-
-        call permutation(1, depth, source, destination, mask, rotations_copy, buffer)
-
-        deallocate(buffer)
-        status = SOLUTION_FOUND
-    end function search
-
-    !
-    ! length - the length of sequence (N)
-    ! number - the number of elements in sequence (K) / rotations size
-    !
-    recursive subroutine permutation(position, length, source, destination, mask, rotations, buffer)
-        integer, dimension(:), intent(in out) :: buffer
-        integer, dimension(:), intent(in) :: source
-        integer, dimension(:), intent(in) :: destination
-        logical, dimension(:), intent(in) :: mask
-        integer, dimension(:), intent(in) :: rotations
-        integer, intent(in) :: position
-        integer, intent(in) :: length
 
         type(TECube)    cube
         type(TERotator) rotator
-        integer :: index
+
+        integer       count
+        integer       index
+        integer       jndex
+        logical       status
 
         cube    = TECube()
         rotator = TERotator()
 
-        call cube%set(source)
+        allocate(buffer(depth))
 
-        if (position == length + 1) then
-            do index = 1, length
-                print '(\A3)', CUBE_ROTATIONS(rotations(buffer(index)))
-                call rotator%rotate(cube, rotations(buffer(index)))
+        print '(A)', 'Initial state: '
+        call cube%set(source)
+        call cube%print()
+
+        buffer = 0
+        count  = 0
+
+        ! iterate over possible rotations
+        do while (buffer(0) == 0)
+            do index = 1, depth
+                !print '(\I3)', buffer(index)
+                print '(\A3)', CUBE_ROTATIONS(rotations(buffer(index) + 1))
+                call rotator%rotate(cube, rotations(buffer(index) + 1))
             end do
 
+            count = count + 1
             print '(X)'
-            return
-        end if
 
-        do index = 1, size(rotations)
-            buffer(position) = index
-            call permutation(position + 1, length, source, destination, mask, rotations, buffer)
+            buffer(depth) = buffer(depth) + 1
+            jndex = depth
+            do while (buffer(jndex) == size(rotations))
+                buffer(jndex) = 0
+                jndex = jndex - 1
+                buffer(jndex) = buffer(jndex) + 1
+            end do
         end do
-    end subroutine
+
+        print *, count
+
+        deallocate(buffer)
+        status = SOLUTION_FOUND
+    end function
 end module
