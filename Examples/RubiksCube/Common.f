@@ -29,8 +29,9 @@ module MERubiksCubeCommon
     implicit none
     public
 
-    integer, parameter :: LENGTH_OF_SIDE  = 3
-    integer, parameter :: NUMBER_OF_SIDES = 6
+    integer, parameter :: LENGTH_OF_SIDE     = 3
+    integer, parameter :: NUMBER_OF_SIDES    = 6
+    integer, parameter :: NUMBER_OF_CUBICLES = LENGTH_OF_SIDE * LENGTH_OF_SIDE * NUMBER_OF_SIDES
 
     integer, parameter :: R = 1, RED    = 1
     integer, parameter :: W = 2, WHITE  = 2
@@ -52,6 +53,8 @@ module MERubiksCubeCommon
     integer, parameter :: ORANGE_CW  =  ORANGE
     integer, parameter :: ORANGE_CCW = -ORANGE
 
+    character(len=2), parameter, dimension(-6:6) :: CUBE_ROTATIONS = &
+            ['O-', 'G-', 'Y-', 'B-', 'W-', 'R-', ' ', 'R', 'W', 'B', 'Y', 'G', 'O']
     character, parameter, dimension(0:6) :: CUBE_COLORS = [' ', 'R', 'W', 'B', 'Y', 'G', 'O']
 
     ! 30 - black    35 - purple        93 - light yellow
@@ -68,4 +71,6 @@ module MERubiksCubeCommon
             achar(27) // '[32mG' // achar(27) // '[0m', &
             achar(27) // '[35mO' // achar(27) // '[0m']
 
+    logical, parameter :: SOLUTION_FOUND     = .true.
+    logical, parameter :: SOLUTION_NOT_FOUND = .false.
 end module

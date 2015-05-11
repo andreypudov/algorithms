@@ -72,7 +72,7 @@ contains
 
         buffer = cube%cube(1:3, 1, G)
         cube%cube(1:3, 1, G) = cube%cube(3, 1:3, W)
-        cube%cube(3, 1:3, W) = reverse(cube%cube(3, 1:3, B))
+        cube%cube(3, 1:3, W) = reverse(cube%cube(1:3, 3, B))
         cube%cube(1:3, 3, B) = cube%cube(1, 1:3, Y)
         cube%cube(1, 1:3, Y) = reverse(buffer)
     end subroutine
@@ -125,7 +125,7 @@ contains
         buffer = cube%cube(1:3, 1, R)
         cube%cube(1:3, 1, R) = cube%cube(1:3, 1, W)
         cube%cube(1:3, 1, W) = reverse(cube%cube(1:3, 3, O))
-        cube%cube(1:3, 3, O) = reverse(cube%cube(1, 1:3, Y))
+        cube%cube(1:3, 3, O) = reverse(cube%cube(1:3, 1, Y))
         cube%cube(1:3, 1, Y) = buffer
     end subroutine
 
@@ -135,11 +135,11 @@ contains
 
         call rotate_ccw(cube%cube(1:3, 1:3, BLUE))
 
-        buffer = cube%cube(1, 1:3, Y)
-        cube%cube(1:3, 1, Y) = reverse(cube%cube(1:3, 3, O))
+        buffer = cube%cube(1:3, 3, O)
         cube%cube(1:3, 3, O) = reverse(cube%cube(1:3, 1, W))
         cube%cube(1:3, 1, W) = cube%cube(1:3, 1, R)
-        cube%cube(1:3, 1, R) = buffer
+        cube%cube(1:3, 1, R) = cube%cube(1:3, 1, Y)
+        cube%cube(1:3, 1, Y) = reverse(buffer)
     end subroutine
 
     subroutine rotate_yellow_cw(cube)

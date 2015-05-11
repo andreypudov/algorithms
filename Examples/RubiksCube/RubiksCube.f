@@ -27,41 +27,45 @@
 module MERubiksCube
 
     use MERubiksCubeCommon
-    use MERubiksCubeCube
-    use MERubiksCubeRotator
+    use MERubiksCubeSearch
 
     implicit none
     private
 
     type, public :: TERubiksCube
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(this)
-        class(TERubiksCube), intent(in) :: this
+    subroutine present()
+        type(TESearch)  search
 
-        type(TECube)    cube
-        type(TERotator) rotator
+        ! source data
+        integer, dimension(NUMBER_OF_CUBICLES) :: source = &
+               [R, R, R, R, R, R, R, R, Y, W, W, W, W, W, W, G, W, W, &
+                B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G,  &
+                G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B]
+        integer, dimension(NUMBER_OF_CUBICLES) :: destination = &
+               [R, R, R, R, R, R, R, R, Y, W, W, W, W, W, W, G, W, W, &
+                B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G,  &
+                G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B]
+        logical, dimension(NUMBER_OF_CUBICLES) :: mask = &
+               [.true., .true., .true., .true., .true., .true., .true., .true., .true., &
+                .true., .true., .true., .true., .true., .true., .true., .true., .true., &
+                .true., .true., .true., .true., .true., .true., .true., .true., .true., &
+                .true., .true., .true., .true., .true., .true., .true., .true., .true., &
+                .true., .true., .true., .true., .true., .true., .true., .true., .true., &
+                .true., .true., .true., .true., .true., .true., .true., .true., .true.]
+        !integer, dimension(12) :: rotations = &
+        !       [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
+        !       YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
+        integer, dimension(3) :: rotations = &
+               [RED_CW, RED_CCW, WHITE_CW]
 
-        cube    = TECube()
-        rotator = TERotator()
+        integer :: depth  = 3
+        logical :: status = .false.
 
-        cube%cube(1, 1, WHITE)  = ORANGE
-        cube%cube(1, 1, RED)    = WHITE
-        cube%cube(1, 1, YELLOW) = RED
-        cube%cube(1, 3, ORANGE) = BLUE
-        cube%cube(1, 1, BLUE)   = ORANGE
-
-        print '(A)', 'Initial state: '
-        call cube%set([R, R, R, R, R, R, R, R, Y, W, W, W, W, W, W, G, W, W, &
-                B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G, &
-                G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B])
-        call cube%print()
-
-        call rotator%rotate(cube, ORANGE_CCW)
-
-        print '(/A)', 'Rotated state: '
-        call cube%print()
+        ! search for desired state
+        status = search%search(source, destination, mask, rotations, depth)
     end subroutine
 end module

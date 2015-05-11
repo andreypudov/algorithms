@@ -36,12 +36,10 @@ module MEPingPong
 
     type, public :: TEPingPong
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TEPingPong), intent(in) :: instance
-
+    subroutine present()
         integer pinger
         integer ponger
 

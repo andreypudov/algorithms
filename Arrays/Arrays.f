@@ -26,6 +26,8 @@
 
 module MArrays
 
+    use MQuickSort
+
     implicit none
     private
 
@@ -46,10 +48,16 @@ module MArrays
         procedure, nopass :: print1d
         procedure, nopass :: print2d
 
+        procedure, nopass :: swap1d
+
+        procedure, nopass :: sort1d
+
         generic :: fillWithSequence      => fillWithSequence1d, fillWithSequence2d
         generic :: increaseWhenRequired => increaseWhenRequiredAllocatable, increaseWhenRequiredPointer
 
         generic :: print => print1d, print2d
+        generic :: swap  => swap1d
+        generic :: sort  => sort1d
     end type
 contains
     !
@@ -214,5 +222,24 @@ contains
          write(length, '(i0.0)') value
 
          print '(' // trim(count) // 'i' // trim(length) // ')', array
+     end subroutine
+
+     subroutine swap1d(array, index, jndex)
+         integer, dimension(:), intent(in out) :: array
+         integer, intent(in) :: index
+         integer, intent(in) :: jndex
+
+         integer buffer
+
+         buffer = array(index)
+         array(index) = array(jndex)
+         array(jndex) = buffer
+     end subroutine swap1d
+
+     subroutine sort1d(array)
+         integer, dimension(:), intent(in out) :: array
+         type(TQuickSort) quickSort
+
+         call quickSort%sortOriginal(array)
      end subroutine
 end module

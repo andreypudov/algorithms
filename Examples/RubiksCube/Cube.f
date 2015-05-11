@@ -49,7 +49,7 @@ module MERubiksCubeCube
     private
         integer, dimension(LENGTH_OF_SIDE, LENGTH_OF_SIDE, NUMBER_OF_SIDES), public :: cube
     contains
-        !procedure :: get
+        procedure :: get
         procedure :: set
 
         procedure :: print
@@ -61,6 +61,13 @@ module MERubiksCubeCube
         procedure :: init
     end interface
 contains
+    function get(this) result(vector)
+        class(TECube), intent(in)           :: this
+        integer, dimension(size(this%cube)) :: vector
+
+        vector = reshape(this%cube, [size(this%cube)])
+    end function
+
     subroutine set(this, vector)
         class(TECube), intent(in out)     :: this
         integer, dimension(:), intent(in) :: vector
@@ -74,19 +81,19 @@ contains
 
         integer index
 
-        buffer(1:3, 4:6)   = this%cube(1:3, 1:3, 2)
-        buffer(4:6, 1:3)   = this%cube(1:3, 1:3, 3)
-        buffer(4:6, 4:6)   = this%cube(1:3, 1:3, 1)
-        buffer(4:6, 7:9)   = this%cube(1:3, 1:3, 5)
-        buffer(4:6, 10:12) = this%cube(1:3, 1:3, 6)
-        buffer(7:9, 4:6)   = this%cube(1:3, 1:3, 4)
+        buffer(1:3, 4:6)   = this%cube(1:3, 1:3, WHITE)
+        buffer(4:6, 1:3)   = this%cube(1:3, 1:3, BLUE)
+        buffer(4:6, 4:6)   = this%cube(1:3, 1:3, RED)
+        buffer(4:6, 7:9)   = this%cube(1:3, 1:3, GREEN)
+        buffer(4:6, 10:12) = this%cube(1:3, 1:3, ORANGE)
+        buffer(7:9, 4:6)   = this%cube(1:3, 1:3, YELLOW)
 
         do index = 1, size(buffer, 1)
             !print '(\A2)', CUBE_COLORS(buffer(index, :))
             print '(\A11)', COLORIFY(buffer(index, :))
             print '(X)'
         end do
-    end subroutine print
+    end subroutine
 
     function init() result(object)
         type(TECube) :: object
