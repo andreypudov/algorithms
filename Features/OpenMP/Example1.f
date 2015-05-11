@@ -24,43 +24,32 @@
 ! THE SOFTWARE.
 !
 
-module MFeature
-
-    use MFArrays
-    use MFReallocation
-
-    use MFInheritance
-    use MFConstructor
-
-    use MFOpemMPExample1
+module MFOpemMPExample1
 
     implicit none
     private
 
-    type, public :: TFeature
+    type,  public :: TFExample1
     contains
-        procedure :: present
+        procedure, nopass :: present
     end type
 contains
-    subroutine present(instance)
-        class(TFeature), intent(in) :: instance
+    subroutine present()
+        integer, external :: OMP_GET_THREAD_NUM
+        integer, external :: OMP_GET_NUM_THREADS
+        integer :: nthreads
+        integer :: myid
 
-        type(TFArrays)       arrays
-        type(TFReallocation) reallocation
+        !$OMP PARALLEL private(nthreads, myid)
 
-        type(TFInheritance)  inheritance
-        !type(TFConstructor)  constructor
+        myid = OMP_GET_THREAD_NUM()
+        print '(A,I)', 'Hello I am thread ', myid
 
-        type(TFExample1) openMPEx1
+        if (myid == 0) then
+            nthreads = OMP_GET_NUM_THREADS()
+            print '(A,I)', 'Number of threads ', nthreads
+        end if
 
-        !constructor = TFConstructor(6)
-        !call constructor%method()
-
-        !call arrays%present()
-        !call reallocation%present()
-
-        !call inheritance%present()
-
-        call openMPEx1%present()
+        !$OMP END PARALLEL
     end subroutine
 end module

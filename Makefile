@@ -1,11 +1,13 @@
 FC = ifort
 CC = clang
-FFLAGS  = -c -free -module Modules -reentrancy threaded # -debug all
-CFLAGS  = -c -pthread # -g
-LDFLAGS =
+FFLAGS  = -c -free -module Modules -reentrancy threaded -openmp # -debug all
+CFLAGS  = -c -pthread -openmp # -g
+LDFLAGS = -openmp
 
 INTERFACES = Arrays/Arrays.f \
 			 Units/Asserts.f Units/Report.f \
+			 Examples/RubiksCube/Common.f Examples/RubiksCube/Cube.f Examples/RubiksCube/Rotator.f \
+			 Examples/RubiksCube/Search.f Examples/RubiksCube/RubiksCube.f \
 			 Features/Inheritance/Shape.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \

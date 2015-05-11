@@ -96,6 +96,7 @@ contains
 
         ! iterate over possible rotations
         do while (buffer(0) == 0)
+            ! begin rotation sequence
             call cube%set(source)
 
             do index = 1, depth
