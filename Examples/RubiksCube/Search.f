@@ -30,6 +30,8 @@ module MERubiksCubeSearch
     use MERubiksCubeCube
     use MERubiksCubeRotator
 
+    use iso_fortran_env
+
     implicit none
     private
 
@@ -62,33 +64,64 @@ contains
         type(TECube)    cube
         type(TERotator) rotator
 
-        integer       count
-        integer       index
-        integer       jndex
-        logical       status
+        integer(kind=int64) expectation
+        integer(kind=int64) count
+        integer index
+        integer jndex
+        logical status
 
+        cube    = TECube()
         cube    = TECube()
         rotator = TERotator()
 
+        expectation = size(rotations) ** depth
         allocate(buffer(depth))
+        buffer = 0
+        count  = 0
+
+        print '(A)', 'Desired state: '
+        call cube%set(destination)
+        call cube%print()
+        print '(X)'
 
         print '(A)', 'Initial state: '
         call cube%set(source)
         call cube%print()
+        print '(X)'
 
-        buffer = 0
-        count  = 0
+        ! expectation value is too large
+        if (expectation == 0) then
+            print '(A)', 'Search in progress... (status is unavailable)'
+        end if
 
         ! iterate over possible rotations
         do while (buffer(0) == 0)
+            call cube%set(source)
+
             do index = 1, depth
-                !print '(\I3)', buffer(index)
-                print '(\A3)', CUBE_ROTATIONS(rotations(buffer(index) + 1))
+                !print '(\A3)', CUBE_ROTATIONS(rotations(buffer(index) + 1))
                 call rotator%rotate(cube, rotations(buffer(index) + 1))
+
+                ! validate current and destired states
+                if (all((cube%get() - destination) == 0)) then
+                    print '(A)', 'Desired pattern found.'
+                    do jndex = 1, depth
+                        print '(\A3)', CUBE_ROTATIONS(rotations(buffer(jndex) + 1))
+                    end do
+                    print '(X)'
+
+                    deallocate(buffer)
+                    status = SOLUTION_NOT_FOUND
+                    return
+                end if
             end do
 
             count = count + 1
-            print '(X)'
+            !print '(X)'
+            if ((mod(count, 2500000) == 0) .and. (expectation /= 0)) then
+                print '(\A,I,A)', 'Search in progress... ', (count * 100 / expectation), '%'
+                print '(\A)', achar(13)
+            end if
 
             buffer(depth) = buffer(depth) + 1
             jndex = depth
@@ -99,9 +132,9 @@ contains
             end do
         end do
 
-        print *, count
+        print '(A)', 'Desired pattern doesn''t found.'
 
         deallocate(buffer)
-        status = SOLUTION_FOUND
+        status = SOLUTION_NOT_FOUND
     end function
 end module

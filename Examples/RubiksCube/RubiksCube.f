@@ -46,9 +46,9 @@ contains
                 B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G,  &
                 G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B]
         integer, dimension(NUMBER_OF_CUBICLES) :: destination = &
-               [R, R, R, R, R, R, R, R, Y, W, W, W, W, W, W, G, W, W, &
-                B, B, Y, B, B, B, B, B, B, Y, Y, O, Y, Y, G, G, O, G,  &
-                G, G, R, G, G, Y, Y, G, W, O, O, O, O, O, Y, O, O, B]
+               [O, G, R, R, R, B, G, W, G, W, R, Y, Y, W, B, B, O, O, &
+                O, W, R, Y, B, B, B, Y, G, W, O, Y, Y, Y, B, R, G, B,  &
+                Y, G, Y, G, G, R, R, R, O, W, W, W, O, O, W, G, O, B]
         logical, dimension(NUMBER_OF_CUBICLES) :: mask = &
                [.true., .true., .true., .true., .true., .true., .true., .true., .true., &
                 .true., .true., .true., .true., .true., .true., .true., .true., .true., &
@@ -59,10 +59,11 @@ contains
         !integer, dimension(12) :: rotations = &
         !       [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
         !       YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
-        integer, dimension(3) :: rotations = &
-               [RED_CW, RED_CCW, WHITE_CW]
+        integer, dimension(12) :: rotations = &
+               [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
+               YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
 
-        integer :: depth  = 3
+        integer :: depth  = 5
         logical :: status = .false.
 
         ! search for desired state
