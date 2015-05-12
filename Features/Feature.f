@@ -33,6 +33,7 @@ module MFeature
     use MFConstructor
 
     use MFOpemMPExample1
+    use MFOpemMPExample2
 
     implicit none
     private
@@ -52,6 +53,7 @@ contains
         !type(TFConstructor)  constructor
 
         type(TFExample1) openMPEx1
+        type(TFExample2) openMPEx2
 
         !constructor = TFConstructor(6)
         !call constructor%method()
@@ -61,6 +63,7 @@ contains
 
         !call inheritance%present()
 
-        call openMPEx1%present()
+        !call openMPEx1%present()
+        call openMPEx2%present()
     end subroutine
 end module

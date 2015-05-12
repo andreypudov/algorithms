@@ -24,32 +24,58 @@
 ! THE SOFTWARE.
 !
 
-module MFOpemMPExample1
+module MFOpemMPExample2
+
+    use omp_lib
 
     implicit none
     private
 
-    type,  public :: TFExample1
+    type,  public :: TFExample2
     contains
         procedure, nopass :: present
     end type
 contains
     subroutine present()
-        integer, external :: OMP_GET_THREAD_NUM
-        integer, external :: OMP_GET_NUM_THREADS
-        integer :: nthreads
-        integer :: myid
+        integer(selected_int_kind(18)), parameter :: intervals = 1e7
+        integer(selected_int_kind(18)) :: i
+        integer :: nthreads, threadid
 
-        !$omp parallel private(nthreads, myid)
+        real(kind(1.d0)), parameter :: PI25DT = acos(-1.d0)
+        real(kind(1.d0)) :: dx, sum, x
+        real(kind(1.d0)) :: f, pi
 
-        myid = OMP_GET_THREAD_NUM()
-        print '(A,I)', 'Hello I am thread ', myid
+        real(kind(1.d0)) :: time1, time2
 
-        if (myid == 0) then
-            nthreads = OMP_GET_NUM_THREADS()
-            print '(A,I)', 'Number of threads ', nthreads
+        !$omp parallel
+        nthreads = OMP_GET_NUM_THREADS()
+        threadid = OMP_GET_THREAD_NUM()
+        if (threadid == 0) then
+            print '(A,I)', 'The number of threads: ', nthreads
         end if
-
         !$omp end parallel
+
+        print '(A, I)', 'The number of intervals: ', intervals
+        sum   = 0.d0
+        dx    = 1.d0 / intervals
+        time1 = omp_get_wtime()
+
+        !$omp parallel do private(x, f) &
+        !$omp reduction(+:sum)
+        do i = intervals, 1, -1
+            x = dx * (i - 0.5d0)
+            f = 4.d0 / (1.d0 + x * x)
+            sum = sum + f
+        end do
+        !$omp end parallel do
+
+        pi    = dx * sum
+        time2 = omp_get_wtime()
+
+        print '(a13,2x,f30.25)', 'Computed PI = ', pi
+        print '(a13,2x,f30.25)', 'The true PI = ', PI25DT
+        print '(a13,2x,f30.25)', 'Error         ', PI25DT - pi
+        print '(X)'
+        print *, 'Elapsed time ', time2 - time1, ' s.'
     end subroutine
 end module

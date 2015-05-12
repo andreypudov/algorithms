@@ -65,9 +65,9 @@ contains
         !integer, dimension(12) :: rotations = &
         !       [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
         !       YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
-        integer, dimension(12) :: rotations = &
+        integer, dimension(10) :: rotations = &
                [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
-               YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
+               YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW]!, ORANGE_CW, ORANGE_CCW]
 
         integer :: depth  = 7
         logical :: status = .false.

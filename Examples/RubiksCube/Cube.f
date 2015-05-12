@@ -81,6 +81,7 @@ contains
 
         integer index
 
+        buffer = 0
         buffer(1:3, 4:6)   = this%cube(1:3, 1:3, WHITE)
         buffer(4:6, 1:3)   = this%cube(1:3, 1:3, BLUE)
         buffer(4:6, 4:6)   = this%cube(1:3, 1:3, RED)
