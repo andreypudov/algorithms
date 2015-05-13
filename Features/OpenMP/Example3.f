@@ -24,31 +24,55 @@
 ! THE SOFTWARE.
 !
 
-module MFOpemMPExample1
+module MFOpemMPExample3
 
     use omp_lib
 
     implicit none
     private
 
-    type,  public :: TFExample1
+    type,  public :: TFExample3
     contains
         procedure, nopass :: present
     end type
 contains
     subroutine present()
-        integer :: nthreads
-        integer :: myid
+        integer, parameter :: N = 4
+        integer, parameter :: K = 2
 
-        !$omp parallel private(nthreads, myid)
+        integer, dimension(0:K) :: buffer
+        integer nthreads, threadid
+        integer index, jndex
+        integer start, end
+        real    divider
 
-        myid = OMP_GET_THREAD_NUM()
-        print '(A,I)', 'Hello I am thread ', myid
+        !$omp parallel private(nthreads, threadid, buffer)
 
-        !$omp master
-            nthreads = OMP_GET_NUM_THREADS()
-            print '(A,I)', 'Number of threads ', nthreads
-        !$omp end master
+        nthreads = OMP_GET_NUM_THREADS()
+        threadid = OMP_GET_THREAD_NUM()
+        buffer   = 0
+        start    = -1
+        end      = -1
+
+        do while (buffer(0) == 0 .and. buffer(1) /= end)
+            if (start == -1) then
+                divider = N / real(nthreads)
+                start   = floor(divider * threadid + 1.0) - 1
+                end     = ceiling(start + divider - 1)    + 1
+
+                buffer(1:K) = [(index, index = K - 1, 0, -1)] * start
+            end if
+
+            print '(I3,4X,4I2)', threadid, buffer(1:K) + 1
+
+            buffer(K) = buffer(K) + 1
+            index = K
+            do while (buffer(index) == N)
+                buffer(index) = 0
+                index = index - 1
+                buffer(index) = buffer(index) + 1
+            end do
+        end do
 
         !$omp end parallel
     end subroutine

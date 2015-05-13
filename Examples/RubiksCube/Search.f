@@ -59,7 +59,7 @@ contains
         integer, dimension(:), intent(in) :: rotations
         integer, intent(in)               :: depth
 
-        integer, dimension(:), allocatable  :: buffer
+        integer, dimension(0:depth) :: buffer
 
         type(TECube)    cube
         type(TERotator) rotator
@@ -75,7 +75,6 @@ contains
         rotator = TERotator()
 
         expectation = size(rotations) ** depth
-        allocate(buffer(depth))
         buffer = 0
         count  = 0
 
@@ -111,7 +110,6 @@ contains
                     end do
                     print '(X)'
 
-                    deallocate(buffer)
                     status = SOLUTION_NOT_FOUND
                     return
                 end if
@@ -134,8 +132,6 @@ contains
         end do
 
         print '(A)', 'Desired pattern doesn''t found.'
-
-        deallocate(buffer)
         status = SOLUTION_NOT_FOUND
     end function
 end module
