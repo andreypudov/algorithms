@@ -56,7 +56,7 @@ contains
         start    = -1
         end      = -1
 
-        do while (buffer(0) == 0 .and. buffer(1) /= end) ! .and. buffer(1) /= end
+        do while (buffer(0) == 0 .and. buffer(1) /= end)
             if (start == -1) then
                 divider = N / real(nthreads)
                 start   = floor(divider * threadid + 1.0)

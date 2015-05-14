@@ -31,6 +31,7 @@ module MERubiksCubeSearch
     use MERubiksCubeRotator
 
     use iso_fortran_env
+    use omp_lib
 
     implicit none
     private
@@ -64,37 +65,54 @@ contains
         type(TECube)    cube
         type(TERotator) rotator
 
-        integer(kind=int64) expectation
-        integer(kind=int64) count
-        integer index
-        integer jndex
+        integer(kind=int64) expectation, count
+        integer index, jndex
         logical status
+
+        ! array dividing parameters
+        integer nthreads, threadid
+        integer start, end
+        real    divider
 
         cube    = TECube()
         cube    = TECube()
         rotator = TERotator()
 
-        expectation = size(rotations) ** depth
-        buffer = 0
-        count  = 0
-
-        print '(A)', 'Desired state: '
-        call cube%set(destination)
-        call cube%print()
-        print '(X)'
+        status = SOLUTION_NOT_FOUND
 
         print '(A)', 'Initial state: '
         call cube%set(source)
         call cube%print()
         print '(X)'
 
-        ! expectation value is too large
+        print '(A)', 'Desired state: '
+        call cube%set(destination)
+        call cube%print()
+        print '(X)'
+
+        !$omp parallel private(cube, buffer, nthreads, threadid, start, end, divider, expectation, count)
+
+        nthreads = omp_get_num_threads()
+        threadid = omp_get_thread_num()
+        buffer   = 0
+        start    = -1
+        end      = -1
+
+        expectation = size(rotations) ** depth / nthreads
         if (expectation == 0) then
             print '(A)', 'Search in progress... (status is unavailable)'
         end if
 
         ! iterate over possible rotations
-        do while (buffer(0) == 0)
+        do while ((buffer(0) == 0) .and. (buffer(1) /= end))
+            if (start == -1) then
+                divider = size(rotations) / real(nthreads)
+                start   = floor(divider * threadid + 1.0)
+                end     = ceiling(start + divider - 1)
+
+                buffer(1) = start - 1
+            end if
+
             ! begin rotation sequence
             call cube%set(source)
 
@@ -110,17 +128,24 @@ contains
                     end do
                     print '(X)'
 
-                    status = SOLUTION_NOT_FOUND
-                    return
+                    status = SOLUTION_FOUND
                 end if
             end do
 
+            !$omp flush(status)
+            if (status == SOLUTION_FOUND) then
+                buffer(1) = end
+            end if
+
             count = count + 1
             !print '(X)'
+
+            !$omp master
             if ((mod(count, 2500000) == 0) .and. (expectation /= 0)) then
                 print '(\A,I,A)', 'Search in progress... ', (count * 100 / expectation), '%'
                 print '(\A)', achar(13)
             end if
+            !$omp end master
 
             buffer(depth) = buffer(depth) + 1
             jndex = depth
@@ -131,7 +156,10 @@ contains
             end do
         end do
 
-        print '(A)', 'Desired pattern doesn''t found.'
-        status = SOLUTION_NOT_FOUND
+        !$omp end parallel
+
+        if (status == SOLUTION_NOT_FOUND) then
+            print '(A)', 'Desired pattern doesn''t found.'
+        end if
     end function
 end module
