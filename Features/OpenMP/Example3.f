@@ -37,8 +37,8 @@ module MFOpemMPExample3
     end type
 contains
     subroutine present()
-        integer, parameter :: N = 4
-        integer, parameter :: K = 2
+        integer, parameter :: N = 3
+        integer, parameter :: K = 3
 
         integer, dimension(0:K) :: buffer
         integer nthreads, threadid
@@ -46,7 +46,9 @@ contains
         integer start, end
         real    divider
 
-        !$omp parallel private(nthreads, threadid, buffer)
+        integer count
+
+        !$omp parallel private(nthreads, threadid, buffer) reduction(+:count)
 
         nthreads = OMP_GET_NUM_THREADS()
         threadid = OMP_GET_THREAD_NUM()
@@ -54,16 +56,17 @@ contains
         start    = -1
         end      = -1
 
-        do while (buffer(0) == 0 .and. buffer(1) /= end)
+        do while (buffer(0) == 0 .and. buffer(1) /= end) ! .and. buffer(1) /= end
             if (start == -1) then
                 divider = N / real(nthreads)
-                start   = floor(divider * threadid + 1.0) - 1
-                end     = ceiling(start + divider - 1)    + 1
+                start   = floor(divider * threadid + 1.0)
+                end     = ceiling(start + divider - 1)
 
-                buffer(1:K) = [(index, index = K - 1, 0, -1)] * start
+                buffer(1) = start - 1
             end if
 
             print '(I3,4X,4I2)', threadid, buffer(1:K) + 1
+            count = count + 1
 
             buffer(K) = buffer(K) + 1
             index = K
@@ -75,5 +78,7 @@ contains
         end do
 
         !$omp end parallel
+
+        print '(A,I,A,I)', 'Expected: ', N ** K, ' Processed: ', count
     end subroutine
 end module
