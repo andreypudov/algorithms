@@ -76,7 +76,7 @@ contains
         integer, dimension(6) :: rotations = &
                [BLUE_CW, BLUE_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
 
-        integer :: depth  = 7
+        integer :: depth  = 11
         logical :: status = .false.
 
         ! search for desired state
