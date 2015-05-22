@@ -36,6 +36,7 @@ module MERubiksCubeRotator
         private
     contains
         procedure, nopass :: rotate
+        procedure, nopass :: optimize
     end type
 
     ! structures to minimize the number of comparisons
@@ -63,6 +64,63 @@ contains
 
         call ROTATORS(type)%rotator(cube)
     end subroutine
+
+    ! optimizes the sequence of rotations
+    recursive function optimize(sequence, rotations) result(jndex)
+        integer, dimension(:), intent(in out) :: sequence
+        integer, dimension(:), intent(in)     :: rotations
+        integer index, jndex
+        integer count, value
+        logical state
+
+        ! removes reversed pairs ([R  R  R- G- Y  B- O] to [R  G- Y  B- O])
+        index = 1
+        jndex = 1
+        count = 1
+        state = .false.
+        value = rotations(sequence(index))
+        do while (index < size(sequence))
+            index = index + 1
+            jndex = jndex + 1
+
+            if (rotations(sequence(index - 1)) == rotations(sequence(index)) * -1) then
+                index = index + 1
+                jndex = jndex - 1
+                count = count - 1
+                state = .true.
+
+                if (index > size(sequence)) then
+                    jndex = jndex - 1
+                    exit
+                end if
+            end if
+
+            if (rotations(sequence(index)) == value) then
+                count = count + 1
+                if (count == 4) then
+                    index = index + 1
+                    jndex = jndex - 3
+                    count = 1
+                    state = .true.
+                    value = rotations(sequence(index))
+
+                    if (index > size(sequence)) then
+                        jndex = jndex - 1
+                        exit
+                    end if
+                end if
+            else
+                count = 1
+                value = rotations(sequence(index))
+            end if
+
+            sequence(jndex) = sequence(index)
+        end do
+
+        if (state .and. (jndex > 0)) then
+            jndex = optimize(sequence(1:jndex), rotations)
+        end if
+    end function
 
     subroutine rotate_red_cw(cube)
         class(TECube), intent(in out)          :: cube

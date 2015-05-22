@@ -61,12 +61,14 @@ contains
         integer, intent(in)               :: depth
 
         integer, dimension(0:depth) :: buffer
+        integer, dimension(1:depth) :: sequence
 
         type(TECube)    cube
         type(TERotator) rotator
 
         integer(kind=int64) expectation, count
         integer index, jndex
+        logical masked
         logical status
 
         ! array dividing parameters
@@ -74,10 +76,19 @@ contains
         integer start, end
         real    divider
 
+        ! search results
+        integer, dimension(:,:), allocatable :: subresults
+        integer, dimension(:,:), allocatable :: results
+        integer subcounter
+
+        ! seach elapsed time
+        real(kind=real64) :: time1, time2
+
         cube    = TECube()
         cube    = TECube()
         rotator = TERotator()
 
+        masked = .not. all(mask == .true.)
         status = SOLUTION_NOT_FOUND
 
         print '(A)', 'Initial state: '
@@ -90,13 +101,26 @@ contains
         call cube%print()
         print '(X)'
 
-        !$omp parallel private(cube, buffer, nthreads, threadid, start, end, divider, expectation, count)
+        if (masked) then
+            print '(A)', 'Comparison mask: '
+            call cube%set(mask + 6)
+            call cube%print()
+            print '(X)'
+        end if
+
+        time1 = omp_get_wtime()
+
+        !omp parallel private(cube, buffer, nthreads, threadid, start, end, divider, expectation, count) &
+        !omp private(subresults, results, subcounter)
 
         nthreads = omp_get_num_threads()
         threadid = omp_get_thread_num()
         buffer   = 0
         start    = -1
         end      = -1
+
+        allocate(subresults(16, depth))
+        subcounter = 0
 
         expectation = size(rotations) ** depth / nthreads
         if (expectation == 0) then
@@ -116,24 +140,30 @@ contains
             ! begin rotation sequence
             call cube%set(source)
 
+            !print '(\A3)', CUBE_ROTATIONS(rotations(buffer(1:depth) + 1))
             do index = 1, depth
-                !print '(\A3)', CUBE_ROTATIONS(rotations(buffer(index) + 1))
                 call rotator%rotate(cube, rotations(buffer(index) + 1))
 
                 ! validate current and destired states
-                if (all((cube%get() - destination) == 0)) then
-                    print '(A)', 'Desired pattern found.'
-                    do jndex = 1, depth
-                        print '(\A3)', CUBE_ROTATIONS(rotations(buffer(jndex) + 1))
-                    end do
+                if (all(((cube%get() - destination) * mask) == 0)) then
+                    !print '(A)', 'Desired pattern found.'
+                    print '(\A3)', CUBE_ROTATIONS(rotations(buffer(1:depth) + 1))
                     print '(X)'
+                    !jndex = rotator%optimize(buffer, rotations)
+                    !print '(\A3)', CUBE_ROTATIONS(rotations(buffer(1:jndex - 1) + 1))
+                    !print '(X)'
+                    sequence = buffer(1:depth) + 1
+                    jndex = rotator%optimize(sequence, rotations)
+                    print '(\A3)', CUBE_ROTATIONS(rotations(sequence(1:jndex)))
+                    print '(X/)'
+                    !call insertResult(buffer(1:jndex - 1), subresults, subcounter)
 
                     status = SOLUTION_FOUND
                 end if
             end do
 
             !$omp flush(status)
-            if (status == SOLUTION_FOUND) then
+            if ((status == SOLUTION_FOUND) .and. (masked == .false.)) then
                 buffer(1) = end
             end if
 
@@ -142,7 +172,7 @@ contains
 
             !$omp master
             if ((mod(count, 2500000) == 0) .and. (expectation /= 0)) then
-                print '(\A,I,A)', 'Search in progress... ', (count * 100 / expectation), '%'
+                print '(\A,I3,A)', 'Search in progress... ', (count * 100 / expectation), '%'
                 print '(\A)', achar(13)
             end if
             !$omp end master
@@ -156,10 +186,54 @@ contains
             end do
         end do
 
-        !$omp end parallel
+        !omp critical
+        !omp end critical
+
+        if (allocated(subresults)) then
+            deallocate(subresults)
+        end if
+
+        !omp end parallel
 
         if (status == SOLUTION_NOT_FOUND) then
             print '(A)', 'Desired pattern doesn''t found.'
         end if
+
+        time2 = omp_get_wtime()
+        print '(X/,A,F6.3,A)', 'Elapsed time: ', time2 - time1, 's.'
+    end function
+
+    subroutine insertResult(value, subresults, subcounter)
+        integer, dimension(:), intent(in)                    :: value
+        integer, dimension(:,:), allocatable, intent(in out) :: subresults
+        integer, intent(in out)                              :: subcounter
+
+        integer, dimension(:,:), allocatable :: temporary_array
+
+        subcounter = subcounter + 1
+        if (subcounter > size(subresults)) then
+            allocate(temporary_array(size(subresults, 1) * 3 / 2, size(subresults, 2)))
+            temporary_array(1:size(subresults, 1), 1:size(subresults, 2)) = subresults
+            deallocate(subresults)
+            call move_alloc(temporary_array, subresults)
+        end if
+
+        !subresults(subcounter, 1:) = value
+    end subroutine
+
+    function containsResult(resvalue, subresults) result(status)
+        integer, dimension(:), intent(in)                    :: resvalue
+        integer, dimension(:,:), allocatable, intent(in out) :: subresults
+
+        integer index
+        logical status
+
+        status = .false.
+        do index = 1, size(subresults, 1)
+            if (all(subresults(index, 1:) == resvalue)) then
+                status = .true.
+                exit
+            end if
+        end do
     end function
 end module

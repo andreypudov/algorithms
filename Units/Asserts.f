@@ -73,9 +73,11 @@ contains
         integer, dimension(:), intent(in) :: value1
         integer, dimension(:), intent(in) :: value2
 
-        if (all(value1 .eq. value2 ) .ne. .true. ) then
+        if ((size(value1) /= size(value2)) .or. &
+                (all(value1 .eq. value2 ) .ne. .true.)) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
-            print *, value1, value2
+            print *, value1
+            print *, value2
         end if
     end subroutine
 
@@ -83,9 +85,11 @@ contains
         integer, dimension(:,:), intent(in) :: value1
         integer, dimension(:,:), intent(in) :: value2
 
-        if (all(value1 .eq. value2 ) .ne. .true. ) then
+        if ((size(value1) /= size(value2)) .or. &
+                (all(value1 .eq. value2 ) .ne. .true.)) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
-            print *, value1, value2
+            print *, value1
+            print *, value2
         end if
     end subroutine
 

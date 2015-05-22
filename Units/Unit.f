@@ -100,7 +100,7 @@ contains
 
         !call arrayStack%present()
         !call arrayQueue%present()
-        call linkedList%present()
+        !call linkedList%present()
     end subroutine
 
     subroutine sorts()

@@ -53,8 +53,12 @@ module MERubiksCubeCommon
     integer, parameter :: ORANGE_CW  =  ORANGE
     integer, parameter :: ORANGE_CCW = -ORANGE
 
+
+    ! the set of supported rotations
     character(len=2), parameter, dimension(-6:6) :: CUBE_ROTATIONS = &
             ['O-', 'G-', 'Y-', 'B-', 'W-', 'R-', ' ', 'R', 'W', 'B', 'Y', 'G', 'O']
+
+    ! the set of colors
     character, parameter, dimension(0:6) :: CUBE_COLORS = [' ', 'R', 'W', 'B', 'Y', 'G', 'O']
 
     ! 30 - black    35 - purple        93 - light yellow

@@ -88,7 +88,7 @@ contains
         call assert_equals(shape_,  [NUMBER_OF_ELEMENTS])
         call assert_equals(lbound_, [FIRST])
         call assert_equals(ubound_, [NUMBER_OF_ELEMENTS])
-        call assert_equals(size_,   NUMBER_OF_ELEMENTS)
+        call assert_equals(size_,    NUMBER_OF_ELEMENTS)
     end subroutine
 
     subroutine getArrayTwoDimension(array)
