@@ -24,28 +24,47 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MExample
-    use MExercises
-    use MExperiments
-    use MFeature
-    use MUnit
+module MNeuron
 
     implicit none
+    private
 
-    type(TExample)     example
-    type(TExercises)   exercises
-    type(TExperiments) experiments
-    type(TFeature)     feature
-    type(TUnit)        unit
+    type, public :: TNeuron
+    private
+        integer, dimension(4) :: weights
+        integer :: activation
+    contains
+        procedure :: activate
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+        final     :: destroy
+    end type
 
-    !call example%present()
-    call exercises%present()
-    !call experiments%present()
-    !call feature%present()
-    !call unit%present()
-end program
+    interface TNeuron
+        procedure :: init
+    end interface
+contains
+    function activate(this, pattern) result(activation)
+        class(TNeuron), intent(in out)     :: this
+        integer, dimension(:), intent(in) :: pattern
+        integer :: activation
+        integer :: index
+
+        do index = 1, size(pattern)
+            activation = activation + pattern(index) * this%weights(index)
+        end do
+    end function
+
+    function init() result(object)
+        type(TNeuron) :: object
+
+        object%activation = 0
+        object%weights    = 0
+    end function
+
+    subroutine destroy(this)
+        type(TNeuron), intent(in out) :: this
+
+        this%activation = 0
+        this%weights    = 0
+    end subroutine
+end module

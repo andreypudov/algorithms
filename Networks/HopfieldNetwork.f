@@ -24,28 +24,36 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MExample
-    use MExercises
-    use MExperiments
-    use MFeature
-    use MUnit
+module MHopfieldNetwork
 
     implicit none
+    private
 
-    type(TExample)     example
-    type(TExercises)   exercises
-    type(TExperiments) experiments
-    type(TFeature)     feature
-    type(TUnit)        unit
+    type, public :: THopfieldNetwork
+    private
+        integer, dimension(:,:), allocatable :: weights
+        integer :: neurons
+    contains
+        !procedure :: train
+        !procedure :: recognize
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+        procedure :: init
+        procedure :: destroy
+    end type
+contains
+    subroutine init(this, neurons)
+        class(THopfieldNetwork), intent(in out) :: this
+        integer, intent(in) :: neurons
 
-    !call example%present()
-    call exercises%present()
-    !call experiments%present()
-    !call feature%present()
-    !call unit%present()
-end program
+        allocate(this%weights(neurons, neurons))
+        this%weights = 0
+        this%neurons = neurons
+    end subroutine
+
+    subroutine destroy(this)
+        class(THopfieldNetwork), intent(in out) :: this
+
+        deallocate(this%weights)
+        this%neurons = 0
+    end subroutine
+end module

@@ -149,20 +149,20 @@ contains
                 end if
             end do
 
-            !$omp flush(status)
-            if ((status == SOLUTION_FOUND) .and. (masked == .false.)) then
-                buffer(1) = end
-            end if
+            !omp flush(status)
+            !if ((status == SOLUTION_FOUND) .and. (masked == .false.)) then
+            !    buffer(1) = end
+            !end if
 
             count = count + 1
             !print '(X)'
 
-            !$omp master
-            if ((mod(count, 2500000) == 0) .and. (expectation /= 0)) then
-                print '(\A,I3,A)', 'Search in progress... ', (count * 100 / expectation), '%'
-                print '(\A)', achar(13)
-            end if
-            !$omp end master
+            !omp master
+            !if ((mod(count, 2500000) == 0) .and. (expectation /= 0)) then
+            !    print '(\A,I3,A)', 'Search in progress... ', (count * 100 / expectation), '%'
+            !    print '(\A)', achar(13)
+            !end if
+            !omp end master
 
             buffer(depth) = buffer(depth) + 1
             jndex = depth
@@ -180,6 +180,6 @@ contains
         end if
 
         time2 = omp_get_wtime()
-        print '(X/,A,F6.3,A)', 'Elapsed time: ', time2 - time1, 's.'
+        print '(X/,A,F0.3,A)', 'Elapsed time: ', time2 - time1, 's.'
     end function
 end module

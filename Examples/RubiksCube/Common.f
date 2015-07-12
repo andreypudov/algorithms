@@ -40,18 +40,18 @@ module MERubiksCubeCommon
     integer, parameter :: G = 5, GREEN  = 5
     integer, parameter :: O = 6, ORANGE = 6
 
-    integer, parameter :: RED_CW     =  RED
-    integer, parameter :: RED_CCW    = -RED
-    integer, parameter :: WHITE_CW   =  WHITE
-    integer, parameter :: WHITE_CCW  = -WHITE
-    integer, parameter :: BLUE_CW    =  BLUE
-    integer, parameter :: BLUE_CCW   = -BLUE
-    integer, parameter :: YELLOW_CW  =  YELLOW
-    integer, parameter :: YELLOW_CCW = -YELLOW
-    integer, parameter :: GREEN_CW   =  GREEN
-    integer, parameter :: GREEN_CCW  = -GREEN
-    integer, parameter :: ORANGE_CW  =  ORANGE
-    integer, parameter :: ORANGE_CCW = -ORANGE
+    integer, parameter :: R_CW  =  RED,    RED_CW     =  RED
+    integer, parameter :: R_CCW = -RED,    RED_CCW    = -RED
+    integer, parameter :: W_CW  =  WHITE,  WHITE_CW   =  WHITE
+    integer, parameter :: W_CCW = -WHITE,  WHITE_CCW  = -WHITE
+    integer, parameter :: B_CW  =  BLUE,   BLUE_CW    =  BLUE
+    integer, parameter :: B_CCW = -BLUE,   BLUE_CCW   = -BLUE
+    integer, parameter :: Y_CW  =  YELLOW, YELLOW_CW  =  YELLOW
+    integer, parameter :: Y_CCW = -YELLOW, YELLOW_CCW = -YELLOW
+    integer, parameter :: G_CW  =  GREEN,  GREEN_CW   =  GREEN
+    integer, parameter :: G_CCW = -GREEN,  GREEN_CCW  = -GREEN
+    integer, parameter :: O_CW  =  ORANGE, ORANGE_CW  =  ORANGE
+    integer, parameter :: O_CCW = -ORANGE, ORANGE_CCW = -ORANGE
 
 
     ! the set of supported rotations
