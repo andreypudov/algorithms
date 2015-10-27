@@ -1,7 +1,7 @@
 FC = ifort
 CC = clang
 FFLAGS  = -c -free -module Modules -reentrancy threaded -openmp # -fast # -debug all
-CFLAGS  = -c -pthread -openmp # -g
+CFLAGS  = -c -pthread -openmp -g
 LDFLAGS = -openmp
 
 INTERFACES = Arrays/Arrays.f \

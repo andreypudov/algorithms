@@ -42,7 +42,7 @@ contains
     subroutine present()
         type(TArrays) :: arrays
 
-        integer, parameter :: NUMBER_OF_ELEMENTS = 12!25000
+        integer, parameter :: NUMBER_OF_ELEMENTS = 25000
         integer, dimension(NUMBER_OF_ELEMENTS, 4) :: ARRAY
 
         character(len=24), dimension(4) :: SEQUENCES = &
@@ -69,7 +69,7 @@ contains
             copy = arrays(1:size(arrays, 1), index)
 
             call cpu_time(start)
-            call mergeSort%sortOriginal(copy)
+            call mergeSort%sortOriginalWrapper(copy)
 
             call report('MergeSort', 'Original', sequences(index), start)
             call assert_sorted(copy)

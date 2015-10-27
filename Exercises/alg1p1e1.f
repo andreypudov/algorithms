@@ -27,6 +27,7 @@
 module MExAlg1p1e1
 
     use MFileReader
+    use MUReport
 
     implicit none
     private
@@ -37,14 +38,20 @@ module MExAlg1p1e1
     end type
 contains
     subroutine present()
+        call sortSequential()
+    end subroutine
+
+    subroutine sortSequential()
         type(TFileReader) fileReader
 
         integer, dimension(:), allocatable :: array
-        integer(kind=8) :: count = 0
+        integer(kind = 8) :: count = 0
         integer value
         integer index
         integer jndex
+        real    start
 
+        call cpu_time(start)
         call fileReader%readListOfIntegers('Samples/IntegerArray.txt', array)
         do index = 1, size(array)
             do jndex = index + 1, size(array)
@@ -58,6 +65,7 @@ contains
             end do
         end do
 
+        call report('Alg1p1e1', 'Sequential', '', start)
         print '(A,I)', 'Number of reverses: ', count
 
         deallocate(array)

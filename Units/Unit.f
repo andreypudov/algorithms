@@ -96,7 +96,7 @@ contains
         !call search%present()
         !call shift%present()
 
-        !call sorts()
+        call sorts()
 
         !call arrayStack%present()
         !call arrayQueue%present()
@@ -118,7 +118,7 @@ contains
 
         !call bubbleSort%present()
         !call insertionSort%present()
-        !call mergeSort%present()
+        call mergeSort%present()
         !call quickSort%present()
         !call radixSort%present()
         !call selectionSort%present()

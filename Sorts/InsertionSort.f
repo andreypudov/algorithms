@@ -84,6 +84,7 @@ contains
             do jndex = index - 1, location, -1
                 array(jndex + 1) = array(jndex)
             end do
+
             array(location) = key
         end do
     end subroutine
