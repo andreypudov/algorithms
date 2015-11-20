@@ -49,8 +49,7 @@ contains
 
         real start
 
-        !call fileReader%readListOfIntegers('Samples/QuickSort.txt', data)
-        call fileReader%readListOfIntegers('Samples/QuickSort.txt', data)
+        call fileReader%readListOfIntegers('Samples/QuickSort', data)
         allocate(list(size(data)))
 
         ! first element based pivot sort
@@ -75,7 +74,7 @@ contains
         call report('Alg1p2e2', 'LastElement', '', start)
         print '(A,I)', 'Number of comparisons: ', count
 
-        ! last element based pivot sort
+        ! median element based pivot sort
         list  = data
         count = 0
         call cpu_time(start)

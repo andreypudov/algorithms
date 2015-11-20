@@ -39,7 +39,11 @@ module MArrays
         procedure, nopass :: fillWithInversedSequence
 
         procedure, nopass :: increaseWhenRequiredAllocatable
+        procedure, nopass :: increaseWhenRequiredAllocatable2d
         procedure, nopass :: increaseWhenRequiredPointer
+
+        procedure, nopass :: resizeAllocatable
+        procedure, nopass :: resizeAllocatable2d
 
         procedure, nopass :: isSorted
 
@@ -48,8 +52,12 @@ module MArrays
 
         procedure, nopass :: swap1d
 
-        generic :: fillWithSequence      => fillWithSequence1d, fillWithSequence2d
-        generic :: increaseWhenRequired => increaseWhenRequiredAllocatable, increaseWhenRequiredPointer
+        generic :: fillWithSequence     => fillWithSequence1d, fillWithSequence2d
+        generic :: increaseWhenRequired => increaseWhenRequiredAllocatable,   &
+                                           increaseWhenRequiredAllocatable2d, &
+                                           increaseWhenRequiredPointer
+
+        generic :: resize => resizeAllocatable, resizeAllocatable2d
 
         generic :: print => print1d, print2d
         generic :: swap  => swap1d
@@ -128,7 +136,31 @@ contains
         if (limit > size(array)) then
             length = size(array) * 3 / 2
             allocate(temporary_array(length))
+            temporary_array = 0
             temporary_array(1:size(array)) = array
+            deallocate(array)
+            call move_alloc(temporary_array, array)
+        end if
+    end subroutine
+
+    subroutine increaseWhenRequiredAllocatable2d(array, limit1, limit2)
+        integer, dimension(:,:), allocatable, intent(in out) :: array
+        integer, intent(in) :: limit1
+        integer, intent(in) :: limit2
+
+        integer, dimension(:,:), allocatable :: temporary_array
+        integer length1
+        integer length2
+
+        ! increase array size when required
+        if ((limit1 > size(array, 1)) .or. (limit2 > size(array, 2))) then
+            !print *, limit1, limit2
+            length1 = size(array, 1) * 3 / 2
+            length2 = size(array, 2) * 3 / 2
+
+            allocate(temporary_array(length1, length2))
+            temporary_array = 0
+            temporary_array(1:size(array, 1), 1:size(array, 2)) = array
             deallocate(array)
             call move_alloc(temporary_array, array)
         end if
@@ -145,9 +177,44 @@ contains
         if (limit > size(array)) then
             length = size(array) * 3 / 2
             allocate(temporary_array(length))
+            temporary_array = 0
             temporary_array(1:size(array)) = array
             deallocate(array)
             array => temporary_array
+        end if
+    end subroutine
+
+    !
+    ! Reallocate array to a given length.
+    !
+    subroutine resizeAllocatable(array, length)
+        integer, dimension(:), allocatable, intent(in out) :: array
+        integer, intent(in) :: length
+
+        integer, dimension(:), allocatable :: temporary_array
+
+        if (length /= size(array)) then
+            allocate(temporary_array(length))
+            temporary_array = 0
+            temporary_array(1:length) = array(1:length)
+            deallocate(array)
+            call move_alloc(temporary_array, array)
+        end if
+    end subroutine
+
+    subroutine resizeAllocatable2d(array, length1, length2)
+        integer, dimension(:,:), allocatable, intent(in out) :: array
+        integer, intent(in) :: length1
+        integer, intent(in) :: length2
+
+        integer, dimension(:,:), allocatable :: temporary_array
+
+        if ((length1 /= size(array, 1)) .or. (length2 /= size(array, 2))) then
+            allocate(temporary_array(length1, length2))
+            temporary_array = 0
+            temporary_array(1:length1, 1:length2) = array(1:length1, 1:length2)
+            deallocate(array)
+            call move_alloc(temporary_array, array)
         end if
     end subroutine
 

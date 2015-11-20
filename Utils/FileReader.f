@@ -31,14 +31,16 @@ module MFileReader
     implicit none
     private
 
-    integer, parameter :: DEFAULT_SIZE = 16
+    integer, parameter :: DEFAULT_SIZE    = 16
+    integer, parameter :: LINE_LENGTH_MAX = 16
 
     type, public :: TFileReader
     contains
         procedure, nopass :: readListOfIntegers
+        procedure, nopass :: readAdjacencyList
     end type
 contains
-    subroutine readListOfIntegers(name, array) !result(array)
+    subroutine readListOfIntegers(name, array)
         character(len=*), intent(in)                       :: name
         integer, dimension(:), allocatable, intent(in out) :: array
         integer, dimension(:), allocatable                 :: temporary_array
@@ -52,10 +54,12 @@ contains
         integer index
 
         allocate(array(DEFAULT_SIZE))
+        unit   = 0
         status = 0
         length = 0
 
         open(unit = unit, file = name)
+
         do while (status == 0)
             read(unit, '(I)', iostat = status) value
 
@@ -66,12 +70,69 @@ contains
             end if
         end do
 
-        if (size(array) /= length) then
-            allocate(temporary_array(length))
-            temporary_array = array(1:length)
-            deallocate(array)
-            call move_alloc(temporary_array, array)
-        end if
+        call arrays%resize(array, length)
+
+        close(unit)
+    end subroutine
+
+    subroutine readAdjacencyList(name, array)
+        character(len=*), intent(in)                         :: name
+        integer, dimension(:,:), allocatable, intent(in out) :: array
+
+        type(TArrays) arrays
+
+        character(len=LINE_LENGTH_MAX) line
+
+        integer unit
+        integer status
+        integer length
+        integer index
+
+        integer value
+        integer begin
+        integer end
+        integer first
+        integer beginning
+
+        allocate(array(DEFAULT_SIZE, DEFAULT_SIZE))
+        unit   = 0
+        status = 0
+        length = 0
+
+        open(unit = unit, file = name)
+
+        do while (status == 0)
+            read(unit, '(A)', iostat = status) line
+
+            if (status  == 0) then
+                beginning = .true.
+
+                index = 1
+                do while (index <= len(line))
+                    begin = index
+                    do while (line(index:index) /= ' ')
+                        end = index
+                        index = index + 1
+                    end do
+
+                    if (begin <= end) then
+                        read(line(begin:end), '(I)', iostat = status) value
+
+                        if (beginning == .true.) then
+                            beginning = .false.
+                            first     = value
+                        else
+                            call arrays%increaseWhenRequired(array, max(first, value), max(first, value))
+                            array(first, value) = 1
+                        end if
+                    end if
+
+                    index = index + 1
+                end do
+            end if
+        end do
+
+        call arrays%resize(array, first, first)
 
         close(unit)
     end subroutine

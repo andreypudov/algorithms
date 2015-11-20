@@ -24,50 +24,42 @@
 ! THE SOFTWARE.
 !
 
-module MExAlg1p1e1
+module MExAlg1p3e1
 
+    use MArrays
     use MFileReader
     use MUReport
 
     implicit none
     private
 
-    type, public :: TExAlg1p1e1
+    type, public :: TExAlg1p3e1
     contains
         procedure, nopass :: present
     end type
 contains
     subroutine present()
-        call sortSequential()
-    end subroutine
+        integer, dimension(:,:), allocatable :: list
 
-    subroutine sortSequential()
         type(TFileReader) fileReader
+        type(TArrays)     arrays
 
-        integer, dimension(:), allocatable :: array
-        integer(kind = 8) :: count = 0
-        integer value
-        integer index
-        integer jndex
-        real    start
+        real start
+
+        call fileReader%readAdjacencyList('Samples/kargerMinCut_8_1', list)
 
         call cpu_time(start)
-        call fileReader%readListOfIntegers('Samples/IntegerArray', array)
-        do index = 1, size(array)
-            do jndex = index + 1, size(array)
-                if (array(jndex) < array(index)) then
-                    value = array(jndex)
-                    array(jndex) = array(index)
-                    array(index) = value
+        call randomizedContraction(list, 1, size(list))
 
-                    count = count + 1
-                end if
-            end do
-        end do
+        call report('Alg1p3e1', 'Randomized Contraction', '', start)
+        print '(A,I)', 'Min cut: ', 1
 
-        call report('Alg1p1e1', 'Sequential', '', start)
-        print '(A,I)', 'Number of reverses: ', count
+        deallocate(list)
+    end subroutine
 
-        deallocate(array)
+    recursive subroutine randomizedContraction(list, first, last)
+        integer, dimension(:,:), allocatable, intent(in out) :: list
+        integer, intent(in) :: first
+        integer, intent(in) :: last
     end subroutine
 end module
