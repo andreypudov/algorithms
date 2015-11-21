@@ -26,7 +26,7 @@
 
 module MExAlg1p3e1
 
-    use MArrays
+    use MIntrinsicRandom
     use MFileReader
     use MUReport
 
@@ -42,14 +42,13 @@ contains
         integer, dimension(:,:), allocatable :: list
 
         type(TFileReader) fileReader
-        type(TArrays)     arrays
 
         real start
 
         call fileReader%readAdjacencyList('Samples/kargerMinCut_8_1', list)
 
         call cpu_time(start)
-        call randomizedContraction(list, 1, size(list))
+        call randomizedContraction(list)
 
         call report('Alg1p3e1', 'Randomized Contraction', '', start)
         print '(A,I)', 'Min cut: ', 1
@@ -57,9 +56,17 @@ contains
         deallocate(list)
     end subroutine
 
-    recursive subroutine randomizedContraction(list, first, last)
+    recursive subroutine randomizedContraction(list)
         integer, dimension(:,:), allocatable, intent(in out) :: list
-        integer, intent(in) :: first
-        integer, intent(in) :: last
+
+        type(TIntrinsicRandom) random
+
+        integer index
+        real value
+
+        do index = 1, 24
+            print *, random%random(1, 6)
+        end do
+
     end subroutine
 end module

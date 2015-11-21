@@ -24,53 +24,59 @@
 ! THE SOFTWARE.
 !
 
-module MLinearCongruential
+module MIntrinsicRandom
 
     use MRandom
 
     implicit none
     private
 
-    integer, parameter :: m  = 100000000
-    integer, parameter :: m1 = 10000
-    integer, parameter :: b  = 31415821
-
-    type, extends(TRandom), public :: TLinearCongruential
+    type, extends(TRandom), public :: TIntrinsicRandom
+        logical initialized
     contains
         procedure :: random
     end type
 contains
     function random(instance, from, to)
-        class(TLinearCongruential), intent(in out) :: instance
+        class(TIntrinsicRandom), intent(in out) :: instance
         integer, optional, intent(in) :: from
         integer, optional, intent(in) :: to
         integer :: random
 
-        integer, save :: value = 1234567
-        value = mod(multiply(value, b) + 1, m)
+        integer :: low
+        integer :: high
 
-        random = value
-    end function
+        real value
 
-    !
-    ! Computes (value1 * value2 mod m) with no overflow.
-    !
-    function multiply(value1, value2)
-        integer, intent(in) :: value1
-        integer, intent(in) :: value2
-        integer :: multiply
+        if (present(from) .and. present(to)) then
+            low  = from
+            high = to
+        else
+            low  = 1
+            high = 256
+        end if
 
-        integer p1
-        integer p0
-        integer q1
-        integer q0
+        if (instance%initialized == .false.) then
+            call initialize()
+            instance%initialized = .true.
+        end if
 
-        p1 = value1 / m1
-        p0 = mod(value1, m1)
+        call random_number(value)
+        random = from + floor((to + 1 - from) * value)
+    end function random
 
-        q1 = value2 / m1
-        q0 = mod(value2, m1)
+    subroutine initialize()
+        integer :: index, size, clock
+        integer, dimension(:), allocatable :: seed
 
-        multiply = mod((mod(p0 * q1 + p1 * q0, m1) * m1 + p0 * q0), m)
-    end function
+        call random_seed(size = size)
+        allocate(seed(size))
+
+        call system_clock(count = clock)
+
+        seed = clock + 37 * (/ (index - 1, index = 1, size) /)
+        call random_seed(put = seed)
+
+        deallocate(seed)
+    end subroutine
 end module

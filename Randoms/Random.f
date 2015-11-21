@@ -35,10 +35,12 @@ module MRandom
     end type
 
     abstract interface
-        function IRandom(instance) result(random)
+        function IRandom(instance, from, to) result(random)
             import TRandom
 
             class(TRandom), intent(in out) :: instance
+            integer, optional, intent(in) :: from
+            integer, optional, intent(in) :: to
             integer :: random
         end function
     end interface

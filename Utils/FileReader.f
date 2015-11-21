@@ -38,6 +38,7 @@ module MFileReader
     contains
         procedure, nopass :: readListOfIntegers
         procedure, nopass :: readAdjacencyList
+        procedure, nopass :: readAdjacencyWeightedList
     end type
 contains
     subroutine readListOfIntegers(name, array)
@@ -124,6 +125,73 @@ contains
                         else
                             call arrays%increaseWhenRequired(array, max(first, value), max(first, value))
                             array(first, value) = 1
+                        end if
+                    end if
+
+                    index = index + 1
+                end do
+            end if
+        end do
+
+        call arrays%resize(array, first, first)
+
+        close(unit)
+    end subroutine
+
+    subroutine readAdjacencyWeightedList(name, array)
+        character(len=*), intent(in)                         :: name
+        integer, dimension(:,:), allocatable, intent(in out) :: array
+
+        type(TArrays) arrays
+
+        character(len=LINE_LENGTH_MAX) line
+
+        integer unit
+        integer status
+        integer length
+        integer index
+
+        integer vertex
+        integer weight
+
+        integer begin
+        integer end
+        integer first
+        integer beginning
+
+        allocate(array(DEFAULT_SIZE, DEFAULT_SIZE))
+        unit   = 0
+        status = 0
+        length = 0
+
+        open(unit = unit, file = name)
+
+        do while (status == 0)
+            read(unit, '(A)', iostat = status) line
+
+            if (status  == 0) then
+                beginning = .true.
+                print *, line
+
+                index = 1
+                do while (index <= len(line))
+                    begin = index
+                    do while (line(index:index) /= ' ')
+                        end = index
+                        index = index + 1
+                    end do
+
+                    if (begin <= end) then
+                        if (beginning == .true.) then
+                            read(line(begin:end), '(I)', iostat = status) vertex
+
+                            beginning = .false.
+                            first     = vertex
+                        else
+                            read(line(begin:end), '(I,I)', iostat = status) vertex, weight
+
+                            call arrays%increaseWhenRequired(array, max(first, vertex), max(first, vertex))
+                            array(first, vertex) = weight
                         end if
                     end if
 

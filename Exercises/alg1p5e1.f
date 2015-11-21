@@ -24,33 +24,49 @@
 ! THE SOFTWARE.
 !
 
-module MExercises
+module MExAlg1p5e1
 
-    use MExAlg1p1e1
-    use MExAlg1p2e1
-    use MExAlg1p3e1
-
-    use MExAlg1p5e1
+    use MIntrinsicRandom
+    use MFileReader
+    use MUReport
 
     implicit none
     private
 
-    type, public :: TExercises
+    type, public :: TExAlg1p5e1
     contains
         procedure, nopass :: present
     end type
 contains
     subroutine present()
-        type(TExAlg1p1e1) alg1p1e1
-        type(TExAlg1p2e1) alg1p2e1
-        type(TExAlg1p3e1) alg1p3e1
+        integer, dimension(:,:), allocatable :: list
 
-        type(TExAlg1p5e1) alg1p5e1
+        type(TFileReader) fileReader
 
-        !call alg1p1e1%present()
-        !call alg1p2e1%present()
-        !call alg1p3e1%present()
+        real start
 
-        call alg1p5e1%present()
+        call fileReader%readAdjacencyWeightedList('Samples/dijkstraData_4_1', list)
+
+        call cpu_time(start)
+        call dijkstrasShortestPath(list)
+
+        call report('Alg1p5e1', 'Dijkstra''s shortest-path', '', start)
+        print '(A,I)', 'Shortest-path distances: ', 1
+
+        deallocate(list)
+    end subroutine
+
+    recursive subroutine dijkstrasShortestPath(list)
+        integer, dimension(:,:), allocatable, intent(in out) :: list
+
+        integer index, jndex
+
+        do index = 1, size(list, 1)
+            do jndex = 1, size(list, 2)
+                print '(I2\)', list(index, jndex)
+            end do
+            print *, ''
+        end do
+
     end subroutine
 end module
