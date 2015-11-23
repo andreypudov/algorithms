@@ -32,7 +32,7 @@ module MGraph
     implicit none
     private
 
-    integer, parameter :: DEFAULT_NUMBER_OF_VERTEXES = 16
+    integer, parameter :: DEFAULT_NUMBER_OF_VERTICES = 16
 
     type, public :: TGraph
         private
@@ -124,8 +124,8 @@ contains
         integer index
         integer jndex
 
-        allocate(instance%adjacencyMatrix(DEFAULT_NUMBER_OF_VERTEXES, DEFAULT_NUMBER_OF_VERTEXES))
-        allocate(instance%vertexList(DEFAULT_NUMBER_OF_VERTEXES))
+        allocate(instance%adjacencyMatrix(DEFAULT_NUMBER_OF_VERTICES, DEFAULT_NUMBER_OF_VERTICES))
+        allocate(instance%vertexList(DEFAULT_NUMBER_OF_VERTICES))
 
         instance%vertexesNumber  = 0
 

@@ -283,7 +283,7 @@ contains
          write(count,  '(i0.0)') size(array, 2)
          write(length, '(i0.0)') value
 
-         print '(' // trim(count) // 'i' // trim(length) // ')', array
+         print '(' // trim(count) // 'i' // trim(length) // ')', transpose(array)
      end subroutine
 
      subroutine swap1d(array, index, jndex)

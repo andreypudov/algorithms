@@ -26,6 +26,7 @@
 
 module MExAlg1p3e1
 
+    use MArrays
     use MIntrinsicRandom
     use MFileReader
     use MUReport
@@ -60,13 +61,34 @@ contains
         integer, dimension(:,:), allocatable, intent(in out) :: list
 
         type(TIntrinsicRandom) random
+        type(TArrays) arrays
 
-        integer index
-        real value
+        logical, dimension(:,:), allocatable :: mask
+        integer vertex
+        integer n, i, j
 
-        do index = 1, 24
-            print *, random%random(1, 6)
+        allocate(mask(size(list, 1), size(list, 2)))
+        n = size(list, 1)
+
+        print '(8I2)', list
+        do while (n > 2)
+            vertex = random%random(1, n)
+            vertex = 3
+
+            print *, vertex
+            mask           = .true.
+            mask(vertex,:) = .false.
+
+            !list = reshape(pack(list, mask), (/ n - 1, n /))
+            n = n - 1
+
+            list(8, 4) = 8
+            print '(8L2)', transpose(mask)
+            print '(8I2)', transpose(list)
+            print *, mask(vertex, 1), mask(vertex, 4), mask(vertex, 7)
+            call arrays%print(list)
         end do
 
+        deallocate(mask)
     end subroutine
 end module

@@ -67,6 +67,5 @@ contains
             end do
             print *, ''
         end do
-
     end subroutine
 end module

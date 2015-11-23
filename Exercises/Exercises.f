@@ -29,7 +29,7 @@ module MExercises
     use MExAlg1p1e1
     use MExAlg1p2e1
     use MExAlg1p3e1
-
+    !use MExAlg1p4e1
     use MExAlg1p5e1
 
     implicit none
@@ -44,13 +44,13 @@ contains
         type(TExAlg1p1e1) alg1p1e1
         type(TExAlg1p2e1) alg1p2e1
         type(TExAlg1p3e1) alg1p3e1
-
+        !type(TExAlg1p4e1) alg1p5e1
         type(TExAlg1p5e1) alg1p5e1
 
         !call alg1p1e1%present()
         !call alg1p2e1%present()
-        !call alg1p3e1%present()
-
-        call alg1p5e1%present()
+        call alg1p3e1%present()
+        !call alg1p4e1%present()
+        !call alg1p5e1%present()
     end subroutine
 end module
