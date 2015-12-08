@@ -32,7 +32,7 @@ module MFileReader
     private
 
     integer, parameter :: DEFAULT_SIZE    = 16
-    integer, parameter :: LINE_LENGTH_MAX = 16
+    integer, parameter :: LINE_LENGTH_MAX = 4096
 
     type, public :: TFileReader
     contains
@@ -111,7 +111,8 @@ contains
                 index = 1
                 do while (index <= len(line))
                     begin = index
-                    do while (line(index:index) /= ' ')
+                    ! accept only ascii digit characters
+                    do while ((iachar(line(index:index)) >= 48) .and. (iachar(line(index:index)) <= 57))
                         end = index
                         index = index + 1
                     end do
@@ -176,7 +177,8 @@ contains
                 index = 1
                 do while (index <= len(line))
                     begin = index
-                    do while (line(index:index) /= ' ')
+                    ! accept only ascii digit characters
+                    do while ((iachar(line(index:index)) >= 48) .and. (iachar(line(index:index)) <= 57))
                         end = index
                         index = index + 1
                     end do

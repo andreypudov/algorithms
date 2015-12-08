@@ -24,59 +24,60 @@
 ! THE SOFTWARE.
 !
 
-module MIntrinsicRandom
-
-    use MRandom
+! Sum square difference
+!
+! By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
+!
+! What is the 10 001st prime number?
+module MPEProblem7
 
     implicit none
     private
 
-    type, extends(TRandom), public :: TIntrinsicRandom
-        logical initialized
+    type, public :: TPEProblem7
     contains
-        procedure :: random
+        procedure, nopass :: present
     end type
 contains
-    function random(instance, from, to)
-        class(TIntrinsicRandom), intent(in out) :: instance
-        integer, optional, intent(in) :: from
-        integer, optional, intent(in) :: to
-        integer :: random
+    subroutine present
+        write (*, '(A)') 'Problem 7. 10001st prime.'
 
-        integer :: low
-        integer :: high
+        write (*, '(A, I)') 'Prime 1: ', prime1()
+    end subroutine
 
-        real value
+    function prime1()
+        integer index
+        integer count
+        integer prime1
 
-        if (present(from) .and. present(to)) then
-            low  = from
-            high = to
-        else
-            low  = 1
-            high = 256
-        end if
+        ! initial value
+        index = 1
+        count = 0
 
-        if (instance%initialized == .false.) then
-            call initialize()
-            instance%initialized = .true.
-        end if
+        do while (count .lt. 10001)
+            index = index + 1
 
-        call random_number(value)
-        random = from + floor((to + 1 - from) * value)
+            if (isPrime(index) .eq. .true.) then
+                count = count + 1
+            end if
+        end do
+
+        prime1 = index
     end function
 
-    subroutine initialize()
-        integer :: index, size, clock
-        integer, dimension(:), allocatable :: seed
+    function isPrime(number)
+        integer number
+        integer devider
+        logical isPrime
 
-        call random_seed(size = size)
-        allocate(seed(size))
+        ! initial value
+        isPrime = .true.
 
-        call system_clock(count = clock)
-
-        seed = clock + 37 * (/ (index - 1, index = 1, size) /)
-        call random_seed(put = seed)
-
-        deallocate(seed)
-    end subroutine
+        do devider = 2, sqrt(real(number))
+            if (mod(number, devider) .eq. 0) then
+                isPrime = .false.
+                exit
+            end if
+        end do
+    end function
 end module

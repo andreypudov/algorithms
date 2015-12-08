@@ -24,31 +24,39 @@
 ! THE SOFTWARE.
 !
 
-program Algorithms
-
-    use MExample
-    use MExercises
-    use MExperiments
-    use MFeature
-    use MProblems
-    use MUnit
+! Largest prime factor
+!
+! The prime factors of 13195 are 5, 7, 13 and 29.
+! What is the largest prime factor of the number 600851475143 ?
+module MPEProblem3
 
     implicit none
+    private
 
-    type(TExample)     example
-    type(TExercises)   exercises
-    type(TExperiments) experiments
-    type(TFeature)     feature
-    type(TProblems)    problems
-    type(TUnit)        unit
+    type, public :: TPEProblem3
+    contains
+        procedure, nopass :: present
+    end type
+contains
+    subroutine present
+        write (*, '(A)') 'Problem 3. Largest prime factor.'
 
-    write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+        write (*, '(A, I)') 'Factor 1: ', factor()
+    end subroutine
 
-    !call example%present()
-    !call exercises%present()
-    !call experiments%present()
-    !call feature%present()
-    call problems%present()
-    !call unit%present()
-end program
+    function factor()
+        integer*8 factor
+        integer*8 index
+
+        factor = 600851475143
+        index  = 2
+
+        do while ((index ** 2) .le. factor)
+            if (mod(factor, index) .eq. 0) then
+                factor = factor / index
+            else
+                index = index + 1
+            end if
+        end do
+    end function
+end module

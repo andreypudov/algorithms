@@ -251,10 +251,10 @@ contains
          maximum = (maxval(array))
          if (maximum == 0) then
              value = 2
-         else if (mod(maximum, 10) == 0) then
-             value = ceiling(log10(real(maxval(array)))) + 2
+         else if ((mod(maximum, 10) == 0) .or. (maximum == 1)) then
+             value = ceiling(log10(real(maximum))) + 2
          else
-             value = ceiling(log10(real(maxval(array)))) + 1
+             value = ceiling(log10(real(maximum))) + 1
          end if
 
          write(count,  '(i0.0)') size(array)
@@ -274,10 +274,10 @@ contains
          maximum = (maxval(array))
          if (maximum == 0) then
              value = 2
-         else if (mod(maximum, 10) == 0) then
-             value = ceiling(log10(real(maxval(array)))) + 2
+         else if ((mod(maximum, 10) == 0) .or. (maximum == 1)) then
+             value = ceiling(log10(real(maximum))) + 2
          else
-             value = ceiling(log10(real(maxval(array)))) + 1
+             value = ceiling(log10(real(maximum))) + 1
          end if
 
          write(count,  '(i0.0)') size(array, 2)

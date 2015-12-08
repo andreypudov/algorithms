@@ -24,59 +24,55 @@
 ! THE SOFTWARE.
 !
 
-module MIntrinsicRandom
-
-    use MRandom
+! Sum square difference
+!
+! The sum of the squares of the first ten natural numbers is,
+! 1^2 + 2^2 + ... + 10^2 = 385
+!
+! The square of the sum of the first ten natural numbers is,
+! (1 + 2 + ... + 10)^2 = 55^2 = 3025
+!
+! Hence the difference between the sum of the squares of the first ten natural
+! numbers and the square of the sum is 3025 - 385 = 2640.
+!
+! Find the difference between the sum of the squares of the first one hundred
+! natural numbers and the square of the sum.
+module MPEProblem6
 
     implicit none
     private
 
-    type, extends(TRandom), public :: TIntrinsicRandom
-        logical initialized
+    type, public :: TPEProblem6
     contains
-        procedure :: random
+        procedure, nopass :: present
     end type
 contains
-    function random(instance, from, to)
-        class(TIntrinsicRandom), intent(in out) :: instance
-        integer, optional, intent(in) :: from
-        integer, optional, intent(in) :: to
-        integer :: random
+    subroutine present
+        write (*, '(A)') 'Problem 6. Sum square difference.'
 
-        integer :: low
-        integer :: high
-
-        real value
-
-        if (present(from) .and. present(to)) then
-            low  = from
-            high = to
-        else
-            low  = 1
-            high = 256
-        end if
-
-        if (instance%initialized == .false.) then
-            call initialize()
-            instance%initialized = .true.
-        end if
-
-        call random_number(value)
-        random = from + floor((to + 1 - from) * value)
-    end function
-
-    subroutine initialize()
-        integer :: index, size, clock
-        integer, dimension(:), allocatable :: seed
-
-        call random_seed(size = size)
-        allocate(seed(size))
-
-        call system_clock(count = clock)
-
-        seed = clock + 37 * (/ (index - 1, index = 1, size) /)
-        call random_seed(put = seed)
-
-        deallocate(seed)
+        write (*, '(A, I)') 'Difference 1: ', difference1()
     end subroutine
+
+    function difference1()
+        integer difference1
+        integer sum
+        integer square
+        integer index
+
+        ! initial values
+        sum    = 0
+        square = 0
+
+        do concurrent (index = 1:100)
+            ! the sum of the squares
+            sum = sum + index ** 2
+
+            ! the square of the sum
+            square = square + index
+        end do
+
+        square = square ** 2
+
+        difference1 = square - sum
+    end function
 end module

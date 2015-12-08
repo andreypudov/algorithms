@@ -24,59 +24,51 @@
 ! THE SOFTWARE.
 !
 
-module MIntrinsicRandom
-
-    use MRandom
+! A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
+!
+!          a^2 + b^2 = c^2
+!
+! For example, 3^2 + 4^2 = 9 + 16 = 25 = 5^2.
+! There exists exactly one Pythagorean triplet for which a + b + c = 1000.
+! Find the product abc.
+module MPEProblem9
 
     implicit none
     private
 
-    type, extends(TRandom), public :: TIntrinsicRandom
-        logical initialized
+    type, public :: TPEProblem9
     contains
-        procedure :: random
+        procedure, nopass :: present
     end type
 contains
-    function random(instance, from, to)
-        class(TIntrinsicRandom), intent(in out) :: instance
-        integer, optional, intent(in) :: from
-        integer, optional, intent(in) :: to
-        integer :: random
+    subroutine present
+        write (*, '(A)') 'Problem 9. Special Pythagorean triplet.'
 
-        integer :: low
-        integer :: high
-
-        real value
-
-        if (present(from) .and. present(to)) then
-            low  = from
-            high = to
-        else
-            low  = 1
-            high = 256
-        end if
-
-        if (instance%initialized == .false.) then
-            call initialize()
-            instance%initialized = .true.
-        end if
-
-        call random_number(value)
-        random = from + floor((to + 1 - from) * value)
-    end function
-
-    subroutine initialize()
-        integer :: index, size, clock
-        integer, dimension(:), allocatable :: seed
-
-        call random_seed(size = size)
-        allocate(seed(size))
-
-        call system_clock(count = clock)
-
-        seed = clock + 37 * (/ (index - 1, index = 1, size) /)
-        call random_seed(put = seed)
-
-        deallocate(seed)
+        write (*, '(A, I)') 'Product 1: ', product1()
     end subroutine
+
+    pure function product1()
+        integer, parameter:: limit = 1000
+        integer product1
+        integer a
+        integer b
+        integer c
+
+        ! initial value
+        product1 = 0
+
+        do c = 1, limit
+            do b = 1, c - 1
+                do a = 1, b - 1
+                    if (a + b + c .eq. limit) then
+                        if ((a**2) + (b**2) .eq. (c**2)) then
+                            product1 = a * b * c
+
+                            return
+                        end if
+                    end if
+                end do
+            end do
+        end do
+    end function
 end module
