@@ -39,6 +39,7 @@ module MProjectEuler
     use MPEProblem10
     use MPEProblem11
     use MPEProblem12
+    use MPEProblem13
 
     implicit none
     private
@@ -62,6 +63,7 @@ contains
         type(TPEProblem10) problem10
         type(TPEProblem11) problem11
         type(TPEProblem12) problem12
+        type(TPEProblem13) problem13
 
         !call problem1%present()
         !call problem2%present()
@@ -74,7 +76,8 @@ contains
         !call problem9%present()
 
         !call problem10%present()
-        call problem11%present()
-        call problem12%present()
+        !call problem11%present()
+        !call problem12%present()
+        call problem13%present()
     end subroutine
 end module
