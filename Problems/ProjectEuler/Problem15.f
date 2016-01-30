@@ -24,26 +24,44 @@
 ! THE SOFTWARE.
 !
 
-module MListIterator
-
-    use MIterator
+! Lattice paths
+!
+! Starting in the top left corner of a 2x2 grid, and only being able to move to
+! the right and down, there are exactly 6 routes to the bottom right corner.
+!
+!     ¯¯|    ¯|_     ¯|     |__     |_      |
+!       |       |     |_       |      |_    |__
+!
+! How many such routes are there through a 20x20 grid?
+module MPEProblem15
 
     implicit none
-    public
+    private
 
-    type, extends(TIterator), abstract :: TListIterator
+    ! global variable to store available pathes
+    integer :: pathes
+
+    type, public :: TPEProblem15
     contains
-        ! the method defined in TIterator can be removed
-        !procedure(INextIndex),     deferred :: nextIndex
-        !procedure(IPreviousIndex), deferred :: previousIndex
-
-        !procedure(ILIHasNext), deferred :: hasNext
-        !procedure(ILINext),    deferred :: next
-        !procedure(IHasNext), deferred :: hasPrevious
-        !procedure(INext),    deferred :: previous
-
-        !procedure(IAdd),     deferred :: add
-        !procedure(ILIRemove),  deferred :: remove
-        !procedure(ISet),     deferred :: set
+        procedure, nopass :: present
     end type
+contains
+    subroutine present
+        write (*, '(A)') 'Problem 15. Lattice paths.'
+        call path(2, 2)
+        write (*, '(A, I)') 'Path 1: ', pathes
+    end subroutine
+
+    !
+    ! Offered solution implements following loop:
+    !   1) step right if not visited
+    !   2) step down if not visited and inverse all accesible steps (right and down)
+    !   3) step back
+    !
+    subroutine path(width, height)
+        integer, intent(in) :: width
+        integer, intent(in) :: height
+
+
+    end subroutine
 end module

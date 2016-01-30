@@ -28,6 +28,7 @@ module MULinkedList
 
     use MArrays
     use MLinkedList
+    use MListIterator
     use MUReport
 
     implicit none
@@ -39,12 +40,15 @@ module MULinkedList
     end type
 contains
     subroutine present()
-        integer, parameter :: NUMBER_OF_ELEMENTS = 50000!0
+        integer, parameter :: NUMBER_OF_ELEMENTS = 50!00!0
         integer, dimension(NUMBER_OF_ELEMENTS) :: ARRAY
 
         integer element
         integer index
+        integer value
         real    start
+
+        class(TListIterator), pointer :: iterator
 
         type(TLinkedList) :: list
         type(TArrays)     :: arrays
@@ -88,11 +92,28 @@ contains
             if (list%get(index) /= index) then
                 print '(t1, a)', 'FAILED. The return value of set operation is incorrect.'
                 print '(t9, a, i10, a, i10)', 'Expected: ', index, ', Value: ', list%get(index)
-                print *, list%size()
                 return
             end if
         end do
         call report('LinkedList', 'Set', '', start)
+
+        call cpu_time(start)
+        iterator => list%iterator()
+        index = 1
+
+        do while (iterator%hasNext())
+            value = iterator%next()
+
+            if (value /= index) then
+                print '(t1, a)', 'FAILED. The return value of iterator is incorrect.'
+                print '(t9, a, i10, a, i10)', 'Expected: ', index, ', Value: ', value
+                return
+            end if
+
+            index = index + 1
+        end do
+
+        call report('LinkedList', 'Iterator', '', start)
 
         call cpu_time(start)
         do index = size(ARRAY) - 1, 0, -1

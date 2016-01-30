@@ -96,11 +96,11 @@ contains
         !call search%present()
         !call shift%present()
 
-        call sorts()
+        !call sorts()
 
         !call arrayStack%present()
         !call arrayQueue%present()
-        !call linkedList%present()
+        call linkedList%present()
     end subroutine
 
     subroutine sorts()
@@ -118,7 +118,7 @@ contains
 
         !call bubbleSort%present()
         !call insertionSort%present()
-        call mergeSort%present()
+        ! call mergeSort%present()
         !call quickSort%present()
         !call radixSort%present()
         !call selectionSort%present()

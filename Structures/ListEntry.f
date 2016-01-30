@@ -24,7 +24,12 @@
 ! THE SOFTWARE.
 !
 
-module MDoublyLinkedList
+module MListEntry
 
+    implicit none
+    public
 
+    type, abstract :: TListEntry
+        integer :: value
+    end type
 end module

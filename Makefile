@@ -11,7 +11,9 @@ INTERFACES = Arrays/Arrays.f \
 			 Features/Inheritance/Shape.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \
-             Structures/List.f Structures/Queue.f Structures/Stack.f Structures/ListIterator.f \
+             Structures/Iterator.f Structures/ListIterator.f \
+             Structures/ListEntry.f Structures/LinkedListEntry.f \
+             Structures/LinkedListIterator.f Structures/List.f Structures/Queue.f Structures/Stack.f \
              Sorts/Sort.f   \
 			 Graphs/Vertex.f Graphs/Graph.f \
 			 Structures/ArrayStack.f Structures/ArrayQueue.f \

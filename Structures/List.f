@@ -26,29 +26,31 @@
 
 module MList
 
+    use MListIterator
+
     implicit none
     public
 
     type, abstract :: TList
     contains
-        procedure(IAdd),      deferred :: add
-        procedure(IContains), deferred :: contains
-        procedure(IGet),      deferred :: get
-        !procedure(IIterator), deferred :: iterator
-        procedure(IRemove),   deferred :: remove
-        procedure(ISet),      deferred :: set
-        procedure(ISize),     deferred :: size
+        procedure(ILAdd),      deferred :: add
+        procedure(ILContains), deferred :: contains
+        procedure(ILGet),      deferred :: get
+        procedure(ILIterator), deferred :: iterator
+        procedure(ILRemove),   deferred :: remove
+        procedure(ILSet),      deferred :: set
+        procedure(ILSize),     deferred :: size
     end type
 
     abstract interface
-        subroutine IAdd(instance, value)
+        subroutine ILAdd(instance, value)
             import TList
 
             class(TList), intent(in out) :: instance
             integer, intent(in)          :: value
         end subroutine
 
-        function IContains(instance, value) result(status)
+        function ILContains(instance, value) result(status)
             import TList
 
             class(TList), intent(in) :: instance
@@ -56,7 +58,7 @@ module MList
             logical                  :: status
         end function
 
-        function IGet(instance, index) result(value)
+        function ILGet(instance, index) result(value)
             import TList
 
             class(TList), intent(in) :: instance
@@ -64,14 +66,22 @@ module MList
             integer                  :: value
         end function
 
-        subroutine IRemove(instance, index)
+        function ILIterator(instance) result(value)
+            import TList
+            import TListIterator
+
+            class(TList), intent(in)      :: instance
+            class(TListIterator), pointer :: value
+        end function
+
+        subroutine ILRemove(instance, index)
             import TList
 
             class(TList), intent(in out) :: instance
             integer, intent(in)          :: index
         end subroutine
 
-        subroutine ISet(instance, index, value)
+        subroutine ILSet(instance, index, value)
             import TList
 
             class(TList), intent(in out) :: instance
@@ -79,7 +89,7 @@ module MList
             integer, intent(in)          :: value
         end subroutine
 
-        function ISize(instance) result(value)
+        function ILSize(instance) result(value)
             import TList
 
             class(TList), intent(in) :: instance

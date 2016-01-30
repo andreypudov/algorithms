@@ -24,26 +24,37 @@
 ! THE SOFTWARE.
 !
 
-module MListIterator
-
-    use MIterator
+module MIterator
 
     implicit none
     public
 
-    type, extends(TIterator), abstract :: TListIterator
+    type, abstract :: TIterator
     contains
-        ! the method defined in TIterator can be removed
-        !procedure(INextIndex),     deferred :: nextIndex
-        !procedure(IPreviousIndex), deferred :: previousIndex
-
-        !procedure(ILIHasNext), deferred :: hasNext
-        !procedure(ILINext),    deferred :: next
-        !procedure(IHasNext), deferred :: hasPrevious
-        !procedure(INext),    deferred :: previous
-
-        !procedure(IAdd),     deferred :: add
-        !procedure(ILIRemove),  deferred :: remove
-        !procedure(ISet),     deferred :: set
+        procedure(IHasNext), deferred :: hasNext
+        procedure(INext),    deferred :: next
+        procedure(IRemove),  deferred :: remove
     end type
+
+    abstract interface
+        function IHasNext(instance) result(value)
+            import TIterator
+
+            class(TIterator), intent(in) :: instance
+            logical :: value
+        end function
+
+        function INext(instance) result(value)
+            import TIterator
+
+            class(TIterator), intent(in out) :: instance
+            integer :: value
+        end function
+
+        subroutine IRemove(instance)
+            import TIterator
+
+            class(TIterator), intent(in out) :: instance
+        end subroutine
+    end interface
 end module

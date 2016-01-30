@@ -24,26 +24,15 @@
 ! THE SOFTWARE.
 !
 
-module MListIterator
+module MLinkedListEntry
 
-    use MIterator
+    use MListEntry
 
     implicit none
-    public
+    private
 
-    type, extends(TIterator), abstract :: TListIterator
-    contains
-        ! the method defined in TIterator can be removed
-        !procedure(INextIndex),     deferred :: nextIndex
-        !procedure(IPreviousIndex), deferred :: previousIndex
-
-        !procedure(ILIHasNext), deferred :: hasNext
-        !procedure(ILINext),    deferred :: next
-        !procedure(IHasNext), deferred :: hasPrevious
-        !procedure(INext),    deferred :: previous
-
-        !procedure(IAdd),     deferred :: add
-        !procedure(ILIRemove),  deferred :: remove
-        !procedure(ISet),     deferred :: set
+    type, extends(TListEntry), public :: TLinkedListEntry
+        type(TLinkedListEntry), pointer :: next     => null()
+        type(TLinkedListEntry), pointer :: previous => null()
     end type
 end module

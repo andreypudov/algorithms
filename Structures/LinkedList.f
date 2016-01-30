@@ -27,21 +27,23 @@
 module MLinkedList
 
     use MList
+    use MLinkedListEntry
+    use MLinkedListIterator
 
     implicit none
     private
 
     type, extends(TList), public :: TLinkedList
     private
-        type(TListEntry), pointer :: first => null()
-        type(TListEntry), pointer :: last  => null()
+        type(TLinkedListEntry), pointer :: first => null()
+        type(TLinkedListEntry), pointer :: last  => null()
 
-        integer                   :: length
+        integer :: length
     contains
         procedure :: add
         procedure :: contains
         procedure :: get
-        !procedure :: iterator
+        procedure :: iterator
         procedure :: remove
         procedure :: set
         procedure :: size
@@ -50,19 +52,13 @@ module MLinkedList
         procedure :: destroy
     end type
 
-    type TListEntry
-    private
-        type(TListEntry), pointer :: next => null()
-        integer                   :: value
-    end type
-
 contains
     subroutine add(instance, value)
         class(TLinkedList), intent(in out) :: instance
         integer, intent(in)                :: value
 
-        type(TListEntry), pointer :: entry
-        type(TListEntry), pointer :: previous
+        type(TLinkedListEntry), pointer :: entry
+        type(TLinkedListEntry), pointer :: previous
 
         allocate(entry)
         entry%next  => null()
@@ -84,7 +80,7 @@ contains
         integer, intent(in)            :: value
         logical                        :: status
 
-        type(TListEntry), pointer :: entry
+        type(TLinkedListEntry), pointer :: entry
 
         entry => instance%first
         do while (associated(entry))
@@ -104,8 +100,8 @@ contains
         integer, intent(in)            :: index
         integer                        :: value
 
-        type(TListEntry), pointer :: entry
-        integer                   :: position
+        type(TLinkedListEntry), pointer :: entry
+        integer                         :: position
 
         entry    => instance%first
         position =  1
@@ -123,13 +119,22 @@ contains
         value = 0
     end function
 
+    function iterator(instance) result(value)
+        class(TLinkedList), intent(in) :: instance
+        class(TListIterator), pointer  :: value
+        type(TLinkedListIterator), target :: valueObject
+
+        call valueObject%init(instance%first)
+        value => valueObject
+    end function
+
     subroutine remove(instance, index)
         class(TLinkedList), intent(in out) :: instance
         integer, intent(in)                :: index
 
-        type(TLIstEntry), pointer :: entry
-        type(TLIstEntry), pointer :: previous
-        integer                   :: position
+        type(TLinkedListEntry), pointer :: entry
+        type(TLinkedListEntry), pointer :: previous
+        integer                         :: position
 
         entry    => instance%first
         previous => entry
@@ -159,8 +164,8 @@ contains
         integer, intent(in)                :: index
         integer, intent(in)                :: value
 
-        type(TListEntry), pointer :: entry
-        integer                   :: position
+        type(TLinkedListEntry), pointer :: entry
+        integer                         :: position
 
         entry    => instance%first
         position =  1
@@ -195,7 +200,7 @@ contains
         ! a -> b -> c -> d
         ! entry -> a, next -> b, delete a
         ! b -> c -> d
-        type(TListEntry), pointer :: entry
+        type(TLinkedListEntry), pointer :: entry
 
         do while (associated(instance%first))
             entry => instance%first
