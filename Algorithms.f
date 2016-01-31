@@ -3,7 +3,7 @@
 !
 ! The MIT License
 !
-! Copyright 2011-2015 Andrey Pudov.
+! Copyright 2011-2016 Andrey Pudov.
 !
 ! Permission is hereby granted, free of charge, to any person obtaining a copy
 ! of this software and associated documentation files (the 'Software'), to deal
@@ -35,7 +35,7 @@ program Algorithms
 
     implicit none
 
-    type(TExample)     example
+    type(TExample)     exgample
     type(TExercises)   exercises
     type(TExperiments) experiments
     type(TFeature)     feature
@@ -43,7 +43,7 @@ program Algorithms
     type(TUnit)        unit
 
     write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2015 Andrey Pudov'
+    write (*, '(A,/)') '(C) 2011-2016 Andrey Pudov'
 
     !call example%present()
     !call exercises%present()

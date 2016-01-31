@@ -3,7 +3,7 @@
 !
 ! The MIT License
 !
-! Copyright 2011-2015 Andrey Pudov.
+! Copyright 2011-2016 Andrey Pudov.
 !
 ! Permission is hereby granted, free of charge, to any person obtaining a copy
 ! of this software and associated documentation files (the 'Software'), to deal
@@ -25,6 +25,9 @@
 !
 
 module MUnit
+
+    ! foundation framework
+    use UFoundation
 
     ! arrays
     use MUShift
@@ -68,6 +71,9 @@ module MUnit
     end type
 contains
     subroutine present()
+        ! foundation framework
+        type(UObject) object
+
         type(TUDepthFirstSearch)      depthFirstSearch
         type(TUBreadthFirstSearch)    breadthFirstSearch
 
@@ -83,6 +89,8 @@ contains
         type(TUArrayStack) arrayStack
         type(TUArrayQueue) arrayQueue
         type(TULinkedList) linkedList
+
+        call object%present()
 
         !call depthFirstSearch%present()
         !call breadthFirstSearch%present()
@@ -100,7 +108,7 @@ contains
 
         !call arrayStack%present()
         !call arrayQueue%present()
-        call linkedList%present()
+        !call linkedList%present()
     end subroutine
 
     subroutine sorts()
