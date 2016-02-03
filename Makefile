@@ -9,6 +9,7 @@ INTERFACES = Arrays/Arrays.f \
 			 Examples/RubiksCube/Common.f Examples/RubiksCube/Cube.f Examples/RubiksCube/Rotator.f \
 			 Examples/RubiksCube/Search.f Examples/RubiksCube/RubiksCube.f \
 			 Features/Inheritance/Shape.f \
+             Foundation/Foundation.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \
              Structures/Iterator.f Structures/ListIterator.f \
@@ -17,7 +18,7 @@ INTERFACES = Arrays/Arrays.f \
              Sorts/Sort.f   \
 			 Graphs/Vertex.f Graphs/Graph.f \
 			 Structures/ArrayStack.f Structures/ArrayQueue.f \
-		     Units/Parameters.f Units/Report.f
+		     Units/Foundation/UFoundation.f Units/Parameters.f Units/Report.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
 EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/* Exercises/* Features/* Problems/*) \
            $(patsubst %, ! -path './%', $(INTERFACES))

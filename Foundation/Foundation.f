@@ -24,25 +24,37 @@
 ! THE SOFTWARE.
 !
 
-submodule (Foundation) FoundationObject
-contains
-    module function equals(self, any) result(value)
-        class(Object), target, intent(in) :: self
-        class(Object), target, intent(in) :: any
-        logical :: value
+module Foundation
 
-        class(Object), pointer :: any_pointer
-        any_pointer => any
+    implicit none
+    private
 
-        value = associated(any_pointer, self)
-    end function
+    type, public :: Object
+    contains
+        procedure :: equals
+        procedure :: description
+    end type
 
-    module function description(self) result(value)
-        class(Object), intent(in) :: self
-        type(String) :: value
+    type, extends(Object), public :: String
+    contains
+        procedure :: length
+    end type
 
-        type(String) string
+    interface
+        module function equals(self, any) result(value)
+            class(Object), target, intent(in) :: self
+            class(Object), target, intent(in) :: any
+            logical :: value
+        end function
 
-        value = string
-    end function
-end submodule
+        module function description(self) result(value)
+            class(Object), intent(in) :: self
+            type(String) :: value
+        end function
+
+        module function length(self) result(value)
+            class(String), intent(in) :: self
+            integer :: value
+        end function
+    end interface
+end module

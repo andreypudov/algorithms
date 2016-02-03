@@ -24,25 +24,28 @@
 ! THE SOFTWARE.
 !
 
-submodule (Foundation) FoundationObject
+module UFoundation
+
+    use Foundation
+
+    implicit none
+    private
+
+    type, public :: TUFoundation
+    contains
+        procedure, nopass :: present
+    end type
+
+    interface
+        module subroutine presentObjectInheritance()
+        end subroutine
+
+        module subroutine presentObjectEquals()
+        end subroutine
+    end interface
 contains
-    module function equals(self, any) result(value)
-        class(Object), target, intent(in) :: self
-        class(Object), target, intent(in) :: any
-        logical :: value
-
-        class(Object), pointer :: any_pointer
-        any_pointer => any
-
-        value = associated(any_pointer, self)
-    end function
-
-    module function description(self) result(value)
-        class(Object), intent(in) :: self
-        type(String) :: value
-
-        type(String) string
-
-        value = string
-    end function
-end submodule
+    subroutine present()
+        call presentObjectInheritance()
+        call presentObjectEquals()
+    end subroutine
+end module

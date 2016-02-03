@@ -24,37 +24,29 @@
 ! THE SOFTWARE.
 !
 
-module UFoundation
+submodule (UFoundation) ObjectInheritance
 
     use Foundation
 
     use MUAsserts
     use MUReport
 
-    implicit none
-    private
-
-    type, public :: UObject
-    contains
-        procedure, nopass :: present
-    end type
-
     ! Base object in hierarchy.
-    type, extends(Object), public :: Shape
+    type, extends(Object) :: Shape
         integer :: color
     contains
         procedure :: getColor
         procedure :: setColor
     end type
 
-    type, extends(Shape), public :: Circle
+    type, extends(Shape) :: Circle
         integer :: radius
     contains
         procedure :: getRadius
         procedure :: setRadius
     end type
 contains
-    subroutine present()
+    module subroutine presentObjectInheritance()
         type(Shape)  :: shape
         type(Circle) :: circle
 
@@ -98,4 +90,4 @@ contains
 
         self%radius = radius
     end subroutine
-end module
+end submodule

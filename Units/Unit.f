@@ -72,7 +72,7 @@ module MUnit
 contains
     subroutine present()
         ! foundation framework
-        type(UObject) object
+        type(TUFoundation) foundation
 
         type(TUDepthFirstSearch)      depthFirstSearch
         type(TUBreadthFirstSearch)    breadthFirstSearch
@@ -90,7 +90,7 @@ contains
         type(TUArrayQueue) arrayQueue
         type(TULinkedList) linkedList
 
-        call object%present()
+        call foundation%present()
 
         !call depthFirstSearch%present()
         !call breadthFirstSearch%present()

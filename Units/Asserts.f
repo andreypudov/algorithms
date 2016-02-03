@@ -31,17 +31,30 @@ module MUAsserts
     implicit none
     public
 
+    interface assert_ok
+        module procedure assert_ok_logical
+    end interface
+
     interface assert_equals
         module procedure assert_equals_int, assert_equals_real, &
                 assert_equals_string, &
                 assert_equals_int_arrays1d, assert_equals_int_arrays2d
     end interface
 contains
+    subroutine assert_ok_logical(condition, description)
+        logical, intent(in)          :: condition
+        character(len=*), intent(in) :: description
+
+        if (condition /= .true.) then
+            print '(t1, a, a)', 'FAILED. The condition is false. ', description
+        end if
+    end subroutine
+
     subroutine assert_equals_int(value1, value2)
         integer, intent(in) :: value1
         integer, intent(in) :: value2
 
-        if (value1 .ne. value2) then
+        if (value1 /= value2) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
             print *, value1, value2
         end if
@@ -63,7 +76,7 @@ contains
         character(len=*), intent(in) :: value1
         character(len=*), intent(in) :: value2
 
-        if (value1 .ne. value2) then
+        if (value1 /= value2) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
             print *, value1, value2
         end if
@@ -97,7 +110,7 @@ contains
         integer, dimension(:), intent(in) :: array
         type(TArrays) :: arrays
 
-        if (arrays%isSorted(array) .ne. .true.) then
+        if (arrays%isSorted(array) /= .true.) then
             print '(t1, a)', 'FAILED. The sequence does not sorted properly.'
             print *, array
         end if
