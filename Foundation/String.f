@@ -26,10 +26,31 @@
 
 submodule (Foundation) FoundationString
 contains
+    module function initWithFormat() result(value)
+        type(String), pointer :: value
+
+        allocate(value)
+    end function
+
+    module function initWithFString(text) result(value)
+        character(len=*), intent(in) :: text
+        type(String), pointer        :: value
+
+        allocate(value)
+        allocate(value%data, source = text)
+    end function
+
+    module function getFString(self) result(value)
+        class(String), target, intent(in) :: self
+        character(len=:), pointer         :: value
+
+        value => self%data
+    end function
+
     module function length(self) result(value)
         class(String), intent(in) :: self
         integer :: value
 
-        value = 0
+        value = len(self%data)
     end function
 end submodule

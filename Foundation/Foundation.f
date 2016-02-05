@@ -30,17 +30,35 @@ module Foundation
     private
 
     type, public :: Object
+    private
     contains
-        procedure :: equals
-        procedure :: description
+        procedure, pass :: init
+        procedure, pass :: destroy
+        procedure, pass :: equals
+        procedure, pass :: description
     end type
 
     type, extends(Object), public :: String
+    private
+        character(len=:), allocatable :: data
     contains
-        procedure :: length
+        procedure, nopass :: initWithFormat
+        procedure, nopass :: initWithFString
+        procedure, pass :: length
     end type
 
     interface
+        !
+        ! Object
+        !
+        module subroutine init(self)
+           class(Object), intent(in out) :: self
+        end subroutine
+
+        module subroutine destroy(self)
+            class(Object), intent(in out) :: self
+        end subroutine
+
         module function equals(self, any) result(value)
             class(Object), target, intent(in) :: self
             class(Object), target, intent(in) :: any
@@ -50,6 +68,23 @@ module Foundation
         module function description(self) result(value)
             class(Object), intent(in) :: self
             type(String) :: value
+        end function
+
+        !
+        ! String
+        !
+        module function initWithFormat() result(value)
+            type(String), pointer :: value
+        end function
+
+        module function initWithFString(text) result(value)
+            character(len=*), intent(in) :: text
+            type(String), pointer        :: value
+        end function
+
+        module function getFString(self) result(value)
+            class(String), target, intent(in) :: self
+            character(len=:), pointer         :: value
         end function
 
         module function length(self) result(value)

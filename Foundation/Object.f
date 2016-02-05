@@ -26,6 +26,16 @@
 
 submodule (Foundation) FoundationObject
 contains
+    module subroutine init(self)
+        class(Object), intent(in out) :: self
+    end subroutine
+
+    module subroutine destroy(self)
+        class(Object), intent(in out) :: self
+
+        !deallocate(self)
+    end subroutine
+
     module function equals(self, any) result(value)
         class(Object), target, intent(in) :: self
         class(Object), target, intent(in) :: any

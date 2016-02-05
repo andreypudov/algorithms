@@ -1,6 +1,6 @@
 FC = ifort
 CC = clang
-FFLAGS  = -c -free -module Modules -reentrancy threaded -openmp -fast # -fast # -debug all
+FFLAGS  = -c -free -module Modules -reentrancy threaded -openmp -fast -parallel -ipo -O3 # -debug all
 CFLAGS  = -c -pthread -openmp -g
 LDFLAGS = -openmp
 

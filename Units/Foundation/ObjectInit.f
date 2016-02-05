@@ -24,37 +24,55 @@
 ! THE SOFTWARE.
 !
 
-module UFoundation
+submodule (UFoundation) ObjectInit
 
     use Foundation
 
-    implicit none
-    private
+    use MUAsserts
+    use MUReport
 
-    type, public :: TUFoundation
+    type, extends(Object) :: Shape
+        integer :: color
     contains
-        procedure, nopass :: present
+        procedure :: init
+        procedure :: initWithColor
     end type
 
-    interface
-        module subroutine presentObjectInit()
-        end subroutine
-
-        module subroutine presentObjectEquals()
-        end subroutine
-
-        module subroutine presentObjectInheritance()
-        end subroutine
-
-        module subroutine presentStringInitWithFString()
-        end subroutine
-    end interface
 contains
-    subroutine present()
-        call presentObjectInit()
-        call presentObjectEquals()
-        call presentObjectInheritance()
+    module subroutine presentObjectInit()
+        type(Shape), pointer :: shape_pointer
 
-        call presentStringInitWithFString()
+        real start
+
+        call cpu_time(start)
+
+        allocate(shape_pointer)
+        call shape_pointer%init()
+
+        call assert_ok(associated(shape_pointer), '[1]')
+
+        call shape_pointer%destroy()
+        deallocate(shape_pointer)
+
+        call report('Foundation', 'Object', 'Init', start)
     end subroutine
-end module
+
+    subroutine init(self)
+        class(Shape), intent(in out) :: self
+
+        ! call initializer subroutine of object class
+        call self%object%init()
+
+        self%color = 0
+    end subroutine
+
+    subroutine initWithColor(self, color)
+        class(Shape), intent(in out) :: self
+        integer, intent(in)          :: color
+
+        ! call default initializer of shape object
+        call self%init()
+
+        self%color = color
+    end subroutine
+end submodule

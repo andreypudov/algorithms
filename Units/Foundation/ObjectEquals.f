@@ -39,6 +39,7 @@ submodule (UFoundation) ObjectEquals
     type, extends(Shape) :: Circle
         integer :: radius
     end type
+
 contains
     module subroutine presentObjectEquals()
         type(Shape), target  :: shape_object
@@ -51,6 +52,8 @@ contains
         class(Object), pointer :: object_circle_pointer
 
         real start
+
+        call cpu_time(start)
 
         shape_pointer  => shape_object
         circle_pointer => circle_object

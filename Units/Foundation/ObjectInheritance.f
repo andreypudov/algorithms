@@ -45,12 +45,15 @@ submodule (UFoundation) ObjectInheritance
         procedure :: getRadius
         procedure :: setRadius
     end type
+
 contains
     module subroutine presentObjectInheritance()
         type(Shape)  :: shape
         type(Circle) :: circle
 
         real start
+
+        call cpu_time(start)
 
         call shape%setColor(1)
         call circle%setColor(3)

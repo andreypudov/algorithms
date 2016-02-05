@@ -24,37 +24,27 @@
 ! THE SOFTWARE.
 !
 
-module UFoundation
+submodule (UFoundation) StringInitWithFString
 
     use Foundation
 
-    implicit none
-    private
+    use MUAsserts
+    use MUReport
 
-    type, public :: TUFoundation
-    contains
-        procedure, nopass :: present
-    end type
-
-    interface
-        module subroutine presentObjectInit()
-        end subroutine
-
-        module subroutine presentObjectEquals()
-        end subroutine
-
-        module subroutine presentObjectInheritance()
-        end subroutine
-
-        module subroutine presentStringInitWithFString()
-        end subroutine
-    end interface
 contains
-    subroutine present()
-        call presentObjectInit()
-        call presentObjectEquals()
-        call presentObjectInheritance()
+    module subroutine presentStringInitWithFString()
+        character(len=13) :: fstring1
 
-        call presentStringInitWithFString()
+        type(String), pointer :: string1
+
+        real start
+
+        call cpu_time(start)
+
+        fstring1 = 'Hello, World!'
+
+        string1 => string1%initWithFString(fstring1)
+
+        call report('Foundation', 'String', 'IWFStr.', start)
     end subroutine
-end module
+end submodule
