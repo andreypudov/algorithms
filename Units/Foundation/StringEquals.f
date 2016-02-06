@@ -24,41 +24,24 @@
 ! THE SOFTWARE.
 !
 
-submodule (Foundation) FoundationString
+submodule (UFoundation) StringEquals
+
+    use Foundation
+
+    use MUAsserts
+    use MUReport
+
 contains
-    module subroutine initWithFormat(self)
-        class(String), intent(in out) :: self
-    end subroutine
+    module subroutine presentStringEquals()
+        type(String) :: string1
+        type(String) :: string2
 
-    module subroutine initWithFString(self, text)
-        class(String), intent(in out) :: self
-        character(len=*), intent(in)  :: text
+        real start
 
-        allocate(self%data, source = text)
-    end subroutine
+        call cpu_time(start)
 
-    module function getFString(self) result(value)
-        class(String), target, intent(in) :: self
-        character(len=:), pointer         :: value
+        !string1
 
-        value => self%data
-    end function
-
-    module function length(self) result(value)
-        class(String), intent(in) :: self
-        integer :: value
-
-        value = len(self%data)
-    end function
-
-    module subroutine assign_fstring(instance, text)
-        class(String), intent(out)   :: instance
-        character(len=*), intent(in) :: text
-
-        if (allocated(instance%data)) then
-            deallocate(instance%data)
-        end if
-
-        call initWithFString(instance, text)
+        call report('Foundation', 'String', 'Equals', start)
     end subroutine
 end submodule

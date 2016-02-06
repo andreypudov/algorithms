@@ -35,7 +35,8 @@ contains
     module subroutine presentStringInitWithFString()
         character(len=13) :: fstring1
 
-        type(String), pointer :: string1
+        type(String), pointer :: string_dynamic
+        type(String)          :: string_static
 
         real start
 
@@ -43,7 +44,16 @@ contains
 
         fstring1 = 'Hello, World!'
 
-        string1 => string1%initWithFString(fstring1)
+        allocate(string_dynamic)
+        call string_dynamic%initWithFString(fstring1)
+        call string_static%initWithFString(fstring1)
+
+        call assert_equals(fstring1, string_dynamic%getFString())
+        call assert_equals(fstring1, string_static%getFString())
+
+        call string_dynamic%destroy()
+        call string_static%destroy()
+        deallocate(string_dynamic)
 
         call report('Foundation', 'String', 'IWFStr.', start)
     end subroutine

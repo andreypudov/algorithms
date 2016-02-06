@@ -48,6 +48,12 @@ module UFoundation
 
         module subroutine presentStringInitWithFString()
         end subroutine
+
+        module subroutine presentStringEquals()
+        end subroutine
+
+        module subroutine presentStringAssignFString()
+        end subroutine
     end interface
 contains
     subroutine present()
@@ -56,5 +62,7 @@ contains
         call presentObjectInheritance()
 
         call presentStringInitWithFString()
+        call presentStringEquals()
+        call presentStringAssignFString()
     end subroutine
 end module

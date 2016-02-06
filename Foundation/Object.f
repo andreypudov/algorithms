@@ -32,8 +32,6 @@ contains
 
     module subroutine destroy(self)
         class(Object), intent(in out) :: self
-
-        !deallocate(self)
     end subroutine
 
     module function equals(self, any) result(value)

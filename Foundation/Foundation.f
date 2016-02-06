@@ -42,9 +42,12 @@ module Foundation
     private
         character(len=:), allocatable :: data
     contains
-        procedure, nopass :: initWithFormat
-        procedure, nopass :: initWithFString
+        procedure, pass :: initWithFormat
+        procedure, pass :: initWithFString
+        procedure, pass :: getFString
         procedure, pass :: length
+
+        procedure, private, nopass :: assign_fstring
     end type
 
     interface
@@ -73,14 +76,14 @@ module Foundation
         !
         ! String
         !
-        module function initWithFormat() result(value)
-            type(String), pointer :: value
-        end function
+        module subroutine initWithFormat(self)
+            class(String), intent(in out) :: self
+        end subroutine
 
-        module function initWithFString(text) result(value)
-            character(len=*), intent(in) :: text
-            type(String), pointer        :: value
-        end function
+        module subroutine initWithFString(self, text)
+            class(String), intent(in out) :: self
+            character(len=*), intent(in)  :: text
+        end subroutine
 
         module function getFString(self) result(value)
             class(String), target, intent(in) :: self
@@ -91,5 +94,15 @@ module Foundation
             class(String), intent(in) :: self
             integer :: value
         end function
+
+        module subroutine assign_fstring(instance, text)
+            class(String), intent(out)   :: instance
+            character(len=*), intent(in) :: text
+        end subroutine
     end interface
+
+    interface assignment(=)
+        module procedure assign_fstring
+    end interface
+    public :: assignment(=)
 end module

@@ -40,19 +40,22 @@ submodule (UFoundation) ObjectInit
 
 contains
     module subroutine presentObjectInit()
-        type(Shape), pointer :: shape_pointer
+        type(Shape), pointer :: shape_dynamic
+        type(Shape)          :: shape_static
 
         real start
 
         call cpu_time(start)
 
-        allocate(shape_pointer)
-        call shape_pointer%init()
+        allocate(shape_dynamic)
+        call shape_dynamic%init()
+        call shape_static%init()
 
-        call assert_ok(associated(shape_pointer), '[1]')
+        call assert_ok(associated(shape_dynamic), '[1]')
 
-        call shape_pointer%destroy()
-        deallocate(shape_pointer)
+        call shape_dynamic%destroy()
+        call shape_static%destroy()
+        deallocate(shape_dynamic)
 
         call report('Foundation', 'Object', 'Init', start)
     end subroutine
