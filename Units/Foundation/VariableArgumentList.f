@@ -24,42 +24,44 @@
 ! THE SOFTWARE.
 !
 
-submodule (UFoundation) StringEquals
+submodule (UFoundation) VariableArgumentList
 
     use Foundation
 
     use MUAsserts
     use MUReport
 
-    type, extends(String) :: Text
-        integer :: kind
-    end type
 contains
-    module subroutine presentStringEquals()
-        type(String) :: string1
-        type(String) :: string2
-        type(String) :: string3
-
-        type(Text) :: text1
+    module subroutine presentVariableArgumentList()
+        type(Number) :: number1
+        type(Number) :: number2
+        type(Number) :: number3
 
         real start
 
         call cpu_time(start)
 
-        string1 = 'Hello, World!'
-        string2 = 'Привет, Мир!'
-        string3 = 'Hello, World!'
-        text1   = 'Привет, Мир!'
+        number1 = 2
+        number2 = 3
+        number3 = 5
 
-        call assert_ok(string1%equals(string3), '[1]')
-        call assert_ok(.not. string1%equals(string2), '[2]')
-        call assert_ok(string2%equals(text1), '[3]')
+        call square(2, number1, number2, number3)
 
-        call string1%destroy()
-        call string2%destroy()
-        call string3%destroy()
-        call text1%destroy()
+        call report('Foundation', 'VAList', '', start)
+    end subroutine
 
-        call report('Foundation', 'String', 'Equals', start)
+    subroutine square(base, &
+             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+            o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
+        integer, intent(in) :: base
+        class(Object), optional, intent(in out) :: &
+            o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+            o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32
+
+        type(VariableArgumentList) :: list
+
+        call list%initWithObjects( &
+             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+            o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
     end subroutine
 end submodule

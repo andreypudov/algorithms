@@ -50,6 +50,9 @@ contains
         call assert_equals(string_dynamic%getFString(), fstring)
         call assert_equals(string_static%getFString(), fstring)
 
+        call string_dynamic%destroy()
+        call string_static%destroy()
+
         deallocate(string_dynamic)
 
         call report('Foundation', 'String', 'AssignFS', start)

@@ -24,42 +24,14 @@
 ! THE SOFTWARE.
 !
 
-submodule (UFoundation) StringEquals
-
-    use Foundation
-
-    use MUAsserts
-    use MUReport
-
-    type, extends(String) :: Text
-        integer :: kind
-    end type
+submodule (Foundation) Array
 contains
-    module subroutine presentStringEquals()
-        type(String) :: string1
-        type(String) :: string2
-        type(String) :: string3
+    module subroutine array_init(self)
+        class(Array), intent(in out) :: self
+    end subroutine
 
-        type(Text) :: text1
-
-        real start
-
-        call cpu_time(start)
-
-        string1 = 'Hello, World!'
-        string2 = 'Привет, Мир!'
-        string3 = 'Hello, World!'
-        text1   = 'Привет, Мир!'
-
-        call assert_ok(string1%equals(string3), '[1]')
-        call assert_ok(.not. string1%equals(string2), '[2]')
-        call assert_ok(string2%equals(text1), '[3]')
-
-        call string1%destroy()
-        call string2%destroy()
-        call string3%destroy()
-        call text1%destroy()
-
-        call report('Foundation', 'String', 'Equals', start)
+    module subroutine array_initWithObjects(self, text)
+        class(Array), intent(in out) :: self
+        class(String), intent(in)    :: text
     end subroutine
 end submodule

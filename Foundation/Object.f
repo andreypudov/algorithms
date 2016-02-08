@@ -24,17 +24,17 @@
 ! THE SOFTWARE.
 !
 
-submodule (Foundation) FoundationObject
+submodule (Foundation) Object
 contains
-    module subroutine init(self)
+    module subroutine object_init(self)
         class(Object), intent(in out) :: self
     end subroutine
 
-    module subroutine destroy(self)
+    module subroutine object_destroy(self)
         class(Object), intent(in out) :: self
     end subroutine
 
-    module function equals(self, any) result(value)
+    module function object_equals(self, any) result(value)
         class(Object), target, intent(in) :: self
         class(Object), target, intent(in) :: any
         logical :: value
@@ -45,7 +45,7 @@ contains
         value = associated(any_pointer, self)
     end function
 
-    module function description(self) result(value)
+    module function object_description(self) result(value)
         class(Object), intent(in) :: self
         type(String) :: value
 

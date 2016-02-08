@@ -24,34 +24,66 @@
 ! THE SOFTWARE.
 !
 
-submodule (Foundation) FoundationString
+submodule (Foundation) String
 contains
-    module subroutine initWithFormat(self)
+     module subroutine string_init(self)
+         class(String), intent(in out) :: self
+
+         allocate(self%data, source = '')
+     end subroutine
+
+     module subroutine string_destroy(self)
+         class(String), intent(in out) :: self
+
+         deallocate(self%data)
+     end subroutine
+
+     module function string_equals(self, any) result(value)
+         class(String), target, intent(in) :: self
+         class(Object), target, intent(in) :: any
+         logical :: value
+
+         select type (any)
+             class is (String)
+                 value = (self%data == any%data)
+             class default
+                 value = .false.
+         end select
+     end function
+
+     module function string_description(self) result(value)
+         class(String), intent(in) :: self
+         type(String) :: value
+
+         value = self
+     end function
+
+    module subroutine string_initWithFormat(self)
         class(String), intent(in out) :: self
     end subroutine
 
-    module subroutine initWithFString(self, text)
+    module subroutine string_initWithFString(self, text)
         class(String), intent(in out) :: self
         character(len=*), intent(in)  :: text
 
         allocate(self%data, source = text)
     end subroutine
 
-    module function getFString(self) result(value)
+    module function string_getFString(self) result(value)
         class(String), target, intent(in) :: self
         character(len=:), pointer         :: value
 
         value => self%data
     end function
 
-    module function length(self) result(value)
+    module function string_length(self) result(value)
         class(String), intent(in) :: self
         integer :: value
 
         value = len(self%data)
     end function
 
-    module subroutine assign_fstring(instance, text)
+    module subroutine string_assign_fstring(instance, text)
         class(String), intent(out)   :: instance
         character(len=*), intent(in) :: text
 
@@ -59,6 +91,6 @@ contains
             deallocate(instance%data)
         end if
 
-        call initWithFString(instance, text)
+        call instance%initWithFString(text)
     end subroutine
 end submodule

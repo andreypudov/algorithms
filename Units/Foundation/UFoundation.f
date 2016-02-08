@@ -54,6 +54,9 @@ module UFoundation
 
         module subroutine presentStringAssignFString()
         end subroutine
+
+        module subroutine presentVariableArgumentList()
+        end subroutine
     end interface
 contains
     subroutine present()
@@ -64,5 +67,6 @@ contains
         call presentStringInitWithFString()
         call presentStringEquals()
         call presentStringAssignFString()
+        call presentVariableArgumentList()
     end subroutine
 end module

@@ -53,6 +53,7 @@ contains
 
         call string_dynamic%destroy()
         call string_static%destroy()
+
         deallocate(string_dynamic)
 
         call report('Foundation', 'String', 'IWFStr.', start)
