@@ -40,11 +40,17 @@ module Foundation
         procedure, pass :: description => object_description
     end type
 
+    type, private :: ObjectLink
+        class(Object), pointer :: link
+    end type
+
     type, extends(Object), public :: Array
     private
+        type(ObjectLink), dimension(:), allocatable :: list
     contains
-        procedure, pass :: init            => array_init
-        procedure, pass :: initWithObjects => array_initWithObjects
+        procedure, pass :: init          => array_init
+        procedure, pass :: destroy       => array_destroy
+        procedure, pass :: initWithArray => array_initWithArray
     end type
 
     type, extends(Object), public :: Date
@@ -81,10 +87,12 @@ module Foundation
 
     type, public :: VariableArgumentList
     private
-        type(Object), dimension(VARIABLE_ARGUMENT_LIST_MAX_LENGTH) :: list
+        type(ObjectLink), dimension(VARIABLE_ARGUMENT_LIST_MAX_LENGTH) :: list
         integer :: count
     contains
         procedure, pass :: initWithObjects => valist_initWithObjects
+        procedure, pass :: objectAtIndex   => valist_objectAtIndex
+        procedure, pass :: length          => valist_length
     end type
 
     interface
@@ -117,9 +125,13 @@ module Foundation
             class(Array), intent(in out) :: self
         end subroutine
 
-        module subroutine array_initWithObjects(self, text)
+        module subroutine array_destroy(self)
             class(Array), intent(in out) :: self
-            class(String), intent(in)   :: text
+        end subroutine
+
+        module subroutine array_initWithArray(self, list)
+            class(Array), intent(in out)               :: self
+            type(ObjectLink), dimension(:), intent(in) :: list
         end subroutine
 
         !
@@ -202,13 +214,24 @@ module Foundation
         ! Variable argument list
         !
         module subroutine valist_initWithObjects(self, &
-                 o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+                 o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9, o10, o11, o12, o13, o14, o15, o16, &
                 o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
             class(VariableArgumentList), intent(in out) :: self
-            class(Object), optional, intent(in out)     :: &
+            class(Object), target, optional, intent(in out)     :: &
                  o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
                 o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32
         end subroutine
+
+        module function valist_objectAtIndex(self, index) result(value)
+            class(VariableArgumentList), intent(in) :: self
+            integer, intent(in)    :: index
+            class(Object), pointer :: value
+        end function
+
+        module function valist_length(self) result(value)
+            class(VariableArgumentList), intent(in) :: self
+            integer :: value
+        end function
     end interface
 
     interface assignment(=)

@@ -47,21 +47,36 @@ contains
 
         call square(2, number1, number2, number3)
 
+        call assert_equals(number1%integerValue(), 2 ** 2)
+        call assert_equals(number2%integerValue(), 3 ** 2)
+        call assert_equals(number3%integerValue(), 5 ** 2)
+
         call report('Foundation', 'VAList', '', start)
     end subroutine
 
     subroutine square(base, &
-             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9, o10, o11, o12, o13, o14, o15, o16, &
             o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
         integer, intent(in) :: base
         class(Object), optional, intent(in out) :: &
             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
             o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32
 
-        type(VariableArgumentList) :: list
+        type(VariableArgumentList) list
+        class(Object), pointer :: value
+        integer       index
 
         call list%initWithObjects( &
-             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
+             o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9, o10, o11, o12, o13, o14, o15, o16, &
             o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
+
+        do index = 1, list%length()
+            value => list%objectAtIndex(index)
+
+            select type(value)
+            class is (Number)
+                value = value%integerValue() ** base
+            end select
+        end do
     end subroutine
 end submodule

@@ -30,8 +30,22 @@ contains
         class(Array), intent(in out) :: self
     end subroutine
 
-    module subroutine array_initWithObjects(self, text)
+    module subroutine array_destroy(self)
         class(Array), intent(in out) :: self
-        class(String), intent(in)    :: text
+
+        deallocate(self%list)
+    end subroutine
+
+    module subroutine array_initWithArray(self, list)
+        class(Array), intent(in out)               :: self
+        type(ObjectLink), dimension(:), intent(in) :: list
+
+        integer index
+
+        allocate(self%list(size(list)))
+
+        do index = 1, size(list)
+            self%list(index)%link => list(index)%link
+        end do
     end subroutine
 end submodule
