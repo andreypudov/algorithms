@@ -26,12 +26,40 @@
 
 submodule (Foundation) Number
 contains
+    module subroutine number_initWithCharacter(self, value)
+        class(Number), intent(in out) :: self
+        character, intent(in)         :: value
+
+        self%charValue = value
+    end subroutine
+
     module subroutine number_initWithInteger(self, value)
         class(Number), intent(in out) :: self
         integer, intent(in)           :: value
 
         self%intValue = value
     end subroutine
+
+    module subroutine number_initWithLogical(self, value)
+        class(Number), intent(in out) :: self
+        logical, intent(in)           :: value
+
+        self%logValue = value
+    end subroutine
+
+    module subroutine number_initWithReal(self, value)
+        class(Number), intent(in out) :: self
+        real, intent(in)              :: value
+
+        self%doubleValue = value
+    end subroutine
+
+    module function number_characterValue(self) result(value)
+        class(Number), intent(in) :: self
+        character                 :: value
+
+        value = self%charValue
+    end function
 
     module function number_integerValue(self) result(value)
         class(Number), intent(in) :: self
@@ -40,10 +68,45 @@ contains
         value = self%intValue
     end function
 
+    module function number_logicalValue(self) result(value)
+        class(Number), intent(in) :: self
+        logical                   :: value
+
+        value = self%logValue
+    end function
+
+    module function number_realValue(self) result(value)
+        class(Number), intent(in) :: self
+        real                      :: value
+
+        value = self%doubleValue
+    end function
+
+    module subroutine number_assign_character(instance, value)
+        class(Number), intent(out)   :: instance
+        character, intent(in)        :: value
+
+        call instance%initWithCharacter(value)
+    end subroutine
+
     module subroutine number_assign_integer(instance, value)
         class(Number), intent(out)   :: instance
         integer, intent(in)          :: value
 
         call instance%initWithInteger(value)
+    end subroutine
+
+    module subroutine number_assign_logical(instance, value)
+        class(Number), intent(out)   :: instance
+        logical, intent(in)          :: value
+
+        call instance%initWithLogical(value)
+    end subroutine
+
+    module subroutine number_assign_real(instance, value)
+        class(Number), intent(out)   :: instance
+        real, intent(in)             :: value
+
+        call instance%initWithReal(value)
     end subroutine
 end submodule

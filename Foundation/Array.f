@@ -33,19 +33,98 @@ contains
     module subroutine array_destroy(self)
         class(Array), intent(in out) :: self
 
+        integer index
+
+        if (self%selfAllocated) then
+            do index = 1, size(self%list)
+                deallocate(self%list(index)%link)
+            end do
+        end if
+
         deallocate(self%list)
     end subroutine
 
-    module subroutine array_initWithArray(self, list)
-        class(Array), intent(in out)               :: self
-        type(ObjectLink), dimension(:), intent(in) :: list
+    module subroutine array_initWithFArray_character(self, list)
+        class(Array), intent(in out)        :: self
+        character, dimension(:), intent(in) :: list
 
+        class(Number), pointer :: buffer
         integer index
 
         allocate(self%list(size(list)))
+        self%selfAllocated = .true.
 
         do index = 1, size(list)
-            self%list(index)%link => list(index)%link
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
         end do
     end subroutine
+
+    module subroutine array_initWithFArray_integer(self, list)
+        class(Array), intent(in out)      :: self
+        integer, dimension(:), intent(in) :: list
+
+        class(Number), pointer :: buffer
+        integer index
+
+        allocate(self%list(size(list)))
+        self%selfAllocated = .true.
+
+        do index = 1, size(list)
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
+        end do
+    end subroutine
+
+    module subroutine array_initWithFArray_logical(self, list)
+        class(Array), intent(in out)      :: self
+        logical, dimension(:), intent(in) :: list
+
+        class(Number), pointer :: buffer
+        integer index
+
+        allocate(self%list(size(list)))
+        self%selfAllocated = .true.
+
+        do index = 1, size(list)
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
+        end do
+    end subroutine
+
+    module subroutine array_initWithFArray_real(self, list)
+        class(Array), intent(in out)   :: self
+        real, dimension(:), intent(in) :: list
+
+        class(Number), pointer :: buffer
+        integer index
+
+        allocate(self%list(size(list)))
+        self%selfAllocated = .true.
+
+        do index = 1, size(list)
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
+        end do
+    end subroutine
+
+    module function array_objectAtIndex(self, index) result(value)
+        class(Array), intent(in) :: self
+        integer, intent(in)      :: index
+        class(Object), pointer   :: value
+
+        if ((index < 1) .or. (index > size(self%list))) then
+            ! TODO
+        end if
+
+        value => self%list(index)%link
+    end function
 end submodule

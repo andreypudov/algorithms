@@ -46,6 +46,9 @@ module UFoundation
         module subroutine presentObjectInheritance()
         end subroutine
 
+        module subroutine presentArrayInitWithFArray()
+        end subroutine
+
         module subroutine presentStringInitWithFString()
         end subroutine
 
@@ -63,6 +66,8 @@ contains
         call presentObjectInit()
         call presentObjectEquals()
         call presentObjectInheritance()
+
+        call presentArrayInitWithFArray()
 
         call presentStringInitWithFString()
         call presentStringEquals()

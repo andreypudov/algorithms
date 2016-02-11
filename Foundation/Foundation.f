@@ -31,6 +31,11 @@ module Foundation
 
     integer, parameter, public :: VARIABLE_ARGUMENT_LIST_MAX_LENGTH = 32
 
+    integer, parameter, public :: CHARACTER_TYPE = 0
+    integer, parameter, public :: INTEGER_TYPE   = 1
+    integer, parameter, public :: LOGICAL_TYPE   = 2
+    integer, parameter, public :: REAL_TYPE      = 3
+
     type, public :: Object
     private
     contains
@@ -47,10 +52,20 @@ module Foundation
     type, extends(Object), public :: Array
     private
         type(ObjectLink), dimension(:), allocatable :: list
+        logical :: selfAllocated
     contains
-        procedure, pass :: init          => array_init
+        procedure, private, pass :: init => array_init
         procedure, pass :: destroy       => array_destroy
-        procedure, pass :: initWithArray => array_initWithArray
+
+        procedure, private, pass :: initWithFArray_charcter => array_initWithFArray_character
+        procedure, private, pass :: initWithFArray_integer  => array_initWithFArray_integer
+        procedure, private, pass :: initWithFArray_logical  => array_initWithFArray_logical
+        procedure, private, pass :: initWithFArray_real     => array_initWithFArray_real
+
+        generic :: initWithFArray => initWithFArray_charcter, initWithFArray_integer, &
+                initWithFArray_logical, initWithFArray_real
+
+        procedure, pass :: objectAtIndex  => array_objectAtIndex
     end type
 
     type, extends(Object), public :: Date
@@ -62,10 +77,27 @@ module Foundation
 
     type, extends(Object), public :: Number
     private
-        integer :: intValue
+        integer :: type
+
+        character :: charValue
+        integer   :: intValue
+        logical   :: logValue
+        real      :: doubleValue
     contains
-        procedure, pass :: initWithInteger => number_initWithInteger
-        procedure, pass :: integerValue    => number_integerValue
+        procedure, pass :: initWithCharacter => number_initWithCharacter
+        procedure, pass :: initWithInteger   => number_initWithInteger
+        procedure, pass :: initWithLogical   => number_initWithLogical
+        procedure, pass :: initWithReal      => number_initWithReal
+
+        procedure, pass :: characterValue    => number_characterValue
+        procedure, pass :: integerValue      => number_integerValue
+        procedure, pass :: logicalValue      => number_logicalValue
+        procedure, pass :: realValue         => number_realValue
+
+        procedure, private, nopass :: assign_character => number_assign_character
+        procedure, private, nopass :: assign_integer   => number_assign_integer
+        procedure, private, nopass :: assign_logical   => number_assign_logical
+        procedure, private, nopass :: assign_real      => number_assign_real
     end type
 
     type, extends(Object), public :: String
@@ -129,10 +161,31 @@ module Foundation
             class(Array), intent(in out) :: self
         end subroutine
 
-        module subroutine array_initWithArray(self, list)
-            class(Array), intent(in out)               :: self
-            type(ObjectLink), dimension(:), intent(in) :: list
+        module subroutine array_initWithFArray_character(self, list)
+            class(Array), intent(in out)        :: self
+            character, dimension(:), intent(in) :: list
         end subroutine
+
+        module subroutine array_initWithFArray_integer(self, list)
+            class(Array), intent(in out)      :: self
+            integer, dimension(:), intent(in) :: list
+        end subroutine
+
+        module subroutine array_initWithFArray_logical(self, list)
+            class(Array), intent(in out)      :: self
+            logical, dimension(:), intent(in) :: list
+        end subroutine
+
+        module subroutine array_initWithFArray_real(self, list)
+            class(Array), intent(in out)   :: self
+            real, dimension(:), intent(in) :: list
+        end subroutine
+
+        module function array_objectAtIndex(self, index) result(value)
+            class(Array), intent(in) :: self
+            integer, intent(in)      :: index
+            class(Object), pointer   :: value
+        end function
 
         !
         ! Date
@@ -149,19 +202,64 @@ module Foundation
         !
         ! Number
         !
+        module subroutine number_initWithCharacter(self, value)
+            class(Number), intent(in out) :: self
+            character, intent(in)         :: value
+        end subroutine
+
         module subroutine number_initWithInteger(self, value)
             class(Number), intent(in out) :: self
             integer, intent(in)           :: value
         end subroutine
+
+        module subroutine number_initWithLogical(self, value)
+            class(Number), intent(in out) :: self
+            logical, intent(in)           :: value
+        end subroutine
+
+        module subroutine number_initWithReal(self, value)
+            class(Number), intent(in out) :: self
+            real, intent(in)              :: value
+        end subroutine
+
+        module function number_characterValue(self) result(value)
+            class(Number), intent(in) :: self
+            character                 :: value
+        end function
 
         module function number_integerValue(self) result(value)
             class(Number), intent(in) :: self
             integer                   :: value
         end function
 
+        module function number_logicalValue(self) result(value)
+            class(Number), intent(in) :: self
+            logical                   :: value
+        end function
+
+        module function number_realValue(self) result(value)
+            class(Number), intent(in) :: self
+            real                      :: value
+        end function
+
+        module subroutine number_assign_character(instance, value)
+            class(Number), intent(out)   :: instance
+            character, intent(in)        :: value
+        end subroutine
+
         module subroutine number_assign_integer(instance, value)
             class(Number), intent(out)   :: instance
             integer, intent(in)          :: value
+        end subroutine
+
+        module subroutine number_assign_logical(instance, value)
+            class(Number), intent(out)   :: instance
+            logical, intent(in)          :: value
+        end subroutine
+
+        module subroutine number_assign_real(instance, value)
+            class(Number), intent(out)   :: instance
+            real, intent(in)             :: value
         end subroutine
 
         !
@@ -235,7 +333,11 @@ module Foundation
     end interface
 
     interface assignment(=)
+        module procedure number_assign_character
         module procedure number_assign_integer
+        module procedure number_assign_logical
+        module procedure number_assign_real
+
         module procedure string_assign_fstring
     end interface
     public :: assignment(=)

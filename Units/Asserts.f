@@ -36,7 +36,7 @@ module MUAsserts
     end interface
 
     interface assert_equals
-        module procedure assert_equals_int, assert_equals_real, &
+        module procedure assert_equals_int, assert_equals_log, assert_equals_real, &
                 assert_equals_string, &
                 assert_equals_int_arrays1d, assert_equals_int_arrays2d
     end interface
@@ -53,6 +53,16 @@ contains
     subroutine assert_equals_int(value1, value2)
         integer, intent(in) :: value1
         integer, intent(in) :: value2
+
+        if (value1 /= value2) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
+
+    subroutine assert_equals_log(value1, value2)
+        logical, intent(in) :: value1
+        logical, intent(in) :: value2
 
         if (value1 /= value2) then
             print '(t1, a)', 'FAILED. The keys are set to different values.'
