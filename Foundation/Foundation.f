@@ -32,9 +32,11 @@ module Foundation
     integer, parameter, public :: VARIABLE_ARGUMENT_LIST_MAX_LENGTH = 32
 
     integer, parameter, public :: CHARACTER_TYPE = 0
-    integer, parameter, public :: INTEGER_TYPE   = 1
-    integer, parameter, public :: LOGICAL_TYPE   = 2
-    integer, parameter, public :: REAL_TYPE      = 3
+    integer, parameter, public :: COMPLEX_TYPE   = 1
+    integer, parameter, public :: DOUBLE_TYPE    = 2
+    integer, parameter, public :: INTEGER_TYPE   = 3
+    integer, parameter, public :: LOGICAL_TYPE   = 4
+    integer, parameter, public :: REAL_TYPE      = 5
 
     type, public :: Object
     private
@@ -65,7 +67,10 @@ module Foundation
         generic :: initWithFArray => initWithFArray_charcter, initWithFArray_integer, &
                 initWithFArray_logical, initWithFArray_real
 
+        procedure, pass :: count          => array_count
         procedure, pass :: objectAtIndex  => array_objectAtIndex
+
+        procedure, pass :: sortedArrayUsingFunction => array_sortedArrayUsingFunction
     end type
 
     type, extends(Object), public :: Date
@@ -79,22 +84,30 @@ module Foundation
     private
         integer :: type
 
-        character :: charValue
-        integer   :: intValue
-        logical   :: logValue
-        real      :: doubleValue
+        character        :: characterVal
+        complex          :: complexVal
+        double precision :: doubleVal
+        integer          :: integerVal
+        logical          :: logicalVal
+        real             :: realVal
     contains
         procedure, pass :: initWithCharacter => number_initWithCharacter
+        procedure, pass :: initWithComplex   => number_initWithComplex
+        procedure, pass :: initWithDouble    => number_initWithDouble
         procedure, pass :: initWithInteger   => number_initWithInteger
         procedure, pass :: initWithLogical   => number_initWithLogical
         procedure, pass :: initWithReal      => number_initWithReal
 
         procedure, pass :: characterValue    => number_characterValue
+        procedure, pass :: complexValue      => number_complexValue
+        procedure, pass :: doubleValue       => number_doubleValue
         procedure, pass :: integerValue      => number_integerValue
         procedure, pass :: logicalValue      => number_logicalValue
         procedure, pass :: realValue         => number_realValue
 
         procedure, private, nopass :: assign_character => number_assign_character
+        procedure, private, nopass :: assign_complexr  => number_assign_complex
+        procedure, private, nopass :: assign_double    => number_assign_double
         procedure, private, nopass :: assign_integer   => number_assign_integer
         procedure, private, nopass :: assign_logical   => number_assign_logical
         procedure, private, nopass :: assign_real      => number_assign_real
@@ -181,10 +194,20 @@ module Foundation
             real, dimension(:), intent(in) :: list
         end subroutine
 
+        module function array_count(self) result(value)
+            class(Array), intent(in) :: self
+            integer                  :: value
+        end function
+
         module function array_objectAtIndex(self, index) result(value)
             class(Array), intent(in) :: self
             integer, intent(in)      :: index
             class(Object), pointer   :: value
+        end function
+
+        module function array_sortedArrayUsingFunction(self) result(value)
+            class(Array), intent(in) :: self
+            class(Array), pointer    :: value
         end function
 
         !
@@ -207,6 +230,16 @@ module Foundation
             character, intent(in)         :: value
         end subroutine
 
+        module subroutine number_initWithComplex(self, value)
+            class(Number), intent(in out) :: self
+            complex, intent(in)           :: value
+        end subroutine
+
+        module subroutine number_initWithDouble(self, value)
+            class(Number), intent(in out) :: self
+            double precision, intent(in)  :: value
+        end subroutine
+
         module subroutine number_initWithInteger(self, value)
             class(Number), intent(in out) :: self
             integer, intent(in)           :: value
@@ -227,6 +260,16 @@ module Foundation
             character                 :: value
         end function
 
+        module function number_complexValue(self) result(value)
+            class(Number), intent(in) :: self
+            complex                   :: value
+        end function
+
+        module function number_doubleValue(self) result(value)
+            class(Number), intent(in) :: self
+            double precision          :: value
+        end function
+
         module function number_integerValue(self) result(value)
             class(Number), intent(in) :: self
             integer                   :: value
@@ -245,6 +288,16 @@ module Foundation
         module subroutine number_assign_character(instance, value)
             class(Number), intent(out)   :: instance
             character, intent(in)        :: value
+        end subroutine
+
+        module subroutine number_assign_complex(instance, value)
+            class(Number), intent(out)   :: instance
+            complex, intent(in)          :: value
+        end subroutine
+
+        module subroutine number_assign_double(instance, value)
+            class(Number), intent(out)   :: instance
+            double precision, intent(in) :: value
         end subroutine
 
         module subroutine number_assign_integer(instance, value)
@@ -334,6 +387,8 @@ module Foundation
 
     interface assignment(=)
         module procedure number_assign_character
+        module procedure number_assign_complex
+        module procedure number_assign_double
         module procedure number_assign_integer
         module procedure number_assign_logical
         module procedure number_assign_real

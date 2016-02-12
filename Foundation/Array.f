@@ -116,6 +116,13 @@ contains
         end do
     end subroutine
 
+    module function array_count(self) result(value)
+        class(Array), intent(in) :: self
+        integer                  :: value
+
+        value = size(self%list)
+    end function
+
     module function array_objectAtIndex(self, index) result(value)
         class(Array), intent(in) :: self
         integer, intent(in)      :: index
@@ -126,5 +133,12 @@ contains
         end if
 
         value => self%list(index)%link
+    end function
+
+    module function array_sortedArrayUsingFunction(self) result(value)
+        class(Array), intent(in) :: self
+        class(Array), pointer    :: value
+
+        allocate(value)
     end function
 end submodule

@@ -60,6 +60,9 @@ module UFoundation
 
         module subroutine presentVariableArgumentList()
         end subroutine
+
+        module subroutine presentArrayCount()
+        end subroutine
     end interface
 contains
     subroutine present()
@@ -68,6 +71,7 @@ contains
         call presentObjectInheritance()
 
         call presentArrayInitWithFArray()
+        call presentArrayCount()
 
         call presentStringInitWithFString()
         call presentStringEquals()
