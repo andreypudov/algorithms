@@ -26,10 +26,16 @@
 
 submodule (Foundation) Array
 contains
+    !
+    ! Initializes a newly allocated array.
+    !
     module subroutine array_init(self)
         class(Array), intent(in out) :: self
     end subroutine
 
+    !
+    ! Releases allocated array.
+    !
     module subroutine array_destroy(self)
         class(Array), intent(in out) :: self
 
@@ -44,6 +50,9 @@ contains
         deallocate(self%list)
     end subroutine
 
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
     module subroutine array_initWithFArray_character(self, list)
         class(Array), intent(in out)        :: self
         character, dimension(:), intent(in) :: list
@@ -62,6 +71,9 @@ contains
         end do
     end subroutine
 
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
     module subroutine array_initWithFArray_integer(self, list)
         class(Array), intent(in out)      :: self
         integer, dimension(:), intent(in) :: list
@@ -80,6 +92,9 @@ contains
         end do
     end subroutine
 
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
     module subroutine array_initWithFArray_logical(self, list)
         class(Array), intent(in out)      :: self
         logical, dimension(:), intent(in) :: list
@@ -98,6 +113,9 @@ contains
         end do
     end subroutine
 
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
     module subroutine array_initWithFArray_real(self, list)
         class(Array), intent(in out)   :: self
         real, dimension(:), intent(in) :: list
@@ -116,6 +134,9 @@ contains
         end do
     end subroutine
 
+    !
+    ! The number of objects in the array.
+    !
     module function array_count(self) result(value)
         class(Array), intent(in) :: self
         integer                  :: value
@@ -123,6 +144,9 @@ contains
         value = size(self%list)
     end function
 
+    !
+    ! Returns the object located at the specified index.
+    !
     module function array_objectAtIndex(self, index) result(value)
         class(Array), intent(in) :: self
         integer, intent(in)      :: index
@@ -135,10 +159,109 @@ contains
         value => self%list(index)%link
     end function
 
-    module function array_sortedArrayUsingFunction(self) result(value)
+    !
+    ! The new array contains references to the receiving array’s elements, not copies of them.
+    !
+    module function array_sortedArrayUsingFunction(self, comparator) result(value)
         class(Array), intent(in) :: self
-        class(Array), pointer    :: value
+        interface
+            function comparator(value1, value2) result(value)
+                import ObjectLink
+
+                type(ObjectLink), intent(in) :: value1
+                type(ObjectLink), intent(in) :: value2
+                integer                   :: value
+            end function
+        end interface
+        class(Array), pointer :: value
+
+        type(ObjectLink), dimension((size(self%list) + 1) / 2) :: buffer
 
         allocate(value)
+        allocate(value%list, source = self%list)
+
+        call mergeSort(value%list, buffer, size(value%list), comparator)
     end function
+
+    recursive subroutine mergeSort(list, buffer, length, comparator)
+        integer, intent(in)                                           :: length
+        type(ObjectLink), dimension(length), intent(in out)           :: list
+        type(ObjectLink), dimension((length + 1) / 2), intent(in out) :: buffer
+        interface
+            function comparator(value1, value2) result(order)
+                import ObjectLink
+
+                type(ObjectLink), intent(in) :: value1
+                type(ObjectLink), intent(in) :: value2
+                integer                      :: order
+            end function
+        end interface
+
+        type(ObjectLink) link
+        integer :: NA, NB
+
+        select case (length)
+        case (:1)
+            return
+        case (2)
+            if (comparator(list(1), list(2)) == ORDERED_DESCENDING) then
+                link = list(1)
+                list(1) = list(2)
+                list(2) = link
+            end if
+
+            return
+        case default
+            NA = (length + 1) / 2
+            NB = length - NA
+
+            call mergeSort(list, buffer, NA, comparator)
+            call mergeSort(list(NA + 1), buffer, NB, comparator)
+
+            if (comparator(list(NA), list(NA + 1)) == ORDERED_DESCENDING) then
+                buffer(1:NA) = list(1:NA)
+                call merge(buffer, NA, list(NA + 1), NB, list, length, comparator)
+            endif
+            return
+        end select
+    end subroutine
+
+    subroutine merge(A, NA, B, NB, C, NC, comparator)
+        integer, intent(in) :: NA,NB,NC           ! Normal usage: NA+NB = NC
+        type(ObjectLink), intent(in out) :: A(NA) ! B overlays C(NA+1:NC)
+        type(ObjectLink), intent(in)     :: B(NB)
+        type(ObjectLink), intent(in out) :: C(NC)
+        interface
+            function comparator(value1, value2) result(order)
+                import ObjectLink
+
+                type(ObjectLink), intent(in) :: value1
+                type(ObjectLink), intent(in) :: value2
+                integer                      :: order
+            end function
+        end interface
+
+        integer :: I,J,K
+        integer order
+
+        I = 1; J = 1; K = 1;
+        do while(I <= NA .and. J <= NB)
+            order = comparator(A(I), B(J))
+            if ((order == ORDERED_ASCENDING) .or. (order == ORDERED_SAME)) then
+                C(K) = A(I)
+                I = I+1
+            else
+                C(K) = B(J)
+                J = J+1
+            endif
+
+            K = K + 1
+        enddo
+
+        do while (I <= NA)
+            C(K) = A(I)
+            I = I + 1
+            K = K + 1
+        enddo
+    end subroutine
 end submodule

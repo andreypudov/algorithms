@@ -29,6 +29,10 @@ module Foundation
     implicit none
     private
 
+    integer, parameter, public :: ORDERED_ASCENDING  = -1
+    integer, parameter, public :: ORDERED_SAME       = 0
+    integer, parameter, public :: ORDERED_DESCENDING = 1
+
     integer, parameter, public :: VARIABLE_ARGUMENT_LIST_MAX_LENGTH = 32
 
     integer, parameter, public :: CHARACTER_TYPE = 0
@@ -47,7 +51,7 @@ module Foundation
         procedure, pass :: description => object_description
     end type
 
-    type, private :: ObjectLink
+    type, public :: ObjectLink
         class(Object), pointer :: link
     end type
 
@@ -205,9 +209,18 @@ module Foundation
             class(Object), pointer   :: value
         end function
 
-        module function array_sortedArrayUsingFunction(self) result(value)
+        module function array_sortedArrayUsingFunction(self, comparator) result(value)
             class(Array), intent(in) :: self
-            class(Array), pointer    :: value
+            interface
+                function comparator(value1, value2) result(value)
+                    import ObjectLink
+
+                    type(ObjectLink), intent(in) :: value1
+                    type(ObjectLink), intent(in) :: value2
+                    integer                   :: value
+                end function
+            end interface
+            class(Array), pointer :: value
         end function
 
         !

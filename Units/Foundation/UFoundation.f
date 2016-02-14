@@ -49,6 +49,12 @@ module UFoundation
         module subroutine presentArrayInitWithFArray()
         end subroutine
 
+        module subroutine presentArrayCount()
+        end subroutine
+
+        module subroutine  presentArraySortedArrayUsingFunction()
+        end subroutine
+
         module subroutine presentStringInitWithFString()
         end subroutine
 
@@ -61,8 +67,7 @@ module UFoundation
         module subroutine presentVariableArgumentList()
         end subroutine
 
-        module subroutine presentArrayCount()
-        end subroutine
+
     end interface
 contains
     subroutine present()
@@ -72,6 +77,7 @@ contains
 
         call presentArrayInitWithFArray()
         call presentArrayCount()
+        call presentArraySortedArrayUsingFunction()
 
         call presentStringInitWithFString()
         call presentStringEquals()
