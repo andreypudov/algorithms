@@ -70,10 +70,32 @@ contains
     end subroutine
 
     function comparator(value1, value2) result(order)
-        type(ObjectLink), intent(in) :: value1
-        type(ObjectLink), intent(in) :: value2
-        integer                      :: order
+        class(Object), pointer, intent(in) :: value1
+        class(Object), pointer, intent(in) :: value2
+        integer                            :: order
 
-        order = 1
+        integer int1, int2
+
+        select type (value1)
+        class is (Number)
+            int1 = value1%integerValue()
+        class default
+            int1 = 0
+        end select
+
+        select type (value2)
+        class is (Number)
+            int2 = value2%integerValue()
+        class default
+            int2 = 0
+        end select
+
+        if (int1 < int2) then
+            order = ORDERED_ASCENDING
+        else if (int1 > int2) then
+            order = ORDERED_DESCENDING
+        else
+            order = ORDERED_SAME
+        end if
     end function
 end submodule

@@ -166,10 +166,10 @@ contains
         class(Array), intent(in) :: self
         interface
             function comparator(value1, value2) result(value)
-                import ObjectLink
+                import Object
 
-                type(ObjectLink), intent(in) :: value1
-                type(ObjectLink), intent(in) :: value2
+                class(Object), pointer, intent(in) :: value1
+                class(Object), pointer, intent(in) :: value2
                 integer                   :: value
             end function
         end interface
@@ -189,11 +189,11 @@ contains
         type(ObjectLink), dimension((length + 1) / 2), intent(in out) :: buffer
         interface
             function comparator(value1, value2) result(order)
-                import ObjectLink
+                import Object
 
-                type(ObjectLink), intent(in) :: value1
-                type(ObjectLink), intent(in) :: value2
-                integer                      :: order
+                class(Object), pointer, intent(in) :: value1
+                class(Object), pointer, intent(in) :: value2
+                integer                            :: order
             end function
         end interface
 
@@ -204,7 +204,7 @@ contains
         case (:1)
             return
         case (2)
-            if (comparator(list(1), list(2)) == ORDERED_DESCENDING) then
+            if (comparator(list(1)%link, list(2)%link) == ORDERED_DESCENDING) then
                 link = list(1)
                 list(1) = list(2)
                 list(2) = link
@@ -218,7 +218,7 @@ contains
             call mergeSort(list, buffer, NA, comparator)
             call mergeSort(list(NA + 1), buffer, NB, comparator)
 
-            if (comparator(list(NA), list(NA + 1)) == ORDERED_DESCENDING) then
+            if (comparator(list(NA)%link, list(NA + 1)%link) == ORDERED_DESCENDING) then
                 buffer(1:NA) = list(1:NA)
                 call merge(buffer, NA, list(NA + 1), NB, list, length, comparator)
             endif
@@ -233,11 +233,11 @@ contains
         type(ObjectLink), intent(in out) :: C(NC)
         interface
             function comparator(value1, value2) result(order)
-                import ObjectLink
+                import Object
 
-                type(ObjectLink), intent(in) :: value1
-                type(ObjectLink), intent(in) :: value2
-                integer                      :: order
+                class(Object), pointer, intent(in) :: value1
+                class(Object), pointer, intent(in) :: value2
+                integer                            :: order
             end function
         end interface
 
@@ -246,7 +246,7 @@ contains
 
         I = 1; J = 1; K = 1;
         do while(I <= NA .and. J <= NB)
-            order = comparator(A(I), B(J))
+            order = comparator(A(I)%link, B(J)%link)
             if ((order == ORDERED_ASCENDING) .or. (order == ORDERED_SAME)) then
                 C(K) = A(I)
                 I = I+1

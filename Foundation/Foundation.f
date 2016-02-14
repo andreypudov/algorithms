@@ -212,12 +212,12 @@ module Foundation
         module function array_sortedArrayUsingFunction(self, comparator) result(value)
             class(Array), intent(in) :: self
             interface
-                function comparator(value1, value2) result(value)
-                    import ObjectLink
+                function comparator(value1, value2) result(order)
+                    import Object
 
-                    type(ObjectLink), intent(in) :: value1
-                    type(ObjectLink), intent(in) :: value2
-                    integer                   :: value
+                    class(Object), pointer, intent(in) :: value1
+                    class(Object), pointer, intent(in) :: value2
+                    integer                            :: order
                 end function
             end interface
             class(Array), pointer :: value
