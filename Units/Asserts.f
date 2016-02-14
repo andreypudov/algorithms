@@ -36,8 +36,8 @@ module MUAsserts
     end interface
 
     interface assert_equals
-        module procedure assert_equals_int, assert_equals_log, assert_equals_real, &
-                assert_equals_string, &
+        module procedure assert_equals_complex, assert_equals_double, assert_equals_int, &
+                assert_equals_log, assert_equals_real, assert_equals_string, &
                 assert_equals_int_arrays1d, assert_equals_int_arrays2d
     end interface
 contains
@@ -47,6 +47,26 @@ contains
 
         if (condition /= .true.) then
             print '(t1, a, a)', 'FAILED. The condition is false. ', description
+        end if
+    end subroutine
+
+    subroutine assert_equals_complex(value1, value2)
+        complex, intent(in) :: value1
+        complex, intent(in) :: value2
+
+        if (value1 /= value2) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
+        end if
+    end subroutine
+
+    subroutine assert_equals_double(value1, value2)
+        double precision, intent(in) :: value1
+        double precision, intent(in) :: value2
+
+        if (value1 /= value2) then
+            print '(t1, a)', 'FAILED. The keys are set to different values.'
+            print *, value1, value2
         end if
     end subroutine
 

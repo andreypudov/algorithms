@@ -33,8 +33,6 @@ module Foundation
     integer, parameter, public :: ORDERED_SAME       = 0
     integer, parameter, public :: ORDERED_DESCENDING = 1
 
-    integer, parameter, public :: VARIABLE_ARGUMENT_LIST_MAX_LENGTH = 32
-
     integer, parameter, public :: CHARACTER_TYPE = 0
     integer, parameter, public :: COMPLEX_TYPE   = 1
     integer, parameter, public :: DOUBLE_TYPE    = 2
@@ -64,11 +62,14 @@ module Foundation
         procedure, pass :: destroy       => array_destroy
 
         procedure, private, pass :: initWithFArray_charcter => array_initWithFArray_character
+        procedure, private, pass :: initWithFArray_complex  => array_initWithFArray_complex
+        procedure, private, pass :: initWithFArray_double   => array_initWithFArray_double
         procedure, private, pass :: initWithFArray_integer  => array_initWithFArray_integer
         procedure, private, pass :: initWithFArray_logical  => array_initWithFArray_logical
         procedure, private, pass :: initWithFArray_real     => array_initWithFArray_real
 
-        generic :: initWithFArray => initWithFArray_charcter, initWithFArray_integer, &
+        generic :: initWithFArray => initWithFArray_charcter, initWithFArray_complex, &
+                initWithFArray_double, initWithFArray_integer, &
                 initWithFArray_logical, initWithFArray_real
 
         procedure, pass :: count          => array_count
@@ -134,16 +135,6 @@ module Foundation
         procedure, private, nopass :: assign_fstring => string_assign_fstring
     end type
 
-    type, public :: VariableArgumentList
-    private
-        type(ObjectLink), dimension(VARIABLE_ARGUMENT_LIST_MAX_LENGTH) :: list
-        integer :: count
-    contains
-        procedure, pass :: initWithObjects => valist_initWithObjects
-        procedure, pass :: objectAtIndex   => valist_objectAtIndex
-        procedure, pass :: length          => valist_length
-    end type
-
     interface
         !
         ! Object
@@ -181,6 +172,16 @@ module Foundation
         module subroutine array_initWithFArray_character(self, list)
             class(Array), intent(in out)        :: self
             character, dimension(:), intent(in) :: list
+        end subroutine
+
+        module subroutine array_initWithFArray_complex(self, list)
+            class(Array), intent(in out)      :: self
+            complex, dimension(:), intent(in) :: list
+        end subroutine
+
+        module subroutine array_initWithFArray_double(self, list)
+            class(Array), intent(in out)               :: self
+            double precision, dimension(:), intent(in) :: list
         end subroutine
 
         module subroutine array_initWithFArray_integer(self, list)
@@ -373,29 +374,6 @@ module Foundation
             class(String), intent(out)   :: instance
             character(len=*), intent(in) :: text
         end subroutine
-
-        !
-        ! Variable argument list
-        !
-        module subroutine valist_initWithObjects(self, &
-                 o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9, o10, o11, o12, o13, o14, o15, o16, &
-                o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32)
-            class(VariableArgumentList), intent(in out) :: self
-            class(Object), target, optional, intent(in out)     :: &
-                 o1,  o2,  o3,  o4,  o5,  o6,  o7,  o8,  o9,  o10, o11, o12, o13, o14, o15, o16, &
-                o17, o18, o19, o20, o21, o22, o23, o24, o25, o26, o27, o28, o29, o30, o31, o32
-        end subroutine
-
-        module function valist_objectAtIndex(self, index) result(value)
-            class(VariableArgumentList), intent(in) :: self
-            integer, intent(in)    :: index
-            class(Object), pointer :: value
-        end function
-
-        module function valist_length(self) result(value)
-            class(VariableArgumentList), intent(in) :: self
-            integer :: value
-        end function
     end interface
 
     interface assignment(=)

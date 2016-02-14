@@ -34,38 +34,68 @@ submodule (UFoundation) ArrayInitWithFArray
 contains
     module subroutine presentArrayInitWithFArray()
         type(Array) arrayChar
+        type(Array) arrayComplex
+        type(Array) arrayDouble
         type(Array) arrayInt
         type(Array) arrayLog
         type(Array) arrayReal
 
         class(Object), pointer :: value
 
-        character, dimension(6) :: charArray
-        integer,   dimension(6) :: intArray
-        logical,   dimension(6) :: logArray
-        real,      dimension(6) :: realArray
+        character,        dimension(6) :: charArray
+        complex,          dimension(6) :: complexArray
+        double precision, dimension(6) :: doubleArray
+        integer,          dimension(6) :: intArray
+        logical,          dimension(6) :: logArray
+        real,             dimension(6) :: realArray
 
         integer index
         real    start
 
-        charArray = (/ 'a', 'b', 'c', 'd', 'e', 'f' /)
-        intArray  = (/ 0, 1, 2, 3, 4, 5 /)
-        logArray  = (/ .true., .false., .true., .false., .true., .false. /)
-        realArray = (/ 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001 /)
+        charArray    = (/ 'a', 'b', 'c', 'd', 'e', 'f' /)
+        complexArray = (/ (0.0, -1.0), (1.0, -1.0), (2.0, -1.0), (3.0, -1.0), (4.0, -1.0), (5.0, -1.0) /)
+        doubleArray  = (/ 0.0, 1.0, 2.0, 3.0, 4.0, 5.0 /)
+        intArray     = (/ 0, 1, 2, 3, 4, 5 /)
+        logArray     = (/ .true., .false., .true., .false., .true., .false. /)
+        realArray    = (/ 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001 /)
 
         call cpu_time(start)
 
         call arrayChar%initWithFArray(charArray)
+        call arrayComplex%initWithFArray(complexArray)
+        call arrayDouble%initWithFArray(doubleArray)
         call arrayInt%initWithFArray(intArray)
         call arrayLog%initWithFArray(logArray)
         call arrayReal%initWithFArray(realArray)
 
-        do index = 1, size(intArray)
+        do index = 1, size(charArray)
             value => arrayChar%objectAtIndex(index)
 
             select type (value)
             class is (Number)
                 call assert_equals(value%characterValue(), charArray(index))
+            class default
+                call assert_ok(.false., '{1}')
+            end select
+        end do
+
+        do index = 1, size(complexArray)
+            value => arrayComplex%objectAtIndex(index)
+
+            select type (value)
+            class is (Number)
+                call assert_equals(value%complexValue(), complexArray(index))
+            class default
+                call assert_ok(.false., '{1}')
+            end select
+        end do
+
+        do index = 1, size(doubleArray)
+            value => arrayDouble%objectAtIndex(index)
+
+            select type (value)
+            class is (Number)
+                call assert_equals(value%doubleValue(), doubleArray(index))
             class default
                 call assert_ok(.false., '{1}')
             end select
@@ -82,7 +112,7 @@ contains
             end select
         end do
 
-        do index = 1, size(intArray)
+        do index = 1, size(logArray)
             value => arrayLog%objectAtIndex(index)
 
             select type (value)
@@ -93,7 +123,7 @@ contains
             end select
         end do
 
-        do index = 1, size(intArray)
+        do index = 1, size(realArray)
             value => arrayReal%objectAtIndex(index)
 
             select type (value)

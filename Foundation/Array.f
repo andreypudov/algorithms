@@ -74,6 +74,48 @@ contains
     !
     ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
     !
+    module subroutine array_initWithFArray_complex(self, list)
+        class(Array), intent(in out)      :: self
+        complex, dimension(:), intent(in) :: list
+
+        class(Number), pointer :: buffer
+        integer index
+
+        allocate(self%list(size(list)))
+        self%selfAllocated = .true.
+
+        do index = 1, size(list)
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
+        end do
+    end subroutine
+
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
+    module subroutine array_initWithFArray_double(self, list)
+        class(Array), intent(in out)               :: self
+        double precision, dimension(:), intent(in) :: list
+
+        class(Number), pointer :: buffer
+        integer index
+
+        allocate(self%list(size(list)))
+        self%selfAllocated = .true.
+
+        do index = 1, size(list)
+            allocate(buffer)
+
+            buffer = list(index)
+            self%list(index)%link => buffer
+        end do
+    end subroutine
+
+    !
+    ! Initializes a newly allocated array by placing in it the objects contained in a given Fortran array.
+    !
     module subroutine array_initWithFArray_integer(self, list)
         class(Array), intent(in out)      :: self
         integer, dimension(:), intent(in) :: list
