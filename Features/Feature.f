@@ -30,7 +30,7 @@ module MFeature
     use MFReallocation
 
     use MFInheritance
-    use MFConstructor
+    !use MFConstructor
 
     use MFOpemMPExample1
     use MFOpemMPExample2

@@ -1,8 +1,8 @@
 FC = ifort
 CC = clang
-FFLAGS  = -c -free -module Modules -reentrancy threaded -openmp -ipo -g3 -warn all -warn nounused # -fast -parallel -O3
+FFLAGS  = -c -free -module Modules -reentrancy threaded -qopenmp -ipo -g3 -warn all -warn nounused # -fast -parallel -O3
 CFLAGS  = -c -pthread -openmp -g
-LDFLAGS = -openmp
+LDFLAGS = -qopenmp
 
 INTERFACES = Arrays/Arrays.f \
 			 Units/Asserts.f Units/Report.f \
