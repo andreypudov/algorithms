@@ -35,7 +35,7 @@ program Algorithms
 
     implicit none
 
-    type(TExample)     exgample
+    type(TExample)     example
     type(TExercises)   exercises
     type(TExperiments) experiments
     type(TFeature)     feature
@@ -43,12 +43,12 @@ program Algorithms
     type(TUnit)        unit
 
     write (*, '(A)') 'The Laboratory of Algorithms'
-    write (*, '(A,/)') '(C) 2011-2016 Andrey Pudov'
+    write (*, '(A,/)') '(C) 2011-2018 Andrey Pudov'
 
-    !call example%present()
+    call example%present()
     !call exercises%present()
     !call experiments%present()
-    call feature%present()
+    !call feature%present()
     !call problems%present()
     !call unit%present()
 end program

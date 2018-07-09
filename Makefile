@@ -8,7 +8,7 @@ INTERFACES = Arrays/Arrays.f \
 			 Units/Asserts.f Units/Report.f \
 			 Examples/RubiksCube/Common.f Examples/RubiksCube/Cube.f Examples/RubiksCube/Rotator.f \
 			 Examples/RubiksCube/Search.f Examples/RubiksCube/RubiksCube.f \
-			 Features/Inheritance/Shape.f \
+			 Features/Inheritance/Animal.f Features/Inheritance/Shape.f \
              Foundation/Foundation.f \
 			 Randoms/Random.f \
 	         Searches/Search.f \
@@ -18,19 +18,18 @@ INTERFACES = Arrays/Arrays.f \
              Sorts/Sort.f   \
 			 Graphs/Vertex.f Graphs/Graph.f \
 			 Structures/ArrayStack.f Structures/ArrayQueue.f \
-		     Units/Foundation/UFoundation.f Units/Parameters.f Units/Report.f
+		     Units/Foundation/UFoundation.f Units/Parameters.f
 INCLUDES = $(foreach d, $(shell find . -name '*.h'), -I$d)
 EXCLUDES = $(patsubst %, ! -path './%', Algorithms.f Examples/* Exercises/* Features/* Problems/*) \
            $(patsubst %, ! -path './%', $(INTERFACES))
 SOURCES  = $(INTERFACES) \
 		   $(shell find . -name '*.c' $(EXCLUDES) | sort) \
 		   $(shell find . -name '*.f' $(EXCLUDES) | sort) \
-           $(shell find Examples  -name '*.f' ! -name 'Example.f')   Examples/Example.f \
-		   $(shell find Exercises -name '*.f' ! -name 'Exercises.f') Exercises/Exercises.f \
-		   $(shell find Features  -name '*.f' ! -name 'Feature.f')   Features/Feature.f \
-		   $(shell find Problems  -name '*.f' ! -name 'Problems.f')  Problems/Problems.f \
+           $(shell find Examples  -name '*.f' ! -name 'Example.f'   | sort)   Examples/Example.f \
+		   $(shell find Exercises -name '*.f' ! -name 'Exercises.f' | sort) Exercises/Exercises.f \
+		   $(shell find Features  -name '*.f' ! -name 'Feature.f'   | sort)   Features/Feature.f \
+		   $(shell find Problems  -name '*.f' ! -name 'Problems.f'  | sort)  Problems/Problems.f \
            Algorithms.f
-#          $(wildcard **/*.c)
 OBJECTS  = $(patsubst %.f, Objects/%.o, $(patsubst %.c, Objects/%_c.o, $(SOURCES)))
 EXECUTABLE = algorithms
 
