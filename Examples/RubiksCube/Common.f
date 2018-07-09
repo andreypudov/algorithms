@@ -3,7 +3,7 @@
 !
 ! The MIT License
 !
-! Copyright 2011-2015 Andrey Pudov.
+! Copyright 2011-2018 Andrey Pudov.
 !
 ! Permission is hereby granted, free of charge, to any person obtaining a copy
 ! of this software and associated documentation files (the 'Software'), to deal
@@ -52,7 +52,6 @@ module MERubiksCubeCommon
     integer, parameter :: G_CCW = -GREEN,  GREEN_CCW  = -GREEN
     integer, parameter :: O_CW  =  ORANGE, ORANGE_CW  =  ORANGE
     integer, parameter :: O_CCW = -ORANGE, ORANGE_CCW = -ORANGE
-
 
     ! the set of supported rotations
     character(len=2), parameter, dimension(-6:6) :: CUBE_ROTATIONS = &

@@ -6,7 +6,8 @@ LDFLAGS = -qopenmp
 
 INTERFACES = Arrays/Arrays.f \
 			 Units/Asserts.f Units/Report.f \
-			 Examples/RubiksCube/Common.f Examples/RubiksCube/Cube.f Examples/RubiksCube/Rotator.f \
+			 Examples/RubiksCube/Common.f Examples/RubiksCube/Cube.f \
+			 Examples/RubiksCube/Analyser.f Examples/RubiksCube/Rotator.f \
 			 Examples/RubiksCube/Search.f Examples/RubiksCube/RubiksCube.f \
 			 Features/Inheritance/Animal.f Features/Inheritance/Shape.f \
              Foundation/Foundation.f \

@@ -3,7 +3,7 @@
 !
 ! The MIT License
 !
-! Copyright 2011-2015 Andrey Pudov.
+! Copyright 2011-2018 Andrey Pudov.
 !
 ! Permission is hereby granted, free of charge, to any person obtaining a copy
 ! of this software and associated documentation files (the 'Software'), to deal
@@ -38,9 +38,12 @@ module MERubiksCube
     logical, dimension(NUMBER_OF_CUBICLES), parameter :: DEFAULT_MASK  = .true.
 
     integer, dimension(NUMBER_OF_CUBICLES), parameter :: DEFAULT_STATE = &
-            [R, R, R, R, R, R, R, R, R, W, W, W, W, W, W, W, W, W, &
-             B, B, B, B, B, B, B, B, B, Y, Y, Y, Y, Y, Y, Y, Y, Y, &
-             G, G, G, G, G, G, G, G, G, O, O, O, O, O, O, O, O, O]
+            [R, R, R, R, R, R, R, R, R, &
+             W, W, W, W, W, W, W, W, W, &
+             B, B, B, B, B, B, B, B, B, &
+             Y, Y, Y, Y, Y, Y, Y, Y, Y, &
+             G, G, G, G, G, G, G, G, G, &
+             O, O, O, O, O, O, O, O, O]
 
     integer, dimension(12), parameter :: DEFAULT_ROTATIONS = &
                [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
@@ -63,13 +66,7 @@ contains
                 G, W, W, Y, G, G, Y, R, Y, & ! green
                 O, G, R, O, O, O, O, O, O]   ! orange
 
-        integer, dimension(NUMBER_OF_CUBICLES) :: destination = &
-               [R, R, R, R, R, R, R, R, R, &
-                W, W, W, W, W, W, W, W, W, &
-                B, B, B, B, B, B, B, B, B, &
-                Y, Y, Y, Y, Y, Y, Y, Y, Y, &
-                G, G, G, G, G, G, G, G, G, &
-                O, O, O, O, O, O, O, O, O]
+        integer, dimension(NUMBER_OF_CUBICLES) :: destination = DEFAULT_STATE;
 
         logical, dimension(NUMBER_OF_CUBICLES) :: mask = &
                [.true., .true., .true., .true., .true., .true., .true., .true., .true., &
@@ -83,17 +80,17 @@ contains
                [RED_CW, RED_CCW, WHITE_CW, WHITE_CCW, BLUE_CW, BLUE_CCW, &
                YELLOW_CW, YELLOW_CCW, GREEN_CW, GREEN_CCW, ORANGE_CW, ORANGE_CCW]
 
-        integer :: depth  = 20
+        integer :: depth  = 7
         logical :: status = .false.
 
-        call presentRotation()
+        ! call presentRotation()
 
         ! search for desired state
         ! RED_CW BLUE_CCW RED_CW RED_CW WHITE_CW WHITE_CW ORANGE_CW WHITE_CW
         ! ORANGE_CCW WHITE_CW RED_CCW YELLOW_CW YELLOW_CW ORANGE_CW ORANGE_CW
         ! BLUE_CW BLUE_CW YELLOW_CCW ORANGE_CW GREEN_CW GREEN_CW WHITE_CCW
         ! GREEN_CW GREEN_CW YELLOW_CCW RED_CW RED_CW
-        ! status = search%search(source, destination, mask, rotations, depth)
+        status = search%search(source, destination, mask, rotations, depth)
     end subroutine
 
     subroutine presentRotation()
@@ -109,12 +106,19 @@ contains
                 G, W, W, Y, G, G, Y, R, Y, & ! green
                 O, G, R, O, O, O, O, O, O]   ! orange
 
-        integer, dimension(28) :: rotations = &
+        integer, dimension(28), parameter :: solution_1 = &
                 [RED_CW, GREEN_CCW, RED_CW, RED_CW, WHITE_CW, WHITE_CW, &
                  ORANGE_CW, WHITE_CW, ORANGE_CCW, WHITE_CW, RED_CCW, YELLOW_CW, &
                  YELLOW_CW, ORANGE_CW, ORANGE_CW, BLUE_CW, BLUE_CW, YELLOW_CCW, &
                  ORANGE_CW, ORANGE_CW, GREEN_CW, GREEN_CW, WHITE_CCW, GREEN_CW, &
                  GREEN_CW, YELLOW_CCW, RED_CW, RED_CW]
+        integer, dimension(30), parameter :: solution_2 = &
+                [RED_CW, GREEN_CCW, YELLOW_CW, YELLOW_CW, ORANGE_CW, ORANGE_CW, &
+                 YELLOW_CW, RED_CW, RED_CW, WHITE_CW, RED_CW, WHITE_CW, &
+                 WHITE_CW, BLUE_CW, BLUE_CW, ORANGE_CW, ORANGE_CW, GREEN_CW, &
+                 GREEN_CW, WHITE_CW, RED_CW, RED_CW, GREEN_CW, GREEN_CW, &
+                 YELLOW_CCW, GREEN_CW, GREEN_CW, YELLOW_CCW, GREEN_CW, GREEN_CW]
+        integer, dimension(size(solution_2)), parameter :: rotations = solution_2
         integer index
 
         print '(A)', 'Initial state: '

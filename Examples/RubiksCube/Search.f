@@ -63,8 +63,8 @@ contains
         integer, dimension(0:depth) :: buffer
         integer, dimension(1:depth) :: sequence
 
-        type(TECube)    cube
-        type(TERotator) rotator
+        type(TECube)     cube
+        type(TERotator)  rotator
 
         integer(kind=int64) expectation, count
         integer index, jndex
@@ -135,8 +135,9 @@ contains
                 call rotator%rotate(cube, rotations(buffer(index) + 1))
 
                 ! validate current and destired states
-                if (all(((cube%get() - destination) * mask) == 0) &
-                        .and. .not. all((cube%get() - destination) == 0)) then
+                if (all((cube%get() - destination) == 0)) then
+                !if (all(((cube%get() - destination) * mask) == 0) &
+                !        .and. .not. all((cube%get() - destination) == 0)) then
                     print '(A)', 'Desired pattern found.'
                     print '(\A3)', CUBE_ROTATIONS(rotations(buffer(1:depth) + 1))
                     print '(X)'

@@ -3,7 +3,7 @@
 !
 ! The MIT License
 !
-! Copyright 2011-2015 Andrey Pudov.
+! Copyright 2011-2018 Andrey Pudov.
 !
 ! Permission is hereby granted, free of charge, to any person obtaining a copy
 ! of this software and associated documentation files (the 'Software'), to deal
@@ -28,6 +28,7 @@ module MERubiksCubeRotator
 
     use MERubiksCubeCommon
     use MERubiksCubeCube
+    use MERubiksCubeAnalyser
 
     implicit none
     private
@@ -35,6 +36,7 @@ module MERubiksCubeRotator
     type, public :: TERotator
         private
     contains
+        procedure, nopass :: init
         procedure, nopass :: rotate
         procedure, nopass :: optimize
     end type
@@ -52,10 +54,14 @@ module MERubiksCubeRotator
     end type
 
     type(TERotatorPointer), dimension(-NUMBER_OF_SIDES:NUMBER_OF_SIDES) :: ROTATORS
+
 contains
+
     subroutine rotate(cube, type)
         class(TECube), intent(in out) :: cube
         integer, intent(in)           :: type
+
+        type(TEAnalyser) analyser
 
         ! initialize an array at the first call
         if (associated(ROTATORS(type)%rotator) /= .true.) then
@@ -63,6 +69,7 @@ contains
         end if
 
         call ROTATORS(type)%rotator(cube)
+        ! print '(A,A,A,I)', 'Rotation: ', CUBE_ROTATIONS(type), ', rate', analyser%cubiclesRate(cube)
     end subroutine
 
     ! optimizes the sequence of rotations
